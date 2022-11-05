@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    </head>
+    <body>
+        <h1>Main Page!</h1>
+        <p>This is the main page for <%= query_data[0]['username'] %> </p>
+        <p>Email is: <%= query_data[0]['email'] %> </p>
+
+        <div class="post-input-container">
+            <form action="/post_text" method="POST">
+                <label for="post_heading">Heading</label><br>
+                <input type="post_heading" name="post_heading" id="post_heading"><br>
+                <label for="post_text">Post Text</label><br>
+                <textarea rows="8" placeholder="PLACEHOLDER" type="post_text" name="post_text" id="post_text"></textarea><br>
+                <input type="submit" value="Post">
+            </form>
+        </div>
+
+    </body>
+</html>

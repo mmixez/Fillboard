@@ -30,7 +30,7 @@ sqlConn.connect((err) => {
 })
 
 app.get('/', (req, res) => {
-    res.render('pages/home')
+    res.render('pages/signup')
 });
 
 app.get('/signup', (req, res) => {
@@ -103,14 +103,20 @@ app.post('/signup', urlParser,
     body('password').notEmpty().withMessage('Password cannot be empty!'),
     body('confpassword').notEmpty().custom((pwrd, {req}) => pwrd === req.body.password).withMessage('Both passwords must match!')
  ,(req, res) => {
-    var errs = validationResult(req);
-    if(!errs.isEmpty()) {
-        return res.status(400).json({errs: errs.array()})
-    } else {
-        bcrypt.hash(req.body.password, 10, (err, hash) => {
-            sqlConn.query(`INSERT INTO fillboard_user (username, email, password)VALUES ('${req.body.username}', '${req.body.email}', '${hash}');`);
-        })
+    var login = req.body.login;
+    if(login)
+    {
         res.redirect('/signin')
+    } else {
+        var errs = validationResult(req);
+        if(!errs.isEmpty()) {
+            return res.status(400).json({errs: errs.array()})
+        } else {
+            bcrypt.hash(req.body.password, 10, (err, hash) => {
+                sqlConn.query(`INSERT INTO fillboard_user (username, email, password)VALUES ('${req.body.username}', '${req.body.email}', '${hash}');`);
+            })
+            res.redirect('/signin')
+        }
     }
 });
 

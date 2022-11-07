@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <link href= "/public/stylesheets/style.css" rel="stylesheet" type="text/css" />
     </head>
     <body>
+        <div>
         <h1>Welcome to Fillboard! Please sign up</h1>
         <form action="/signup" method="POST">
             <label for="username">Username</label><br>
@@ -12,8 +14,10 @@
             <label for="password">Password</label><br>
             <input type="password" name="password" id="password"><br>
             <label for="confpassword">Confirm Password</label><br>
-            <input type="password" name="confpassword" id="confpassword"><br>
-            <input type="submit" value="Sign Up">
+            <input type="password" name="confpassword" id="confpassword"><br><br>
+            <input type="submit" name="signup" value="Sign Up">
+            <input type="submit" name="login" value="Login">
         </form>
+    </div>
     </body>
 </html>

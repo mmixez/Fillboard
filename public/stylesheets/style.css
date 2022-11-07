@@ -5,5 +5,10 @@
     }
 
     body{
-        background: #ff0000;
+        background: grey;
     }
+
+    div {
+        width: 500px;
+        margin: auto;
+      }

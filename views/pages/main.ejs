@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <link href= "/public/stylesheets/style.css" rel="stylesheet" type="text/css" />
     </head>
     <body>
-        <h1>Main Page!</h1>
+        <h1>Welcome  <%= query_data[0]['username'] %> to your Dashboard</h1>
         <p>This is the main page for <%= query_data[0]['username'] %> </p>
         <p>Email is: <%= query_data[0]['email'] %> </p>
 

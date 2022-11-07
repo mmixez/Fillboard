@@ -6,25 +6,38 @@ var mysql = require('mysql');
 var app = express();
 var {body, validationResult} = require('express-validator');
 
+app.set('views', 'views');
 app.set('view engine', 'ejs');
 app.use(bp.json());
 
+app.use('/public', express.static('public'));
+
+// shows which port is listening
+var listener = app.listen(3000, function(){
+    console.log('Listening on port ' + listener.address().port);
+});
+
+/* for some reason localhost:3000 doesn't work here but the above code does
+app.listen(3000, () => {
+    console.log('Server running on port 3000!');
+}); */
+
 var urlParser = bp.urlencoded({extended: false});
 
-//This is the DB Connection - please connection here
+// This is the DB Connection
 var sqlConn = mysql.createConnection({
     host: "localhost",
     user: "root",
-    password: "MySQLAdmin", //might have to change this to your pwd
-    database: "Fillboard"
-})
+    password: "0906clcl",
+    database: "fillboard"
+});
 
 sqlConn.connect((err) => {
     if(err) console.log(err)
     else  {
         console.log('Successfully connected to SQL database!')
     }
-})
+});
 
 app.get('/', (req, res) => {
     res.render('pages/home')
@@ -38,8 +51,9 @@ app.get('/signin', (req, res) => {
     res.render('pages/login')
 });
 
-//This is hardcoded for ian username - the value needs to be forwarded in the url propably
-//See in main.ejs how the values are accessed from the query result
+// This is hardcoded for ian username - the value needs to be forwarded in the url probably
+// See in main.ejs how the values are accessed from the query result
+// http://localhost:3000/main?username=ian (there MUST be username = 'ian' in the DB)
 app.get('/main', (req, res) => {
     sqlConn.query(`SELECT * FROM fillboard_user WHERE username = 'ian';`, function (err, qres, fields) {
         if(err){
@@ -47,7 +61,7 @@ app.get('/main', (req, res) => {
         }
         else {
             res.render('pages/main', {
-                query_data: qres //this is the data property to access
+                query_data: qres // this is the data property to access
             });
         }
     })
@@ -67,7 +81,7 @@ app.post('/post_text', urlParser,
     }
 });
 
-//an examle how to read data from the frontend end read then from the DB
+//an example how to read data from the frontend and read them from the DB
 app.post('/signin', urlParser, 
     body('email').isEmail().withMessage('Must be email!'),
     body('password').notEmpty().withMessage('Password cannot be empty!')
@@ -93,7 +107,7 @@ app.post('/signin', urlParser,
     }
 });
 
-//an examle to store data from the frontend to the DB
+//an example to store data from the frontend to the DB
 app.post('/signup', urlParser,
     body('username').isLength({min:1, max: 45}).withMessage('Username can not be empty!'),
     body('email').isEmail().withMessage('Must be email!'),
@@ -109,8 +123,4 @@ app.post('/signup', urlParser,
         })
         res.redirect('/signin')
     }
-});
-
-app.listen(3000, () => {
-    console.log('Server running on port 3000!');
 });

@@ -6,8 +6,11 @@ var mysql = require('mysql');
 var app = express();
 var {body, validationResult} = require('express-validator');
 
+app.set('views', 'views');
 app.set('view engine', 'ejs');
 app.use(bp.json());
+
+app.use('/public', express.static('public'));
 
 var urlParser = bp.urlencoded({extended: false});
 

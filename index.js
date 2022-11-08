@@ -7,6 +7,8 @@ const session = require('express-session');
 var app = express();
 var {body, validationResult} = require('express-validator');
 
+// text fields for edit profile (value = $qres.name...)
+
 app.set('views', 'views');
 app.set('view engine', 'ejs');
 app.use(bp.json());
@@ -17,6 +19,7 @@ app.use(session({
     resave: false,
     saveUnitialized: false
 }));
+
 app.use('/public', express.static('public'));
 
 var urlParser = bp.urlencoded({extended: false});
@@ -48,8 +51,33 @@ app.get('/signin', (req, res) => {
     res.render('pages/login')
 });
 
-//This is hardcoded for ian username - the value needs to be forwarded in the url propably
-//See in main.ejs how the values are accessed from the query result
+app.get('/editProfile', (req, res) => {
+    sqlConn.query(`SELECT * FROM fillboard_user WHERE username = '${req.session.username}';`, function (err, qres, fields) {
+        if(err){
+            throw err; 
+        }
+        else {
+            res.render('pages/editProfile', {
+                query_data: qres //this is the data property to access
+            });
+        }
+    })
+});
+
+app.post('/editProfile',(req, res) => {
+    res.redirect('/editProfile');
+});
+
+app.post('/saveProfile', urlParser, body('birthday'),body('gender'),body('biography'),(req, res) => {
+    console.log('/saveProfile');
+    console.log(`req.body.birthday = '${req.body.birthday}'`);
+    console.log(`req.body.gender = '${req.body.gender}'`);
+    console.log(`req.body.biography = '${req.body.biography}'`);
+    sqlConn.query(`UPDATE fillboard_user SET birthday='${req.body.birthday}', gender='${req.body.gender}', biography='${req.body.biography}' WHERE username='${req.session.username}'`);
+    console.log('updated bday + gender + bio');
+    res.redirect('/main');
+});
+
 app.get('/main', (req, res) => {
     sqlConn.query(`SELECT * FROM fillboard_user WHERE username = '${req.session.username}';`, function (err, qres, fields) {
         if(err){
@@ -61,6 +89,18 @@ app.get('/main', (req, res) => {
             });
         }
     })
+});
+
+app.post('/main', (req,res) => {
+    sqlConn.query(`SELECT * FROM fillboard_user WHERE username = '${req.session.username}';`, function (err, qres, fields) {
+        if(err){
+            throw err; 
+        }
+        else {
+            req.session.qres=qres;
+        }
+    })
+    res.redirect('/main');
 });
 
 app.post('/post_text', urlParser,
@@ -92,6 +132,7 @@ app.post('/signin', urlParser,
             } else {
                 bcrypt.compare(req.body.password, qres[0]['password']).then((result) => {
                     if(result == true) {
+                        req.session.qres=qres;
                         req.session.username=qres[0]['username'];
                         res.redirect('/main');
                     } else {
@@ -103,7 +144,10 @@ app.post('/signin', urlParser,
     }
 });
 
-//an examle to store data from the frontend to the DB
+app.post('/logout', (req,res) => {
+    res.redirect('/signup');
+});
+
 app.post('/signup', urlParser,
     body('username').isLength({min:1, max: 45}).withMessage('Username can not be empty!'),
     body('email').isEmail().withMessage('Must be email!'),

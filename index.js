@@ -7,31 +7,32 @@ const session = require('express-session');
 var app = express();
 var {body, validationResult} = require('express-validator');
 
-// text fields for edit profile (value = $qres.name...)
-
+// sets up for css
 app.set('views', 'views');
 app.set('view engine', 'ejs');
+app.use('/public', express.static('public'));
+
 app.use(bp.json());
 
-// parameters for session (like a user session)
+// parameters for session
 app.use(session({
     secret: 'secret',
     resave: false,
     saveUnitialized: false
 }));
 
-app.use('/public', express.static('public'));
-
+// url parser used to decipher input from forms
 var urlParser = bp.urlencoded({extended: false});
 
-//This is the DB Connection - please connection here
+// db connection obj
 var sqlConn = mysql.createConnection({
     host: "localhost",
     user: "root",
-    password: "MySQLAdmin", //might have to change this to your pwd
+    password: "MySQLAdmin",
     database: "Fillboard"
 })
 
+// check db connection
 sqlConn.connect((err) => {
     if(err) console.log(err)
     else  {
@@ -69,12 +70,7 @@ app.post('/editProfile',(req, res) => {
 });
 
 app.post('/saveProfile', urlParser, body('birthday'),body('gender'),body('biography'),(req, res) => {
-    console.log('/saveProfile');
-    console.log(`req.body.birthday = '${req.body.birthday}'`);
-    console.log(`req.body.gender = '${req.body.gender}'`);
-    console.log(`req.body.biography = '${req.body.biography}'`);
     sqlConn.query(`UPDATE fillboard_user SET birthday='${req.body.birthday}', gender='${req.body.gender}', biography='${req.body.biography}' WHERE username='${req.session.username}'`);
-    console.log('updated bday + gender + bio');
     res.redirect('/main');
 });
 

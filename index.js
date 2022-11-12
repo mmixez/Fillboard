@@ -52,6 +52,7 @@ app.get('/signin', (req, res) => {
     res.render('pages/login')
 });
 
+// lines 55-77 needed for edit/save profile req's
 app.get('/editProfile', (req, res) => {
     sqlConn.query(`SELECT * FROM fillboard_user WHERE username = '${req.session.username}';`, function (err, qres, fields) {
         if(err){
@@ -140,6 +141,7 @@ app.post('/signin', urlParser,
     }
 });
 
+// lines 144-148 needed to receive logout req
 app.post('/logout', (req,res) => {
     res.redirect('/signup');
 });

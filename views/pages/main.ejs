@@ -10,6 +10,11 @@
         <p>Hi <%= query_data[0]['username'] %>, welcome to your Dashboard.</p>
         <p>The email tied to this account is: <%= query_data[0]['email'] %></p>
 
+        <!--
+            lines 17-24: user interaction for edit/signout functions
+            lines 24-29: display user data from DB, not needed for final but needed for test/base idea
+        -->
+
         <form action="/editProfile" method="POST">
             <input type="submit" value="Edit Profile"></button>
         </form> 

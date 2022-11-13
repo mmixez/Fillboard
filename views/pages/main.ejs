@@ -1,21 +1,176 @@
 <!DOCTYPE html>
 <html>
-    <head>
-    </head>
-    <body>
-        <h1>Main Page!</h1>
-        <p>This is the main page for <%= query_data[0]['username'] %> </p>
-        <p>Email is: <%= query_data[0]['email'] %> </p>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FILLBOARD MAIN</title>
+    <link
+      href="/public/stylesheets/style.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link rel="icon" href="/public/stylesheets/images/favicon.png">
 
-        <div class="post-input-container">
-            <form action="/post_text" method="POST">
-                <label for="post_heading">Heading</label><br>
-                <input type="post_heading" name="post_heading" id="post_heading"><br>
-                <label for="post_text">Post Text</label><br>
-                <textarea rows="8" placeholder="PLACEHOLDER" type="post_text" name="post_text" id="post_text"></textarea><br>
-                <input type="submit" value="Post">
-            </form>
+    
+
+  </head>
+    <body>
+        <div class="main-header">
+        <nav>
+            <div class="nav-left">
+                <img src="/public/stylesheets/images/logo3.png" class="main-logo" />
+            
+
+                <ul>
+                    <li><img src="/public/stylesheets/images/inbox.png"></li>
+                    <li><img src="/public/stylesheets/images/inbox.png"></li>
+                    
+                </ul>
+            </div>
+            <div class="nav-right">
+                <div class="search-box">
+                    <img src="/public/stylesheets/images/search.png" class="search" />
+                    <input type="text" placeholder="Search Event">
+                </div>
+            </div>
+
+        </nav>
         </div>
+        <div class= "m-topcontainer">
+          <div class="main-container">
+
+
+            <!-- left column-->
+
+          <div class="main-left-col">
+          <h1>left - 4 testing  </h1>
+            <div class="main-profile-box">
+
+            <div class="main-left-col-title">
+                 
+            </div>
+
+            
+            <div class="welcome-msg">
+                
+            <p>WELCOME <%= query_data[0]['username'] %> !</p><br>
+              <p> I knew you were coming.</p>
+            <p>Loggd In Account: <%= query_data[0]['email'] %></p><br>
+
+            <img src="/public/stylesheets/images/pf1.jpg" class="main-pf" /><br><br>
+
+            <h4>ABOUT ME: </h5><p><%= query_data[0]['biography'] %></p><br>
+            <h4>GENDER: </h5><p><%= query_data[0]['gender'] %></p><br>
+            <h4>BIRTHDAY: </h5><p><%= query_data[0]['birthday'] %></p><br>
+            <div class="pf-box-container">
+            <form action="/editProfile" method="POST">
+              
+              <div class="pf-edit-btn">
+                <input type="submit" style="background-color: hsl(351, 4%, 66%)" value="Edit Profile"></button>
+              </div>
+            
+            </form>
+
+            <form action="/logout" method="POST">
+                <div class ="pf-signout-btn">
+                <input type="submit" style="background-color: hsl(351, 4%, 66%)" value="Sign Out"></button>
+              </div>
+             
+
+
+            </div>
+          </div>
+
+          
+        </div>
+        </div>
+        
+          <!-- center column-->
+        <div class="main-center-col">
+          <h1>center col - 4 testing</h1>
+          <div class="main-center-box">
+          
+
+          <div class="write-post-container">
+            <div class="post-msg">
+            <p>Wanna Create an Event <%= query_data[0]['username'] %> ? </p><br>
+            </div>
+            <div class="post-input-container">
+              
+              <form action="/post_text" method="POST">
+                <div class ="post-msg-heading">
+                <label for="post_heading">Heading</label><br>
+              </div>
+                
+                <textarea class="textarea" rows="3" cols="70" placeholder="TITLE" type="post_heading" name="post_heading" id="post_heading"></textarea><br>
+                <div class ="post-msg-text">
+                <label for="post_text">Post Text</label><br>
+                </div>
+                
+                
+                <textarea class="textarea" rows="6" cols="70" placeholder="WHATS IN YOUR MIND?" type="post_text" name="post_text" id="post_text"></textarea><br>
+                <div class="post-btn-container">
+                  <div class="post-btn">
+                    <input
+                      type="submit"
+                      style="background-color: hsl(351, 4%, 66%)"
+                     
+                    
+                      value="Post"
+                    />
+                  </div>
+                </div>
+            </form>
+
+            </div>
+
+            
+        </div>
+        </div>
+        
+        </div>
+        <!-- right column-->
+        <div class="main-right-col">
+
+          <h1>right col - 4 testing</h1>
+          <div class="main-right-box">
+          
+          <!-- dummy writings -->
+          <p>
+            It is a long established fact that a reader will be distracted by the
+            readable content of a page when looking at its layout. The point of
+            using Lorem Ipsum is that it has a more-or-less normal distribution of
+            letters, as opposed to using 'Content here, content here', making it
+            look like readable English. Many desktop publishing packages and web
+            page editors now use Lorem Ipsum as their default model text, and a
+            search for 'lorem ipsum' will uncover many web sites still in their
+            infancy. Various versions have evolved over the years, sometimes by
+            accident, sometimes on purpose (injected humour and the like).
+          </p>
+
+          
+          </div>
+
+          </div>
+
+
+        </div>
+      </div>
+        
+        <div id='wrapper'>
+          <div> 
+            <p1> FillBoard 2022</p1>
+          </div>
+
+        </div>
+        <footer></footer>
+          
+        
+      
 
     </body>
+
+    
+
 </html>

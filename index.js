@@ -2,45 +2,46 @@ var express = require('express');
 var bp = require('body-parser');
 var bcrypt = require('bcrypt');
 var mysql = require('mysql');
+const session = require('express-session');
 
 var app = express();
 var {body, validationResult} = require('express-validator');
 
+// sets up for css
 app.set('views', 'views');
 app.set('view engine', 'ejs');
-app.use(bp.json());
-
 app.use('/public', express.static('public'));
 
-// shows which port is listening
-var listener = app.listen(3000, function(){
-    console.log('Listening on port ' + listener.address().port);
-});
+app.use(bp.json());
 
-/* for some reason localhost:3000 doesn't work here but the above code does
-app.listen(3000, () => {
-    console.log('Server running on port 3000!');
-}); */
+// parameters for session
+app.use(session({
+    secret: 'secret',
+    resave: false,
+    saveUnitialized: false
+}));
 
+// url parser used to decipher input from forms
 var urlParser = bp.urlencoded({extended: false});
 
-// This is the DB Connection
+// db connection obj
 var sqlConn = mysql.createConnection({
     host: "localhost",
     user: "root",
     password: "0906clcl",
-    database: "fillboard"
-});
+    database: "Fillboard"
+})
 
+// check db connection
 sqlConn.connect((err) => {
     if(err) console.log(err)
     else  {
         console.log('Successfully connected to SQL database!')
     }
-});
+})
 
 app.get('/', (req, res) => {
-    res.render('pages/home')
+    res.render('pages/signup')
 });
 
 app.get('/signup', (req, res) => {
@@ -51,20 +52,52 @@ app.get('/signin', (req, res) => {
     res.render('pages/login')
 });
 
-// This is hardcoded for ian username - the value needs to be forwarded in the url probably
-// See in main.ejs how the values are accessed from the query result
-// http://localhost:3000/main?username=ian (there MUST be username = 'ian' in the DB)
+// lines 55-77 needed for edit/save profile req's
+app.get('/editProfile', (req, res) => {
+    sqlConn.query(`SELECT * FROM fillboard_user WHERE username = '${req.session.username}';`, function (err, qres, fields) {
+        if(err){
+            throw err; 
+        }
+        else {
+            res.render('pages/editProfile', {
+                query_data: qres //this is the data property to access
+            });
+        }
+    })
+});
+
+app.post('/editProfile',(req, res) => {
+    res.redirect('/editProfile');
+});
+
+app.post('/saveProfile', urlParser, body('birthday'),body('gender'),body('biography'),(req, res) => {
+    sqlConn.query(`UPDATE fillboard_user SET birthday='${req.body.birthday}', gender='${req.body.gender}', biography='${req.body.biography}' WHERE username='${req.session.username}'`);
+    res.redirect('/main');
+});
+
 app.get('/main', (req, res) => {
-    sqlConn.query(`SELECT * FROM fillboard_user WHERE username = 'ian';`, function (err, qres, fields) {
+    sqlConn.query(`SELECT * FROM fillboard_user WHERE username = '${req.session.username}';`, function (err, qres, fields) {
         if(err){
             throw err; 
         }
         else {
             res.render('pages/main', {
-                query_data: qres // this is the data property to access
+                query_data: qres //this is the data property to access
             });
         }
     })
+});
+
+app.post('/main', (req,res) => {
+    sqlConn.query(`SELECT * FROM fillboard_user WHERE username = '${req.session.username}';`, function (err, qres, fields) {
+        if(err){
+            throw err; 
+        }
+        else {
+            req.session.qres=qres;
+        }
+    })
+    res.redirect('/main');
 });
 
 app.post('/post_text', urlParser,
@@ -81,7 +114,6 @@ app.post('/post_text', urlParser,
     }
 });
 
-//an example how to read data from the frontend and read them from the DB
 app.post('/signin', urlParser, 
     body('email').isEmail().withMessage('Must be email!'),
     body('password').notEmpty().withMessage('Password cannot be empty!')
@@ -97,6 +129,8 @@ app.post('/signin', urlParser,
             } else {
                 bcrypt.compare(req.body.password, qres[0]['password']).then((result) => {
                     if(result == true) {
+                        req.session.qres=qres;
+                        req.session.username=qres[0]['username'];
                         res.redirect('/main');
                     } else {
                         console.log('Wrong username and password combo!')
@@ -107,7 +141,11 @@ app.post('/signin', urlParser,
     }
 });
 
-//an example to store data from the frontend to the DB
+// lines 144-148 needed to receive logout req
+app.post('/logout', (req,res) => {
+    res.redirect('/signup');
+});
+
 app.post('/signup', urlParser,
     body('username').isLength({min:1, max: 45}).withMessage('Username can not be empty!'),
     body('email').isEmail().withMessage('Must be email!'),
@@ -115,12 +153,20 @@ app.post('/signup', urlParser,
     body('confpassword').notEmpty().custom((pwrd, {req}) => pwrd === req.body.password).withMessage('Both passwords must match!')
  ,(req, res) => {
     var errs = validationResult(req);
-    if(!errs.isEmpty()) {
-        return res.status(400).json({errs: errs.array()})
-    } else {
-        bcrypt.hash(req.body.password, 10, (err, hash) => {
-            sqlConn.query(`INSERT INTO fillboard_user (username, email, password)VALUES ('${req.body.username}', '${req.body.email}', '${hash}');`);
-        })
-        res.redirect('/signin')
+    if(req.body.signin){
+        res.redirect('/signin');
+    }else{
+        if(!errs.isEmpty()) {
+            return res.status(400).json({errs: errs.array()})
+        } else {
+            bcrypt.hash(req.body.password, 10, (err, hash) => {
+                sqlConn.query(`INSERT INTO fillboard_user (username, email, password)VALUES ('${req.body.username}', '${req.body.email}', '${hash}');`);
+            })
+            res.redirect('/signin')
+        }
     }
+});
+
+app.listen(3000, () => {
+    console.log('Server running on port 3000!');
 });

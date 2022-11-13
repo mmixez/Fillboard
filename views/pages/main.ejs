@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <meta name="viewport content =" width="device-width," initial-scale="1.0" />
+        <title>Main Dashboard</title>
         <link href= "/public/stylesheets/style.css" rel="stylesheet" type="text/css" />
     </head>
     <body>
@@ -8,12 +10,40 @@
         <p>This is the main page for <%= user_data[0]['username'] %> </p>
         <p>Email is: <%= user_data[0]['email'] %> </p> <br>
 
+        <!--
+            lines 17-24: user interaction for edit/signout functions
+            lines 24-29: display user data from DB, not needed for final but needed for test/base idea
+        -->
+
+        <form action="/editProfile" method="POST">
+            <input type="submit" value="Edit Profile"></button>
+        </form> 
+        <form action="/logout" method="POST">
+            <input type="submit" value="Sign Out"></button>
+        </form> 
+
+        <br>
+        <h3>Biography: </h3><p><%= user_data[0]['biography'] %></p><br>
+        <h3>Gender: </h3><p><%= user_data[0]['gender'] %></p><br>
+        <h3>Birthday: </h3><p><%= user_data[0]['birthday'] %></p><br>
+        
+        <h2>Create a post?</h2>
         <div class="post-input-container">
             <form action="/post_text" method="POST">
                 <label for="post_heading">Heading</label><br>
                 <input type="post_heading" name="post_heading" id="post_heading"><br>
                 <label for="post_text">Post Text</label><br>
                 <textarea rows="8" placeholder="Share your expierience!" type="post_text" name="post_text" id="post_text"></textarea><br>
+                <label for="post_heading">Post Title:</label><br>
+                <input type="post_heading" name="post_heading" id="post_heading">
+                
+                <br><br>
+                                
+                <label for="post_text">Post Description:</label><br>
+                <textarea rows="8" placeholder="What is this post about?" type="post_text" name="post_text" id="post_text"></textarea>
+                
+                <br><br>
+                
                 <input type="submit" value="Post">
             </form>
         </div>
@@ -25,5 +55,6 @@
             </div>
         <% } %>
 
+        
     </body>
 </html> 

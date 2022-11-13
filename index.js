@@ -7,28 +7,32 @@ const session = require('express-session');
 var app = express();
 var {body, validationResult} = require('express-validator');
 
+// sets up for css
 app.set('views', 'views');
 app.set('view engine', 'ejs');
+app.use('/public', express.static('public'));
+
 app.use(bp.json());
 
-// parameters for session (like a user session)
+// parameters for session
 app.use(session({
     secret: 'secret',
     resave: false,
     saveUnitialized: false
 }));
-app.use('/public', express.static('public'));
 
+// url parser used to decipher input from forms
 var urlParser = bp.urlencoded({extended: false});
 
-//This is the DB Connection - please connection here
+// db connection obj
 var sqlConn = mysql.createConnection({
     host: "localhost",
     user: "root",
-    password: "MySQLAdmin", //might have to change this to your pwd
+    password: "MySQLAdmin",
     database: "Fillboard"
 })
 
+// check db connection
 sqlConn.connect((err) => {
     if(err) console.log(err)
     else  {
@@ -48,19 +52,65 @@ app.get('/signin', (req, res) => {
     res.render('pages/login')
 });
 
-//This is hardcoded for ian username - the value needs to be forwarded in the url propably
-//See in main.ejs how the values are accessed from the query result
-app.get('/main', (req, res) => {
+app.get('/events', (req, res) => {
+    res.render('pages/events')
+});
+
+// lines 55-77 needed for edit/save profile req's
+app.get('/editProfile', (req, res) => {
     sqlConn.query(`SELECT * FROM fillboard_user WHERE username = '${req.session.username}';`, function (err, qres, fields) {
         if(err){
             throw err; 
         }
         else {
-            res.render('pages/main', {
+            res.render('pages/editProfile', {
                 query_data: qres //this is the data property to access
             });
         }
     })
+});
+
+app.post('/editProfile',(req, res) => {
+    res.redirect('/editProfile');
+});
+
+app.post('/saveProfile', urlParser, body('birthday'),body('gender'),body('biography'),(req, res) => {
+    sqlConn.query(`UPDATE fillboard_user SET birthday='${req.body.birthday}', gender='${req.body.gender}', biography='${req.body.biography}' WHERE username='${req.session.username}'`);
+    res.redirect('/main');
+});
+
+app.get('/main', (req, res) => {
+    sqlConn.query(`SELECT * FROM fillboard_user WHERE username = '${req.session.username}';`, function (err, qres_user, fields) {
+        if(err){
+            throw err; 
+        }
+        else {
+            sqlConn.query(`SELECT * FROM posts ORDER BY idposts DESC;`, function (err, qres_posts, fields) {
+                if(err){
+                    throw err; 
+                }
+                else {
+                    res.render('pages/main', {
+                        user_data: qres_user,
+                        post_data: qres_posts 
+                    });
+                }
+            })
+
+        }
+    })
+});
+
+app.post('/main', (req,res) => {
+    sqlConn.query(`SELECT * FROM fillboard_user WHERE username = '${req.session.username}';`, function (err, qres, fields) {
+        if(err){
+            throw err; 
+        }
+        else {
+            req.session.qres=qres;
+        }
+    })
+    res.redirect('/main');
 });
 
 app.post('/post_text', urlParser,
@@ -92,6 +142,7 @@ app.post('/signin', urlParser,
             } else {
                 bcrypt.compare(req.body.password, qres[0]['password']).then((result) => {
                     if(result == true) {
+                        req.session.qres=qres;
                         req.session.username=qres[0]['username'];
                         res.redirect('/main');
                     } else {
@@ -103,7 +154,11 @@ app.post('/signin', urlParser,
     }
 });
 
-//an examle to store data from the frontend to the DB
+// lines 144-148 needed to receive logout req
+app.post('/logout', (req,res) => {
+    res.redirect('/signup');
+});
+
 app.post('/signup', urlParser,
     body('username').isLength({min:1, max: 45}).withMessage('Username can not be empty!'),
     body('email').isEmail().withMessage('Must be email!'),

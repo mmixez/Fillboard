@@ -48,17 +48,29 @@ app.get('/signin', (req, res) => {
     res.render('pages/login')
 });
 
-//This is hardcoded for ian username - the value needs to be forwarded in the url propably
-//See in main.ejs how the values are accessed from the query result
+app.get('/events', (req, res) => {
+    res.render('pages/events')
+});
+
+
 app.get('/main', (req, res) => {
-    sqlConn.query(`SELECT * FROM fillboard_user WHERE username = '${req.session.username}';`, function (err, qres, fields) {
+    sqlConn.query(`SELECT * FROM fillboard_user WHERE username = '${req.session.username}';`, function (err, qres_user, fields) {
         if(err){
             throw err; 
         }
         else {
-            res.render('pages/main', {
-                query_data: qres //this is the data property to access
-            });
+            sqlConn.query(`SELECT * FROM posts ORDER BY idposts DESC;`, function (err, qres_posts, fields) {
+                if(err){
+                    throw err; 
+                }
+                else {
+                    res.render('pages/main', {
+                        user_data: qres_user,
+                        post_data: qres_posts 
+                    });
+                }
+            })
+
         }
     })
 });

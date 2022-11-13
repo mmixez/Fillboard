@@ -4,19 +4,26 @@
         <link href= "/public/stylesheets/style.css" rel="stylesheet" type="text/css" />
     </head>
     <body>
-        <h1>Welcome  <%= query_data[0]['username'] %> to your Dashboard</h1>
-        <p>This is the main page for <%= query_data[0]['username'] %> </p>
-        <p>Email is: <%= query_data[0]['email'] %> </p>
+        <h1>Welcome  <%= user_data[0]['username'] %> to your Dashboard</h1>
+        <p>This is the main page for <%= user_data[0]['username'] %> </p>
+        <p>Email is: <%= user_data[0]['email'] %> </p> <br>
 
         <div class="post-input-container">
             <form action="/post_text" method="POST">
                 <label for="post_heading">Heading</label><br>
                 <input type="post_heading" name="post_heading" id="post_heading"><br>
                 <label for="post_text">Post Text</label><br>
-                <textarea rows="8" placeholder="PLACEHOLDER" type="post_text" name="post_text" id="post_text"></textarea><br>
+                <textarea rows="8" placeholder="Share your expierience!" type="post_text" name="post_text" id="post_text"></textarea><br>
                 <input type="submit" value="Post">
             </form>
         </div>
 
+        <% for (var i = 0; i < 3; i++) { %>
+            <div class="post-input-container">
+                <label for="post_heading"><%= post_data[i]['heading'] %></label><br>
+                <textarea rows="8"type="post_text" name="post_text" id="post_text"><%= post_data[i]['post_text'] %></textarea><br>
+            </div>
+        <% } %>
+
     </body>
-</html>
+</html> 

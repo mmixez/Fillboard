@@ -1,21 +1,122 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <link href= "/public/stylesheets/style.css" rel="stylesheet" type="text/css" />
-    </head>
-    <body>
-        <h1>Welcome to Fillboard! Please sign up</h1>
-        <form action="/signup" method="POST">
-            <label for="username">Username</label><br>
-            <input type="username" name="username" id="username"><br>
-            <label for="email">Email</label><br>
-            <input type="email" name="email" id="email"><br>
-            <label for="password">Password</label><br>
-            <input type="password" name="password" id="password"><br>
-            <label for="confpassword">Confirm Password</label><br>
-            <input type="password" name="confpassword" id="confpassword"><br>
-            <input type="submit" name="signup" id="signup" value="Sign Up">
-            <input type="submit" name="signin" id="signin" value="Login">
-        </form>
-    </body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FILLBOARD</title>
+    <link
+      href="/public/stylesheets/style.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link rel="icon" href="/public/stylesheets/images/favicon.png" />
+  </head>
+  <body>
+    <div class="topcontainer">
+      <div class="container">
+        <div class="content">
+          <!-- locate logo on the left-->
+          <div class="left-content">
+            <div class="logo">
+              <img src="/public/stylesheets/images/logo3.png" alt="FillBoard" />
+            </div>
+            <h1 class="f-intro">
+              Welcome to Fillboard. Fill it with joy together where amazing
+              happens.
+            </h1>
+            <br /><br /><br /><br />
+          </div>
+          <!-- locate signup box on the right-->
+
+          <div class="right-content">
+            <br />
+            <div class="signup-box">
+              <!-- <form action="/signup" method="POST">
+              <label for="username">Username</label><br />
+              <input type="username" name="username" id="username" /><br />
+              <label for="email">Email</label><br />
+              <input type="email" name="email" id="email" /><br />
+              <label for="password">Password</label><br />
+              <input type="password" name="password" id="password" /><br />
+              <label for="confpassword">Confirm Password</label><br />
+              <input
+                type="password"
+                name="confpassword"
+                id="confpassword"
+              /><br /><br />
+              <input type="submit" name="signup" value=" Sign Up " />
+              <input type="submit" name="login" value=" Login " />
+            </form> -->
+              <form action="/signup" method="POST">
+                <div class="input-container">
+                  <input
+                    type="username"
+                    name="username"
+                    id="username"
+                    placeholder="User name"
+                  />
+                </div>
+
+                <div class="input-container">
+                  <input
+                    type="email"
+                    name="email"
+                    id="email"
+                    placeholder="Email address.."
+                  />
+                </div>
+
+                <div class="input-container">
+                  <input
+                    type="password"
+                    name="password"
+                    id="password"
+                    placeholder="Password"
+                  />
+                </div>
+
+                <div class="input-container">
+                  <input
+                    type="password"
+                    name="confpassword"
+                    id="confpassword"
+                    placeholder="Confirm password"
+                  />
+                </div>
+                <div class="login-btn-container">
+                  <div class="signup-btn">
+                    <input
+                      type="submit"
+                      style="background-color: hsl(351, 4%, 66%)"
+                      name="signup"
+                      value=" SIGN UP "
+                    />
+                  </div>
+                  <div class="signin-btn">
+                    <input
+                      type="submit"
+                      style="background-color: hsl(351, 4%, 66%)"
+                      name="signin"
+                      value=" SIGN IN "
+                    />
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- <footer class="signup-footer">
+      <p1 class="signup-footer1"> FillBoard 2022 </p1>
+    </footer> -->
+
+    <div id="wrapper">
+      <div>
+        <p1> FillBoard 2022</p1>
+      </div>
+    </div>
+    <footer></footer>
+  </body>
 </html>

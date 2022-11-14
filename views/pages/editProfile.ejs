@@ -1,18 +1,93 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <link href= "/public/stylesheets/style.css" rel="stylesheet" type="text/css" />
-    </head>
-    <body>
-        <h1>Edit Profile</h1>
-        <form action="/saveProfile", method="POST">
-            <label for="birthday">Your saved birthday is:</label><br>
-            <input type="birthday" name="birthday" id="birthday" value="<%= user_data[0]['birthday'] %>"><br><br>
-            <label for="gender">Your gender is:</label><br>
-            <input type="gender" name="gender" id="gender" value="<%= user_data[0]['gender'] %>"><br><br>
-            <label for="biography">Your biography is:</label><br>
-            <input type="biography" name="biography" id="biography" value="<%= user_data[0]['biography'] %>"><br><br>
-            <input type="submit" name="save" id="save" value="Save">
-        </form>
-    </body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EDIT PROFILE</title>
+    <link
+      href="/public/stylesheets/style.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link rel="icon" href="/public/stylesheets/images/favicon.png" />
+  </head>
+  <!-- <body>
+    <h1>Edit Profile</h1>
+    <form action="/saveProfile", method="POST">
+        <label for="birthday">Your saved birthday is:</label><br>
+        <input type="birthday" name="birthday" id="birthday" value="<%= user_data[0]['birthday'] %>"><br><br>
+        <label for="gender">Your gender is:</label><br>
+        <input type="gender" name="gender" id="gender" value="<%= user_data[0]['gender'] %>"><br><br>
+        <label for="biography">Your biography is:</label><br>
+        <input type="biography" name="biography" id="biography" value="<%= user_data[0]['biography'] %>"><br><br>
+        <input type="submit" name="save" id="save" value="Save">
+    </form>
+</body> -->
+
+  <body>
+    <div class="edit-profile-container">
+      <div class="edit-profile-content">
+        <div class="edit-profile-left-content">
+          <h1 class="edit-profile-intro">EDIT PROFILE</h1>
+
+          <br /><br /><br />
+        </div>
+
+        <div class="edit-profile-right-content">
+          <div class="profile-edit-box">
+            <form action="/saveProfile" method="POST">
+              <div class="pf-input-container">
+                <label for="birthday">BIRTHDAY:</label><br />
+                <input
+                  type="birthday"
+                  name="birthday"
+                  id="birthday"
+                  value="<%= user_data[0]['birthday'] %>"
+                />
+              </div>
+              <br />
+
+              <div class="pf-input-container">
+                <label for="gender">GENDER:</label><br />
+                <input
+                  type="gender"
+                  name="gender"
+                  id="gender"
+                  value="<%= user_data[0]['gender'] %>"
+                />
+              </div>
+              <br />
+
+              <div class="pfb-input-container">
+                <label for="biography">ABOUT ME:</label><br />
+                <input
+                  type="biography"
+                  name="biography"
+                  id="biography"
+                  value="<%= user_data[0]['biography'] %>"
+                />
+              </div>
+              <br />
+
+              <div class="save-btn-container">
+                <div class="save-btn">
+                  <input
+                    type="submit"
+                    style="background-color: hsl(351, 4%, 66%)"
+                    name="save"
+                    value=" SAVE "
+                  />
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer class="signup-footer">
+      <p1 class="signup-footer1"> FillBoard 2022 </p1>
+    </footer>
+  </body>
 </html>

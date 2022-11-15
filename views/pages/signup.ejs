@@ -1,21 +1,84 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <link href= "/public/stylesheets/style.css" rel="stylesheet" type="text/css" />
-    </head>
-    <body>
-        <h1>Welcome to Fillboard! Please sign up</h1>
-        <form action="/signup" method="POST">
-            <label for="username">Username</label><br>
-            <input type="username" name="username" id="username"><br>
-            <label for="email">Email</label><br>
-            <input type="email" name="email" id="email"><br>
-            <label for="password">Password</label><br>
-            <input type="password" name="password" id="password"><br>
-            <label for="confpassword">Confirm Password</label><br>
-            <input type="password" name="confpassword" id="confpassword"><br><br>
-            <input type="submit" name="signup" value="Sign Up">
-            <input type="submit" name="signin" value="Login">
-        </form>
-    </body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FILLBOARD</title>
+    <link
+      href="/public/stylesheets/style.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <div class="content">
+        <div class="left-content">
+          <div class="logo">
+            <img src="/public/stylesheets/images/logo.png" alt="FillBoard" />
+          </div>
+          <h1 class="f-intro">Welcome to Fillboard!! Please sign up</h1>
+        </div>
+
+        <div class="right-content">
+          <div class="signup-box">
+            <!-- <form action="/signup" method="POST">
+              
+              <input type="username" name="username" id="username" /><br />
+              
+              <input type="email" name="email" id="email" /><br />
+              
+              <input type="password" name="password" id="password" /><br />
+              <label for="confpassword">Confirm Password</label><br />
+              <input type="password" name="confpassword" id="confpassword"
+              /><br /><br />
+              <input type="submit" name="signup" value="Sign Up" />
+              <input type="submit" name="login" value="Login" />
+            </form> -->
+            <form action="/signup" method="POST">
+              <div class="input-container">
+                <input
+                  type="username"
+                  name="username"
+                  id="username"
+                  placeholder="User name"
+                />
+              </div>
+
+              <div class="input-container">
+                <input
+                  type="email"
+                  name="email"
+                  id="email"
+                  placeholder="Email address.."
+                />
+              </div>
+
+              <div class="input-container">
+                <input
+                  type="password"
+                  name="password"
+                  id="password"
+                  placeholder="Password..."
+                />
+              </div>
+
+              <div class="input-container">
+                <input
+                  type="confpassword"
+                  name="confpassword"
+                  id="confpassword"
+                  placeholder="Confirm password..."
+                />
+              </div>
+
+              <input type="submit" name="signup" value="Sign Up" />
+              <input type="submit" name="signin" value="Login" />
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
 </html>

@@ -1,13 +1,108 @@
 *{
     margin: 0;
     padding: 0;
-    font-family: 'poppins', sans-serif;
+    font-family: 'Open Sans', sans-serif;
     }
 
     body{
-        background: red;
+        background: rgb(80, 75, 75);
+    }
+    /*
+    div {
+        width: 500px;
+        margin: auto;
+      }
+      */
+
+    .container {
+        background: rgb(153, 145, 145);
+        padding-top: 72px;
+        padding-bottom: 112px;
+        display: flex;
+
+    }
+    .content{
+        width: 980px;
+       
+        margin: 20px auto;
+    } 
+    
+    .content > div {
+        display: inline-block;
+    }
+    
+    .logo > img {
+        margin-top: -20px;
+        margin-left: -50px;
+    }
+
+    .f-intro {
         margin-top: 10px;
-        margin-bottom: 10px;
-        margin-right: 20px;
-        margin-left: 20px;
+        font-size: 28px;
+        font-weight: 530;   
+        margin-left: -40px;
+
+    }
+   
+
+    .left-content{
+        width: 580px;
+        padding-right: 32px;
+        box-sizing: border-box;
+        
+
+    }
+
+    .right-content{
+            
+            width: 250px;
+            margin-bottom:-0px;
+
+    }
+
+/* 
+    .signup-box{
+        background: white;
+        padding-top: 30px;
+        padding-left: 20%;
+        padding-bottom: 30px;
+        width: 200px;
+        height: 280px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px 1px grey;
+        margin-top: 0;
+    } */
+        
+    .signup-box {
+        background: white;
+        width: 396px;
+        border-radius: 5px;
+        box-shadow: 0 0 5px 10px grey;
+        padding: 5px 10px;
+        box-sizing: border-box;
+    }
+
+    .input-container > input[type=username],
+    .input-container > input[type=email],
+    .input-container > input[type=password],
+    .input-container > input[type=confpassword] {
+        width: 100%;
+        padding: 14px 16px;
+        box-sizing: border-box;
+        outline: none;
+        
+        border: 1px solid rgb(226, 220, 220);
+        border-radius: 6px;
+        margin: 8px 0;
+        font-size: 14px;
+    }
+
+    .input-container > input[type=username]:focus,
+    .input-container > input[type=email]:focus,
+    .input-container > input[type=password]:focus,
+    .input-container > input[type=confpassword]:focus
+     {
+        border: 1.5px solid rgb(79, 79, 218);
+        box-shadow: 0 0 0 2px  rgb(226, 220, 220);
+
     }

@@ -7,6 +7,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>FILLBOARD MAIN</title>
         <link href="/public/stylesheets/style.css" rel="stylesheet" type="text/css" />
+        <link href="/public/stylesheets/hover_button.css" rel="stylesheet" type="text/css" />
         <link rel="icon" href="/public/stylesheets/images/favicon.png">
     </head>
 
@@ -27,14 +28,33 @@
                         <input type="text" placeholder="Search Event">
                     </div>
                 </div>
-
+                <div class="dropdown">
+                    <button class="dropbtn">Menu</button>
+                    <div class="dropdown-content">
+                        <form action="/main_to_profile" method="POST">
+                            <a>
+                                <div class="pf-edit-btn">
+                                    <input type="submit" style="background-color: hsl(351, 4%, 66%)"
+                                        value="Show Profile"></button>
+                                </div>
+                            </a>
+                        </form>
+                        <form action="/logout" method="POST">
+                            <a>
+                                <div class="pf-signout-btn">
+                                    <input type="submit" style="background-color: hsl(351, 4%, 66%)"
+                                        value="Sign Out"></button>
+                                </div>
+                            </a>
+                        </form>
+                    </div>
+                </div>
             </nav>
         </div>
         <div class="m-topcontainer">
             <div class="main-container">
                 <!-- left column-->
                 <div class="main-left-col">
-                    <h1>left - 4 testing </h1>
                     <div class="main-profile-box">
                         <div class="main-left-col-title">
                         </div>
@@ -53,7 +73,7 @@
                             <p><%= user_data[0]['gender'] %></p><br>
                             <h4>BIRTHDAY: </h5>
                             <p><%= user_data[0]['birthday'] %></p><br>
-                            <div class="pf-box-container">
+                            <!-- <div class="pf-box-container">
                                 <form action="/main_to_profile" method="POST">
                                     <div class="pf-edit-btn">
                                         <input type="submit" style="background-color: hsl(351, 4%, 66%)"
@@ -66,13 +86,13 @@
                                             value="Sign Out"></button>
                                     </div>
                                 </form>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                 </div>
                 <!-- center column-->
                 <div class="main-center-col">
-                    <h1>center col - 4 testing</h1>
+
                     <div class="main-center-box">
                         <div class="write-post-container">
                             <div class="post-msg">
@@ -118,21 +138,28 @@
 
                 <!-- right column-->
                 <div class="main-right-col">
-
-                    <h1>right col - 4 testing</h1>
+                    <div class="dropdown">
+                        <button class="dropbtn">Categories</button>
+                        <div class="dropdown-content">
+                            <% for (var i=0; i < category_data.length; i++) { %>
+                                <a href="#"><%= category_data[i]['category_name'] %></a>
+                            <% } %>
+                        </div>
+                    </div>
+                    <br>
                     <div class="main-right-box">
-                        <!-- dummy writings -->
-                        <p>
-                            It is a long established fact that a reader will be distracted by the
-                            readable content of a page when looking at its layout. The point of
-                            using Lorem Ipsum is that it has a more-or-less normal distribution of
-                            letters, as opposed to using 'Content here, content here', making it
-                            look like readable English. Many desktop publishing packages and web
-                            page editors now use Lorem Ipsum as their default model text, and a
-                            search for 'lorem ipsum' will uncover many web sites still in their
-                            infancy. Various versions have evolved over the years, sometimes by
-                            accident, sometimes on purpose (injected humour and the like).
-                        </p>
+                        <% for (var i=0; i < event_data.length; i++) { %>
+                            <div class="main-center-box">
+                                <div class="write-post-container">
+                                    <div class="post-input-container">
+                                        <div class="post-msg-heading">
+                                            <label for="post_heading"><%= event_data[i]['event_name'] %></label><br>
+                                            <label for="post_heading"><%= event_data[i]['description'] %></label><br>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <% } %>
                     </div>
                 </div>
             </div>

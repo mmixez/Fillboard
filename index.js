@@ -94,13 +94,28 @@ app.get('/main', (req, res) => {
                     throw err; 
                 }
                 else {
-                    res.render('pages/main', {
-                        user_data: qres_user,
-                        post_data: qres_posts 
-                    });
+                    sqlConn.query(`SELECT * FROM category;`, function (err, qres_categories, fields) {
+                        if(err){
+                            throw err; 
+                        }
+                        else {
+                            sqlConn.query(`SELECT * FROM event;`, function (err, qres_events, fields) {
+                                if(err){
+                                    throw err; 
+                                }
+                                else {
+                                    res.render('pages/main', {
+                                        user_data: qres_user,
+                                        post_data: qres_posts,
+                                        category_data: qres_categories,
+                                        event_data: qres_events
+                                    });
+                                }
+                            })
+                        }
+                    })
                 }
             })
-
         }
     })
 });

@@ -89,7 +89,8 @@ app.get('/main', (req, res) => {
             throw err; 
         }
         else {
-            sqlConn.query(`SELECT * FROM posts ORDER BY idposts DESC;`, function (err, qres_posts, fields) {
+            sqlConn.query(`SELECT * FROM posts p, event e WHERE p.event_id = e.id_event ORDER BY p.idposts DESC;`, 
+            function (err, qres_posts, fields) {
                 if(err){
                     throw err; 
                 }

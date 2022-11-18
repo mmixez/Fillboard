@@ -130,6 +130,10 @@
                                     <textarea class="textarea" rows="6" cols="70" type="post_text" name="post_text" id="post_text">
                                         <%= post_data[i]['post_text'] %>
                                     </textarea>
+                                    <div class="post-msg-heading">
+                                        <label>Event: <%= post_data[i]['event_name'] %></label><br>
+                                        <label>Date: <%= post_data[i]['begin_date'] %> - <%= post_data[i]['end_date'] %></label><br>
+                                    </div>
                                 </div>
                             </div>
                         </div>

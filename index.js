@@ -56,27 +56,31 @@ app.get('/events', (req, res) => {
     res.render('pages/events')
 });
 
-// lines 55-77 needed for edit/save profile req's
-app.get('/editProfile', (req, res) => {
-    sqlConn.query(`SELECT * FROM fillboard_user WHERE username = '${req.session.username}';`, function (err, qres, fields) {
+app.get('/profile', (req, res) => {
+    sqlConn.query(`SELECT * FROM fillboard_user WHERE username = '${req.session.username}';`, function (err, qres_user, fields) {
         if(err){
             throw err; 
         }
         else {
-            res.render('pages/editProfile', {
-                query_data: qres //this is the data property to access
+            res.render('pages/profile', {
+                user_data: qres_user 
             });
         }
     })
 });
 
-app.post('/editProfile',(req, res) => {
-    res.redirect('/editProfile');
-});
-
-app.post('/saveProfile', urlParser, body('birthday'),body('gender'),body('biography'),(req, res) => {
-    sqlConn.query(`UPDATE fillboard_user SET birthday='${req.body.birthday}', gender='${req.body.gender}', biography='${req.body.biography}' WHERE username='${req.session.username}'`);
-    res.redirect('/main');
+// lines 55-77 needed for edit/save profile req's
+app.get('/editProfile', (req, res) => {
+    sqlConn.query(`SELECT * FROM fillboard_user WHERE username = '${req.session.username}';`, function (err, qres_user, fields) {
+        if(err){
+            throw err; 
+        }
+        else {
+            res.render('pages/editProfile', {
+                user_data: qres_user //this is the data property to access
+            });
+        }
+    })
 });
 
 app.get('/main', (req, res) => {
@@ -90,15 +94,47 @@ app.get('/main', (req, res) => {
                     throw err; 
                 }
                 else {
-                    res.render('pages/main', {
-                        user_data: qres_user,
-                        post_data: qres_posts 
-                    });
+                    sqlConn.query(`SELECT * FROM category;`, function (err, qres_categories, fields) {
+                        if(err){
+                            throw err; 
+                        }
+                        else {
+                            sqlConn.query(`SELECT * FROM event;`, function (err, qres_events, fields) {
+                                if(err){
+                                    throw err; 
+                                }
+                                else {
+                                    res.render('pages/main', {
+                                        user_data: qres_user,
+                                        post_data: qres_posts,
+                                        category_data: qres_categories,
+                                        event_data: qres_events
+                                    });
+                                }
+                            })
+                        }
+                    })
                 }
             })
-
         }
     })
+});
+
+app.post('/main_to_profile',(req, res) => {
+    res.redirect('/profile');
+});
+
+app.post('/profile_to_main', (req, res) => {
+    res.redirect('/main');
+});
+
+app.post('/editProfile', (req, res) => {
+    res.redirect('/editProfile');
+});
+
+app.post('/saveProfile', urlParser, body('birthday'),body('gender'),body('biography'),(req, res) => {
+    sqlConn.query(`UPDATE fillboard_user SET birthday="${req.body.birthday}", gender="${req.body.gender}", biography="${req.body.biography}" WHERE username="${req.session.username}";`);
+    res.redirect('/profile');
 });
 
 app.post('/main', (req,res) => {
@@ -121,10 +157,13 @@ app.post('/post_text', urlParser,
     if(!errs.isEmpty()) {
         return res.status(400).json({errs: errs.array()})
     } else {
-        // event id is hardcoded for now !!! TODO: change 
         sqlConn.query(`INSERT INTO posts (heading, post_text, event_id) VALUES ('${req.body.post_heading}', '${req.body.post_text}', 3);`);
         res.redirect('/main')
     }
+});
+
+app.post('/post_img',urlParser,(req, res) => {
+    alert("Test");
 });
 
 app.post('/signin', urlParser, 
@@ -180,6 +219,6 @@ app.post('/signup', urlParser,
     }
 });
 
-app.listen(3300, () => {
+app.listen(3000, () => {
     console.log('Server running on port 3000!');
 });

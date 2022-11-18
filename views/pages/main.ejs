@@ -1,60 +1,237 @@
 <!DOCTYPE html>
 <html>
+
     <head>
-        <meta name="viewport content =" width="device-width," initial-scale="1.0" />
-        <title>Main Dashboard</title>
-        <link href= "/public/stylesheets/style.css" rel="stylesheet" type="text/css" />
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>FILLBOARD MAIN</title>
+        <link href="/public/stylesheets/style.css" rel="stylesheet" type="text/css" />
+        <link rel="icon" href="/public/stylesheets/images/favicon.png">
     </head>
+
     <body>
-        <h1>Welcome  <%= user_data[0]['username'] %> to your Dashboard</h1>
-        <p>This is the main page for <%= user_data[0]['username'] %> </p>
-        <p>Email is: <%= user_data[0]['email'] %> </p> <br>
+        <div class="main-header">
+            <nav>
+                <div class="nav-left">
+                    <img src="/public/stylesheets/images/logo3.png" class="main-logo" />
+                    <ul>
+                        <li><img src="/public/stylesheets/images/inbox.png"></li>
+                        <li><img src="/public/stylesheets/images/inbox.png"></li>
 
-        <!--
-            lines 17-24: user interaction for edit/signout functions
-            lines 24-29: display user data from DB, not needed for final but needed for test/base idea
-        -->
+                    </ul>
+                </div>
 
-        <form action="/editProfile" method="POST">
-            <input type="submit" value="Edit Profile"></button>
-        </form> 
-        <form action="/logout" method="POST">
-            <input type="submit" value="Sign Out"></button>
-        </form> 
+                <div class="nav-center">
 
-        <br>
-        <h3>Biography: </h3><p><%= user_data[0]['biography'] %></p><br>
-        <h3>Gender: </h3><p><%= user_data[0]['gender'] %></p><br>
-        <h3>Birthday: </h3><p><%= user_data[0]['birthday'] %></p><br>
-        
-        <h2>Create a post?</h2>
-        <div class="post-input-container">
-            <form action="/post_text" method="POST">
-                <label for="post_heading">Heading</label><br>
-                <input type="post_heading" name="post_heading" id="post_heading"><br>
-                <label for="post_text">Post Text</label><br>
-                <textarea rows="8" placeholder="Share your expierience!" type="post_text" name="post_text" id="post_text"></textarea><br>
-                <label for="post_heading">Post Title:</label><br>
-                <input type="post_heading" name="post_heading" id="post_heading">
-                
-                <br><br>
+                    <div class="search-box">
+                        <img src="/public/stylesheets/images/search.png" class="search" />
+                        <input type="text" placeholder="Search Event, people">
+                    </div>
+                </div>
+                <div class="nav-right">
+
+                    
+                    <!-- <div class="main-top-pf-btn-container">
+
+                        <form action="/main_to_profile" method="POST">
+                        <div class="main-pf-edit-btn">
+                          <input
+                            type="submit"
+                            style="background-color: hsl(351, 4%, 66%)"
+                            
+                            value=" My Profile "
+                          />
+                        </div>
+                        </form>
+
+                        <form action="/logout" method="POST">
+                            <div class="main-top-singout-btn">
+                            <input
+                                type="submit"
+                                style="background-color: hsl(351, 4%, 66%)"
                                 
-                <label for="post_text">Post Description:</label><br>
-                <textarea rows="8" placeholder="What is this post about?" type="post_text" name="post_text" id="post_text"></textarea>
-                
-                <br><br>
-                
-                <input type="submit" value="Post">
-            </form>
+                                value=" Sign Out "
+                            />
+                            </div>
+
+                        </form>
+                    </div> -->
+
+
+
+
+
+
+
+                    <ul>
+                         <li>
+                            <form action="/main_to_profile" method="POST">
+                                
+                                
+                                <div class="main-pf-edit-btn">
+                                    <input type="submit" style="background-color: hsl(351, 4%, 66%)"
+                                        value="My Profile"></button>
+                                    
+                                </div>
+                            
+                            </form>
+                        </li>
+                        <li>
+                            <form action="/logout" method="POST">
+                            
+                                <div class="main-top-signout-btn">
+                                    <input type="submit" style="background-color: hsl(351, 4%, 66%)"
+                                        value="Sign Out"></button>
+                                </div>
+                                
+                                
+                                    
+                            </form>
+                        </li>
+                   
+                    </ul>
+                </div>
+
+            </nav>
         </div>
+       
+            <div class="main-container">
+                <!-- left column-->
+                <div class="main-left-col">
+                    
+                    <div class="main-profile-box">
+                        <div class="main-left-col-title">
+                        </div>
+                        <div class="welcome-msg">
 
-        <% for (var i = 0; i < 3; i++) { %>
-            <div class="post-input-container">
-                <label for="post_heading"><%= post_data[i]['heading'] %></label><br>
-                <textarea rows="8"type="post_text" name="post_text" id="post_text"><%= post_data[i]['post_text'] %></textarea><br>
+                            <p>WELCOME <%= user_data[0]['username'] %> !</p><br>
+                            <p> I knew you were coming.</p>
+                            <p>Loggd In Account: <%= user_data[0]['email'] %>
+                            </p><br>
+
+                            <img src="/public/stylesheets/images/pf1.jpg" class="main-pf" /><br><br>
+
+                            <h4>ABOUT ME: </h5>
+                            <p><%= user_data[0]['biography'] %></p><br>
+                            <h4>GENDER: </h5>
+                            <p><%= user_data[0]['gender'] %></p><br>
+                            <h4>BIRTHDAY: </h5>
+                            <p><%= user_data[0]['birthday'] %></p><br>
+                            <!-- <div class="pf-box-container">
+                                <form action="/main_to_profile" method="POST">
+                                    <div class="pf-mypf-btn">
+                                        <input type="submit" style="background-color: hsl(351, 4%, 66%)"
+                                            value="My Profile"></button>
+                                    </div>
+                                </form>
+                                <form action="/logout" method="POST">
+                                    <div class="pf-signout-btn">
+                                        <input type="submit" style="background-color: hsl(351, 4%, 66%)"
+                                            value="Sign Out"></button>
+                                    </div>
+                                </form>
+                            </div> -->
+                        </div>
+                    </div>
+                </div>
+                <!-- center column-->
+                <div class="main-center-col">
+                   
+                    <div class="main-center-box">
+                        <div class="write-post-container">
+                            <div class="user-pf-post">
+                                <img src="/public/stylesheets/images/pf1.jpg" class="user-pf-post-img" />
+
+                            </div>
+                            <div class="post-msg">
+                                <p><%= user_data[0]['username'] %> Post your event ! </p><br>
+                            </div>
+                            <div class="post-input-container">
+
+                                <div class="post-btn-container">
+                                    <form action="/post_text" method="POST">
+                                        <div class="post-msg-heading">
+                                            <label for="post_heading">TITLE</label><br>
+                                        </div>
+                                        <textarea class="textarea" rows="2" cols="70" placeholder="TITLE"
+                                            type="post_heading" name="post_heading" id="post_heading"></textarea><br>
+                                        <div class="post-msg-text">
+                                            <label for="post_text">Post Text</label><br>
+                                        </div>
+                                        <textarea class="textarea" rows="6" cols="70" placeholder="WHATS IN YOUR MIND?"
+                                            type="post_text" name="post_text" id="post_text"></textarea><br>
+                                        
+                                            <div class="post-btn">
+                                                <input type="submit" style="background-color: hsl(351, 4%, 66%)"
+                                                    value="Post" />
+                                            </div>
+                                    
+                                    </form>
+                                    <form action="/post_img" method="POST" enctype="multipart/form-data">
+                                        <div class="post-img-up-btn">
+                                            <input type="file" accept="image/png, image/gif, image/jpeg" name="fileToUpload" id="fileToUpload">
+                                            <input type="submit" style="background-color: hsl(351, 4%, 66%)"
+                                            value="UPLOAD IMG" /> 
+                                        </div>
+
+                                    </form>
+                                 </div>
+
+
+
+
+
+
+                            </div>
+                        </div>
+                    </div>
+                    <% var rowSize = post_data.length;
+                    for (var i=0; i < rowSize; i++) { %>
+                        <div class="main-center-box">
+                            <div class="write-post-container">
+                                <div class="post-input-container">
+                                    <div class="post-msg-heading">
+                                        <div class="post-img-info">
+                                        <%= user_data[0]['username'] %>
+                                    </div> 
+                                        <label for="post_heading"><%= post_data[i]['heading'] %></label><br>
+                                    </div>
+                                    <textarea class="textarea" rows="6" cols="70" type="post_text" name="post_text" id="post_text">
+                                        <%= post_data[i]['post_text'] %>
+                                    </textarea>
+                                </div>
+                            </div>
+                        </div>
+                    <% } %>
+                </div>
+
+                <!-- right column-->
+                <div class="main-right-col">
+
+                   
+                    <div class="main-right-box">
+                        <!-- dummy writings -->
+                        <p>
+                            It is a long established fact that a reader will be distracted by the
+                            readable content of a page when looking at its layout. The point of
+                            using Lorem Ipsum is that it has a more-or-less normal distribution of
+                            letters, as opposed to using 'Content here, content here', making it
+                            look like readable English. Many desktop publishing packages and web
+                            page editors now use Lorem Ipsum as their default model text, and a
+                            search for 'lorem ipsum' will uncover many web sites still in their
+                            infancy. Various versions have evolved over the years, sometimes by
+                            accident, sometimes on purpose (injected humour and the like).
+                        </p>
+                    </div>
+                </div>
             </div>
-        <% } %>
-
         
+        <div id='wrapper'>
+            <div>
+                <p1> FillBoard 2022</p1>
+            </div>
+        </div>
+        <footer></footer>
     </body>
-</html> 
+</html>

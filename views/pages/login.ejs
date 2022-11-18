@@ -1,16 +1,69 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <link href= "/public/stylesheets/style.css" rel="stylesheet" type="text/css" />
-    </head>
-    <body>
-        <h1>Login Page!</h1>
-        <form action="/signin", method="POST">
-            <label for="email">Email</label><br>
-            <input type="email" name="email" id="email"><br>
-            <label for="password">Password</label><br>
-            <input type="password" name="password" id="password"><br>
-            <input type="submit" value="Sign In">
-        </form>
-    </body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FILLBOARD LOGIN</title>
+    <link
+      href="/public/stylesheets/style.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link rel="icon" href="/public/stylesheets/images/favicon.png" />
+  </head>
+  <body>
+    <div class="topcontainer">
+      <div class="si-container">
+        <div class="si-content">
+          <div class="si-left-content">
+            <h1 class="si-f-intro">Already a member?</h1>
+            <h1 class="si-f-intro">Come on in, it's cold outside</h1>
+            <br /><br /><br /><br />
+          </div>
+
+          <div class="si-right-content">
+            <br />
+            <div class="signin-box">
+              <form action="/signin" method="POST">
+                <div class="input-container">
+                  <input
+                    type="email"
+                    name="email"
+                    id="email"
+                    placeholder="Email address.."
+                  />
+                </div>
+
+                <div class="input-container">
+                  <input
+                    type="password"
+                    name="password"
+                    id="password"
+                    placeholder="Password"
+                  />
+                </div>
+
+                <div class="login-btn-container">
+                  <div class="signin-btn">
+                    <input
+                      type="submit"
+                      style="background-color: hsl(351, 4%, 66%)"
+                      name="signin"
+                      value=" SIGN IN "
+                    />
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="wrapper">
+      <p1>FillBoard 2022</p1>
+    </div>
+    <footer></footer>
+  </body>
 </html>

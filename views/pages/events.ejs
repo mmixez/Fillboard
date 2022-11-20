@@ -1,10 +1,111 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <link href= "/public/stylesheets/style.css" rel="stylesheet" type="text/css" />
-    </head>
-    <body>
-        <h1>Event Page</h1>
 
-    </body>
-</html> 
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FILLBOARD MAIN</title>
+    <link href="/public/stylesheets/style.css" rel="stylesheet" type="text/css" />
+    <link href="/public/stylesheets/event_page.css" rel="stylesheet" type="text/css" />
+    <link rel="icon" href="/public/stylesheets/images/favicon.png">
+
+    <style type="text/css">
+        * {margin: 0; padding: 0;}
+        #left, #middle, #right {display: inline-block; *display: inline; zoom: 1; vertical-align: top; font-size: 12px;}
+        </style>
+</head>
+
+<body>
+    <div class="main-header">
+        <nav>
+            <div class="nav-left">
+                <img src="/public/stylesheets/images/logo3.png" class="main-logo" />
+            </div>
+            <div class="nav-right">
+            </div>
+        </nav>
+    </div>
+    <section class="event-filter-section">
+        <form action="/search_for_events" method="POST">
+            <div class="search-box">
+                <img src="/public/stylesheets/images/search.png" class="search" />
+                <input type="text" name="eventname" id="eventname" placeholder="Search Event">
+            </div>
+            <br>
+            <div class="dropdown">
+                <button onclick="myFunction()" class="dropbtn">Country</button>
+                <div id="myDropdown" class="dropdown-content">
+                    <input type="text" placeholder="Search.." id="myInput" onkeyup="filterFunction()">
+                    <% for (var i=0; i < country_data.length; i++) { %>
+                        <a><%= country_data[i]['name'] %></a>
+                    <% } %>
+                </div>
+              </div>
+            <br>
+            <input list="countries" name="country" id="country" placeholder="Country">
+            <datalist id="countries">
+                <% for (var i=0; i < country_data.length; i++) { %>
+                    <a></a>
+                    <option value="<%= country_data[i]['name'] %>">
+                <% } %>
+            </datalist>
+            <br>
+            <input name="state" id="state" placeholder="State" />
+            <br>
+            <input name="city" id="city" placeholder="City" />
+            <br>
+            <input name="category" id="category" placeholder="Category" />
+            <br><br>
+            <div id="container">
+                <div id="left"><label>Date:</label></div>
+                <div id="middle"><input name="start-date" id="start-date"/></div> - 
+                <div id="right"><input name="end-date" id="end-date"/></div>
+            </div>
+            <br>
+            <div class="pf-edit-btn">
+                <input type="submit" style="background-color: hsl(351, 4%, 66%)"
+                    value="Search"></button>
+            </div>
+        </form>
+        <script>
+            /* When the user clicks on the button,
+            toggle between hiding and showing the dropdown content */
+            function myFunction() {
+              document.getElementById("myDropdown").classList.toggle("show");
+            }
+            
+            function filterFunction() {
+              var input, filter, ul, li, a, i;
+              input = document.getElementById("myInput");
+              filter = input.value.toUpperCase();
+              div = document.getElementById("myDropdown");
+              a = div.getElementsByTagName("a");
+              for (i = 0; i < a.length; i++) {
+                txtValue = a[i].textContent || a[i].innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                  a[i].style.display = "";
+                } else {
+                  a[i].style.display = "none";
+                }
+              }
+            }
+            </script>
+    </section>
+    <section>
+        <p>Events found: <%= event_data.length %></p>
+    </section>
+    <section>
+        <% for (var i=0; i < event_data.length; i++) { %>
+            <p>Eventname: <%= event_data[i]['event_name'] %></p>
+        <% } %>
+    </section>
+    <div id='wrapper'>
+        <div>
+            <p1> FillBoard 2022</p1>
+        </div>
+    </div>
+    <footer></footer>
+</body>
+
+</html>

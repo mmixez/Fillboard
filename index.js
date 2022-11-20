@@ -52,9 +52,64 @@ app.get('/signin', (req, res) => {
     res.render('pages/login')
 });
 
+//----------------------------------------- EVENT PAGE -----------------------------------------
+
 app.get('/events', (req, res) => {
-    res.render('pages/events')
+    sqlConn.query(`SELECT * FROM event;`, function (err, qres_event, fields) {
+        if(err){
+            throw err; 
+        }
+        else {
+            sqlConn.query(`SELECT * FROM country ORDER BY name ASC;`, function (err, qres_country, fields) {
+                if(err){
+                    throw err; 
+                }
+                else {
+                    res.render('pages/events', {
+                        event_data: qres_event,
+                        country_data: qres_country 
+                    });
+                }
+            })
+        }
+    })
 });
+
+app.get('/events_search', (req, res) => {
+    res.render('pages/events', {
+        event_data: req.session.qres_event,
+        country_data: req.session.qres_country
+    })
+});
+
+app.post('/search_for_events', urlParser,
+    body('eventname'),
+    body('country'),
+    body('city'),
+    body('category'),
+    body('start-date'),
+    body('end-date'),
+    (req, res) => {
+    sqlConn.query(`SELECT * FROM event WHERE event_name = "${req.body.eventname}";`, function (err, qres_event, fields) {
+        if(err){
+            throw err; 
+        }
+        else {
+            sqlConn.query(`SELECT * FROM country ORDER BY name ASC;`, function (err, qres_country, fields) {
+                if(err){
+                    throw err; 
+                }
+                else {
+                    req.session.qres_event = qres_event;
+                    req.session.qres_country = qres_country;
+                    res.redirect('/events_search');
+                }
+            })
+        }
+    })
+});
+
+//----------------------------------------- PROFILE PAGE -----------------------------------------
 
 app.get('/profile', (req, res) => {
     sqlConn.query(`SELECT * FROM fillboard_user WHERE username = '${req.session.username}';`, function (err, qres_user, fields) {
@@ -119,6 +174,11 @@ app.get('/main', (req, res) => {
             })
         }
     })
+});
+
+
+app.post('/main_to_event',(req, res) => {
+    res.redirect('/events');
 });
 
 app.post('/main_to_profile',(req, res) => {

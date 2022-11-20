@@ -112,8 +112,7 @@
                                         type="post_text" name="post_text" id="post_text"></textarea><br>
                                     <div class="post-btn-container">
                                         <div class="post-btn">
-                                            <input type="submit" style="background-color: hsl(351, 4%, 66%)"
-                                                value="Post" />
+                                            <input type="submit" style="background-color: hsl(351, 4%, 66%)" value="Post" />
                                         </div>
                                     </div>
                                 </form>
@@ -150,6 +149,10 @@
                             <% } %>
                         </div>
                     </div>
+                    <br><br>
+                    <form action="/main_to_event" method="POST">
+                        <input type="submit" style="background-color: hsl(351, 4%, 66%)" value="All Events" />
+                    </form>
                     <br>
                     <div class="main-right-box">
                         <% for (var i=0; i < event_data.length; i++) { %>

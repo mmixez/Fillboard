@@ -223,6 +223,10 @@ app.post('/post_text', urlParser,
     }
 });
 
+app.post('/post_img',urlParser,(req, res) => {
+    alert("Test");
+});
+
 app.post('/signin', urlParser, 
     body('email').isEmail().withMessage('Must be email!'),
     body('password').notEmpty().withMessage('Password cannot be empty!')

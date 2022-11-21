@@ -22,36 +22,43 @@
 
                     </ul>
                 </div>
-                <div class="nav-right">
+
+                <div class="nav-center">
+
                     <div class="search-box">
                         <img src="/public/stylesheets/images/search.png" class="search" />
-                        <input type="text" placeholder="Search Event">
+                        <input type="text" placeholder="Search Event, people">
                     </div>
                 </div>
-                <div class="dropdown">
-                    <button class="dropbtn">Menu</button>
-                    <div class="dropdown-content">
-                        <form action="/main_to_profile" method="POST">
-                            <a>
-                                <div class="pf-edit-btn">
+                <div class="nav-right">
+                    <ul>
+                         <li>
+                            <form action="/main_to_profile" method="POST">
+                                
+                                
+                                <div class="main-pf-edit-btn">
                                     <input type="submit" style="background-color: hsl(351, 4%, 66%)"
-                                        value="Show Profile"></button>
+                                        value="My Profile"></button>
+                                    
                                 </div>
-                            </a>
-                        </form>
-                        <form action="/logout" method="POST">
-                            <a>
-                                <div class="pf-signout-btn">
+                            
+                            </form>
+                        </li>
+                        <li>
+                            <form action="/logout" method="POST">
+                            
+                                <div class="main-top-signout-btn">
                                     <input type="submit" style="background-color: hsl(351, 4%, 66%)"
                                         value="Sign Out"></button>
-                                </div>
-                            </a>
-                        </form>
-                    </div>
+                                </div>        
+                            </form>
+                        </li>
+                    </ul>
                 </div>
+
             </nav>
         </div>
-        <div class="m-topcontainer">
+       
             <div class="main-container">
                 <!-- left column-->
                 <div class="main-left-col">
@@ -75,9 +82,9 @@
                             <p><%= user_data[0]['birthday'] %></p><br>
                             <!-- <div class="pf-box-container">
                                 <form action="/main_to_profile" method="POST">
-                                    <div class="pf-edit-btn">
+                                    <div class="pf-mypf-btn">
                                         <input type="submit" style="background-color: hsl(351, 4%, 66%)"
-                                            value="Show Profile"></button>
+                                            value="My Profile"></button>
                                     </div>
                                 </form>
                                 <form action="/logout" method="POST">
@@ -92,38 +99,56 @@
                 </div>
                 <!-- center column-->
                 <div class="main-center-col">
-
                     <div class="main-center-box">
                         <div class="write-post-container">
+                            <div class="user-pf-post">
+                                <img src="/public/stylesheets/images/pf1.jpg" class="user-pf-post-img" />
+
+                            </div>
                             <div class="post-msg">
-                                <p>Post your experience <%= user_data[0]['username'] %> ? </p><br>
+                                <p><%= user_data[0]['username'] %> Post your event ! </p><br>
                             </div>
                             <div class="post-input-container">
-                                <form action="/post_text" method="POST">
-                                    <div class="post-msg-heading">
-                                        <label for="post_heading">Heading</label><br>
-                                    </div>
-                                    <textarea class="textarea" rows="3" cols="70" placeholder="TITLE"
-                                        type="post_heading" name="post_heading" id="post_heading"></textarea><br>
-                                    <div class="post-msg-text">
-                                        <label for="post_text">Post Text</label><br>
-                                    </div>
-                                    <textarea class="textarea" rows="6" cols="70" placeholder="WHATS IN YOUR MIND?"
-                                        type="post_text" name="post_text" id="post_text"></textarea><br>
-                                    <div class="post-btn-container">
-                                        <div class="post-btn">
-                                            <input type="submit" style="background-color: hsl(351, 4%, 66%)" value="Post" />
+                                <div class="post-btn-container">
+                                    <form action="/post_text" method="POST">
+                                        <div class="post-msg-heading">
+                                            <label for="post_heading">TITLE</label><br>
                                         </div>
-                                    </div>
-                                </form>
+                                        <textarea class="textarea" rows="2" cols="70" placeholder="TITLE"
+                                            type="post_heading" name="post_heading" id="post_heading"></textarea><br>
+                                        <div class="post-msg-text">
+                                            <label for="post_text">Post Text</label><br>
+                                        </div>
+                                        <textarea class="textarea" rows="6" cols="70" placeholder="WHATS IN YOUR MIND?"
+                                            type="post_text" name="post_text" id="post_text"></textarea><br>
+                                        
+                                            <div class="post-btn">
+                                                <input type="submit" style="background-color: hsl(351, 4%, 66%)"
+                                                    value="Post" />
+                                            </div>
+                                    
+                                    </form>
+                                    <form action="/post_img" method="POST" enctype="multipart/form-data">
+                                        <div class="post-img-up-btn">
+                                            <input type="file" accept="image/png, image/gif, image/jpeg" name="fileToUpload" id="fileToUpload">
+                                            <input type="submit" style="background-color: hsl(351, 4%, 66%)"
+                                            value="UPLOAD IMG" /> 
+                                        </div>
+
+                                    </form>
+                                 </div>
                             </div>
                         </div>
                     </div>
-                    <% for (var i=0; i < 3; i++) { %>
+                    <% var rowSize = post_data.length;
+                    for (var i=0; i < rowSize; i++) { %>
                         <div class="main-center-box">
                             <div class="write-post-container">
                                 <div class="post-input-container">
                                     <div class="post-msg-heading">
+                                        <div class="post-img-info">
+                                        <%= user_data[0]['username'] %>
+                                    </div> 
                                         <label for="post_heading"><%= post_data[i]['heading'] %></label><br>
                                     </div>
                                     <textarea class="textarea" rows="6" cols="70" type="post_text" name="post_text" id="post_text">
@@ -138,22 +163,15 @@
                         </div>
                     <% } %>
                 </div>
-
-                <!-- right column-->
+                
                 <div class="main-right-col">
-                    <div class="dropdown">
-                        <button class="dropbtn">Categories</button>
-                        <div class="dropdown-content">
-                            <% for (var i=0; i < category_data.length; i++) { %>
-                                <a href="#"><%= category_data[i]['category_name'] %></a>
-                            <% } %>
-                        </div>
-                    </div>
                     <br><br>
                     <form action="/main_to_event" method="POST">
                         <input type="submit" style="background-color: hsl(351, 4%, 66%)" value="All Events" />
                     </form>
                     <br>
+
+                   
                     <div class="main-right-box">
                         <% for (var i=0; i < event_data.length; i++) { %>
                             <div class="main-center-box">
@@ -170,7 +188,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        
         <div id='wrapper'>
             <div>
                 <p1> FillBoard 2022</p1>

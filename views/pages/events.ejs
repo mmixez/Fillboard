@@ -23,6 +23,12 @@
                 <img src="/public/stylesheets/images/logo3.png" class="main-logo" />
             </div>
             <div class="nav-right">
+                <form action="/event_back_main" method="POST">
+                    <div class="pf-edit-btn">
+                        <input type="submit" style="background-color: hsl(351, 4%, 66%)"
+                            value="Go Back"></button>
+                    </div>
+                </form>
             </div>
         </nav>
     </div>
@@ -33,16 +39,6 @@
                 <input type="text" name="eventname" id="eventname" placeholder="Search Event">
             </div>
             <br>
-            <div class="dropdown">
-                <button onclick="myFunction()" class="dropbtn">Country</button>
-                <div id="myDropdown" class="dropdown-content">
-                    <input type="text" placeholder="Search.." id="myInput" onkeyup="filterFunction()">
-                    <% for (var i=0; i < country_data.length; i++) { %>
-                        <a><%= country_data[i]['name'] %></a>
-                    <% } %>
-                </div>
-              </div>
-            <br>
             <input list="countries" name="country" id="country" placeholder="Country">
             <datalist id="countries">
                 <% for (var i=0; i < country_data.length; i++) { %>
@@ -50,17 +46,26 @@
                     <option value="<%= country_data[i]['name'] %>">
                 <% } %>
             </datalist>
-            <br>
-            <input name="state" id="state" placeholder="State" />
-            <br>
             <input name="city" id="city" placeholder="City" />
+            <input name="zip" id="zip" placeholder="Zip" />
+            <input name="street" id="street" placeholder="Street" />
             <br>
-            <input name="category" id="category" placeholder="Category" />
+            <br>
+            <!-- <form action="/events_category_chosen" method="POST">
+                <input list="categories" name="category" id="category" placeholder="Category">
+                <datalist id="categories">
+                    <% for (var i=0; i < category_data.length; i++) { %>
+                        <a></a>
+                        <option value="<%= category_data[i]['category_name'] %>">
+                    <% } %>
+                </datalist>
+            </form> -->
+            <input name="sub_category" id="sub_category" placeholder="Sub-Category" />
             <br><br>
             <div id="container">
                 <div id="left"><label>Date:</label></div>
-                <div id="middle"><input name="start-date" id="start-date"/></div> - 
-                <div id="right"><input name="end-date" id="end-date"/></div>
+                <div id="middle"><input type="datetime-local" id="start_date" name="start_date"></div> - 
+                <div id="right"><input type="datetime-local" id="end_date" name="end_date"></div>
             </div>
             <br>
             <div class="pf-edit-btn">
@@ -97,8 +102,18 @@
     </section>
     <section>
         <% for (var i=0; i < event_data.length; i++) { %>
-            <p>Eventname: <%= event_data[i]['event_name'] %></p>
+            <div class="event-display-box">
+                <b><p>Eventname: <%= event_data[i]['event_name'] %></p></b>
+                <p>Description: <%= event_data[i]['description'] %></p>
+                <p>Begin Date: <%= event_data[i]['begin_date'] %></p>
+                <p>End Date: <%= event_data[i]['end_date'] %></p>
+                <p>Minimum participants: <%= event_data[i]['min_participants'] %></p>
+                <p>Maximum participants: <%= event_data[i]['max_participants'] %></p>
+                <p>Category: <%= event_data[i]['category_name'] %></p>
+                <p>Sub Category: <%= event_data[i]['sub_category_name'] %></p>
+            </div>
         <% } %>
+
     </section>
     <div id='wrapper'>
         <div>

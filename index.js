@@ -55,7 +55,10 @@ app.get('/signin', (req, res) => {
 //----------------------------------------- EVENT PAGE -----------------------------------------
 
 app.get('/events', (req, res) => {
-    sqlConn.query(`SELECT * FROM event;`, function (err, qres_event, fields) {
+    sqlConn.query(`SELECT event_name, e.description , begin_date, end_date, 
+    min_participants, max_participants, sub_category_name, category_name FROM event e, sub_category sc, category c 
+    WHERE e.sub_category_idsub_category = sc.idsub_category AND sc.category_id_category = c.id_category;`, 
+    function (err, qres_event, fields) {
         if(err){
             throw err; 
         }
@@ -65,10 +68,19 @@ app.get('/events', (req, res) => {
                     throw err; 
                 }
                 else {
-                    res.render('pages/events', {
-                        event_data: qres_event,
-                        country_data: qres_country 
-                    });
+                    sqlConn.query(`SELECT * FROM category ORDER BY category_name ASC;`, function (err, qres_category, fields) {
+                        if(err){
+                            throw err; 
+                        }
+                        else {
+                            // req.session.qres_category = qres_category;
+                            res.render('pages/events', {
+                                event_data: qres_event,
+                                country_data: qres_country,
+                                category_data: qres_category
+                            });
+                        }
+                    })
                 }
             })
         }
@@ -78,19 +90,50 @@ app.get('/events', (req, res) => {
 app.get('/events_search', (req, res) => {
     res.render('pages/events', {
         event_data: req.session.qres_event,
-        country_data: req.session.qres_country
+        country_data: req.session.qres_country,
+        category_data: req.session.qres_category
     })
 });
 
 app.post('/search_for_events', urlParser,
     body('eventname'),
-    body('country'),
-    body('city'),
-    body('category'),
-    body('start-date'),
-    body('end-date'),
     (req, res) => {
-    sqlConn.query(`SELECT * FROM event WHERE event_name = "${req.body.eventname}";`, function (err, qres_event, fields) {
+    sqlConn.query(`SELECT event_name, e.description , begin_date, end_date, 
+    min_participants, max_participants, sub_category_name, category_name FROM event e, sub_category sc, category c 
+    WHERE e.sub_category_idsub_category = sc.idsub_category AND sc.category_id_category = c.id_category 
+    AND e.event_name = "${req.body.eventname}"`, 
+    function (err, qres_event, fields) {
+        if(err){
+            throw err; 
+        }
+        else {
+            sqlConn.query(`SELECT * FROM country ORDER BY name ASC;`, function (err, qres_country, fields) {
+                if(err){
+                    throw err; 
+                }
+                else {
+                    sqlConn.query(`SELECT * FROM category ORDER BY category_name ASC;`, function (err, qres_category, fields) {
+                        if(err){
+                            throw err; 
+                        }
+                        else {
+                            req.session.qres_event = qres_event;
+                            req.session.qres_country = qres_country;
+                            req.session.qres_category = qres_category;
+                            res.redirect('/events_search');
+                        }
+                    })
+                }
+            })
+        }
+    })
+});
+
+app.post('/events_category_chosen', urlParser,
+    body('category'),
+    (req, res) => {
+    sqlConn.query(`SELECT * from sub_category sc WHERE sc.category_id_category = "${req.body.category}";`, 
+    function (err, qres_event, fields) {
         if(err){
             throw err; 
         }
@@ -107,6 +150,10 @@ app.post('/search_for_events', urlParser,
             })
         }
     })
+});
+
+app.post('/event_back_main', (req, res) => {
+    res.redirect('/main');
 });
 
 //----------------------------------------- PROFILE PAGE -----------------------------------------
@@ -144,7 +191,9 @@ app.get('/main', (req, res) => {
             throw err; 
         }
         else {
-            sqlConn.query(`SELECT * FROM posts p, event e WHERE p.event_id = e.id_event ORDER BY p.idposts DESC;`, 
+            sqlConn.query(`SELECT heading, post_text, event_name, begin_date, end_date, username 
+            FROM posts p, event e, fillboard_user u WHERE p.event_id = e.id_event  AND p.user_id_posts =  u.id_fillboard_user 
+            ORDER BY p.idposts DESC;`, 
             function (err, qres_posts, fields) {
                 if(err){
                     throw err; 

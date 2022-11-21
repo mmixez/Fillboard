@@ -80,20 +80,6 @@
                             <p><%= user_data[0]['gender'] %></p><br>
                             <h4>BIRTHDAY: </h5>
                             <p><%= user_data[0]['birthday'] %></p><br>
-                            <!-- <div class="pf-box-container">
-                                <form action="/main_to_profile" method="POST">
-                                    <div class="pf-mypf-btn">
-                                        <input type="submit" style="background-color: hsl(351, 4%, 66%)"
-                                            value="My Profile"></button>
-                                    </div>
-                                </form>
-                                <form action="/logout" method="POST">
-                                    <div class="pf-signout-btn">
-                                        <input type="submit" style="background-color: hsl(351, 4%, 66%)"
-                                            value="Sign Out"></button>
-                                    </div>
-                                </form>
-                            </div> -->
                         </div>
                     </div>
                 </div>
@@ -147,8 +133,8 @@
                                 <div class="post-input-container">
                                     <div class="post-msg-heading">
                                         <div class="post-img-info">
-                                        <%= user_data[0]['username'] %>
-                                    </div> 
+                                        <%= post_data[0]['username'] %> said
+                                        </div> 
                                         <label for="post_heading"><%= post_data[i]['heading'] %></label><br>
                                     </div>
                                     <textarea class="textarea" rows="6" cols="70" type="post_text" name="post_text" id="post_text">
@@ -163,7 +149,7 @@
                         </div>
                     <% } %>
                 </div>
-                
+
                 <div class="main-right-col">
                     <br><br>
                     <form action="/main_to_event" method="POST">

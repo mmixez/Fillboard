@@ -12,18 +12,17 @@
     />
     <link rel="icon" href="/public/stylesheets/images/favicon.png" />
   </head>
-  <!-- <body>
+   <body>
     <h1>Edit Profile</h1>
-    <form action="/saveProfile", method="POST">
-        <label for="birthday">Your saved birthday is:</label><br>
-        <input type="birthday" name="birthday" id="birthday" value="<%= user_data[0]['birthday'] %>"><br><br>
-        <label for="gender">Your gender is:</label><br>
-        <input type="gender" name="gender" id="gender" value="<%= user_data[0]['gender'] %>"><br><br>
-        <label for="biography">Your biography is:</label><br>
-        <input type="biography" name="biography" id="biography" value="<%= user_data[0]['biography'] %>"><br><br>
-        <input type="submit" name="save" id="save" value="Save">
-    </form>
-</body> -->
+    <form action="/uploadpfp" enctype="multipart/form-data" method="POST"> 
+      <input type="file" name="pic" />
+      <input type="submit" value="Upload profile picture"/>
+   </form>
+   <form action="/uploadbackground" enctype="multipart/form-data" method="POST"> 
+    <input type="file" name="pic" />
+    <input type="submit" value="Upload background"/>
+ </form>      
+</body>
 
   <body>
     <div class="edit-profile-container">

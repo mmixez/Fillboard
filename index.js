@@ -3,6 +3,9 @@ var bp = require('body-parser');
 var bcrypt = require('bcrypt');
 var mysql = require('mysql');
 const session = require('express-session');
+const multer = require('multer');
+const path = require('path');
+const fs = require("fs");
 
 var app = express();
 var {body, validationResult} = require('express-validator');
@@ -20,6 +23,10 @@ app.use(session({
     resave: false,
     saveUnitialized: false
 }));
+
+const upload = multer ({
+    dest: __dirname + '/public/images/tmp'
+});
 
 // url parser used to decipher input from forms
 var urlParser = bp.urlencoded({extended: false});
@@ -39,6 +46,8 @@ sqlConn.connect((err) => {
         console.log('Successfully connected to SQL database!')
     }
 })
+
+app.get("/", express.static(path.join(__dirname, "./views/pages")));
 
 app.get('/', (req, res) => {
     res.render('pages/signup')
@@ -159,7 +168,7 @@ app.post('/event_back_main', (req, res) => {
 //----------------------------------------- PROFILE PAGE -----------------------------------------
 
 app.get('/profile', (req, res) => {
-    sqlConn.query(`SELECT * FROM fillboard_user WHERE username = '${req.session.username}';`, function (err, qres_user, fields) {
+    sqlConn.query(`SELECT * FROM fillboard_user WHERE username = '${req.session.username}';`, function (err, qres_user, fields) { 
         if(err){
             throw err; 
         }
@@ -171,7 +180,6 @@ app.get('/profile', (req, res) => {
     })
 });
 
-// lines 55-77 needed for edit/save profile req's
 app.get('/editProfile', (req, res) => {
     sqlConn.query(`SELECT * FROM fillboard_user WHERE username = '${req.session.username}';`, function (err, qres_user, fields) {
         if(err){
@@ -202,32 +210,105 @@ app.get('/main', (req, res) => {
                     sqlConn.query(`SELECT * FROM category;`, function (err, qres_categories, fields) {
                         if(err){
                             throw err; 
-                        }
-                        else {
-                            sqlConn.query(`SELECT * FROM event;`, function (err, qres_events, fields) {
+                        } else {
+                            sqlConn.query(`SELECT * FROM images WHERE picture_id = ${req.session.id_fillboard_user};`, function (err, qres_img, fields) {
                                 if(err){
                                     throw err; 
                                 }
                                 else {
-                                    res.render('pages/main', {
-                                        user_data: qres_user,
-                                        post_data: qres_posts,
-                                        category_data: qres_categories,
-                                        event_data: qres_events
-                                    });
+                                    sqlConn.query(`SELECT * FROM event;`, function (err, qres_events, fields) {
+                                        if(err){
+                                            throw err; 
+                                        }
+                                        else {
+                                            res.render('pages/main', {
+                                                user_data: qres_user,
+                                                post_data: qres_posts,
+                                                category_data: qres_categories,
+                                                event_data: qres_events,
+                                                pfp_data: qres_img,
+                                            });
+                                        }
+                                    })
                                 }
                             })
                         }
-                    })
+                    })   
                 }
             })
-        }
+        }  
     })
 });
 
 
 app.post('/main_to_event',(req, res) => {
     res.redirect('/events');
+});
+
+app.post("/uploadpfp", upload.single("pic"), (req, res) => {
+      const tempPath = req.file.path;
+      const targetPath = path.join(__dirname, "./public/images/tmp/", `${req.session.id_fillboard_user}pfp.png`);
+  
+      if (path.extname(req.file.originalname).toLowerCase() === ".png") {
+        fs.rename(tempPath, targetPath, err => {
+          if (err){
+            throw err;
+          }
+          /* NEED TO ADJUST FOR ONLINE DATABASE, SECURE_FILE_PRIV WILL BE DIFFERENT AND POTENTIALLY LOAD_FILE COULD WORK BETTER THAN DESKTOP
+          sqlConn.query(`INSERT INTO profilePicture (picture_id, id_fillboard_user, image) VALUES (${req.session.id_fillboard_user}, ${req.session.id_fillboard_user}, LOAD_FILE("${targetPath}"));`), 
+            function (err, fields){
+            if(err){
+                throw err;
+            }};
+            */
+          res.redirect('/main');
+        });
+      } else {
+        fs.unlink(tempPath, err => {
+          if (err){
+            throw err;
+          }
+          res.status(403).contentType("text/plain").end("Only .png files are allowed!");
+        });
+      }
+    }
+  );
+
+app.get("/pfp.png", (req, res) => {
+    res.sendFile(path.join(__dirname, "./public/images/tmp/", `${req.session.id_fillboard_user}pfp.png`));
+});
+
+app.post("/uploadbackground", upload.single("pic"), (req, res) => {
+    const tempPath = req.file.path;
+    const targetPath = path.join(__dirname, "./public/images/tmp/", `${req.session.id_fillboard_user}background.png`);
+
+    if (path.extname(req.file.originalname).toLowerCase() === ".png") {
+      fs.rename(tempPath, targetPath, err => {
+        if (err){
+          throw err;
+        }
+        /* NEED TO ADJUST FOR ONLINE DATABASE, SECURE_FILE_PRIV WILL BE DIFFERENT AND POTENTIALLY LOAD_FILE COULD WORK BETTER THAN DESKTOP
+        sqlConn.query(`INSERT INTO profilePicture (picture_id, id_fillboard_user, image) VALUES (${req.session.id_fillboard_user}, ${req.session.id_fillboard_user}, LOAD_FILE("${targetPath}"));`), 
+          function (err, fields){
+          if(err){
+              throw err;
+          }};
+          */
+        res.redirect('/main');
+      });
+    } else {
+      fs.unlink(tempPath, err => {
+        if (err){
+          throw err;
+        }
+        res.status(403).contentType("text/plain").end("Only .png files are allowed!");
+      });
+    }
+  }
+);
+
+app.get("/background.png", (req, res) => {
+    res.sendFile(path.join(__dirname, "./public/images/tmp/", `${req.session.id_fillboard_user}background.png`));
 });
 
 app.post('/main_to_profile',(req, res) => {
@@ -293,6 +374,7 @@ app.post('/signin', urlParser,
                     if(result == true) {
                         req.session.qres=qres;
                         req.session.username=qres[0]['username'];
+                        req.session.id_fillboard_user=qres[0]['id_fillboard_user'];
                         res.redirect('/main');
                     } else {
                         console.log('Wrong username and password combo!')
@@ -303,7 +385,6 @@ app.post('/signin', urlParser,
     }
 });
 
-// lines 144-148 needed to receive logout req
 app.post('/logout', (req,res) => {
     res.redirect('/signup');
 });

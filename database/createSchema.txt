@@ -1,0 +1,249 @@
+-- MySQL Workbench Forward Engineering
+
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
+
+-- -----------------------------------------------------
+-- Schema Fillboard
+-- -----------------------------------------------------
+
+-- -----------------------------------------------------
+-- Schema Fillboard
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `Fillboard` DEFAULT CHARACTER SET utf8 ;
+USE `Fillboard` ;
+
+-- -----------------------------------------------------
+-- Table `Fillboard`.`fillboard_user`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `Fillboard`.`fillboard_user` (
+  `id_fillboard_user` INT NOT NULL AUTO_INCREMENT,
+  `username` VARCHAR(45) NOT NULL,
+  `email` VARCHAR(45) NOT NULL,
+  `password` VARCHAR(200) NOT NULL,
+  `birthday` VARCHAR(45) NULL,
+  `gender` VARCHAR(45) NULL,
+  `biography` VARCHAR(200) NULL,
+  PRIMARY KEY (`id_fillboard_user`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `Fillboard`.`country`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `Fillboard`.`country` (
+  `country_code` VARCHAR(3) NOT NULL,
+  `name` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`country_code`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `Fillboard`.`location`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `Fillboard`.`location` (
+  `idlocation` INT NOT NULL AUTO_INCREMENT,
+  `country_country_code` VARCHAR(3) NOT NULL,
+  `city_name` VARCHAR(45) NOT NULL,
+  `zip` INT NOT NULL,
+  `street_address` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`idlocation`, `country_country_code`),
+  INDEX `fk_location_country1_idx` (`country_country_code` ASC),
+  CONSTRAINT `fk_location_country1`
+    FOREIGN KEY (`country_country_code`)
+    REFERENCES `Fillboard`.`country` (`country_code`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `Fillboard`.`category`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `Fillboard`.`category` (
+  `id_category` INT NOT NULL AUTO_INCREMENT,
+  `category_name` VARCHAR(45) NOT NULL,
+  `description` VARCHAR(45) NULL,
+  PRIMARY KEY (`id_category`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `Fillboard`.`sub_category`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `Fillboard`.`sub_category` (
+  `idsub_category` INT NOT NULL AUTO_INCREMENT,
+  `sub_category_name` VARCHAR(45) NOT NULL,
+  `sub_category_desc` VARCHAR(45) NULL,
+  `category_id_category` INT NOT NULL,
+  PRIMARY KEY (`idsub_category`, `category_id_category`),
+  INDEX `fk_sub_category_category1_idx` (`category_id_category` ASC),
+  CONSTRAINT `fk_sub_category_category1`
+    FOREIGN KEY (`category_id_category`)
+    REFERENCES `Fillboard`.`category` (`id_category`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `Fillboard`.`event`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `Fillboard`.`event` (
+  `id_event` INT NOT NULL AUTO_INCREMENT,
+  `event_name` VARCHAR(45) NOT NULL,
+  `description` VARCHAR(200) NULL,
+  `begin_date` VARCHAR(45) NOT NULL,
+  `end_date` VARCHAR(45) NOT NULL,
+  `location_idlocation` INT NOT NULL,
+  `sub_category_idsub_category` INT NOT NULL,
+  `min_participants` INT NOT NULL,
+  `max_participants` INT NOT NULL,
+  PRIMARY KEY (`id_event`, `location_idlocation`, `sub_category_idsub_category`),
+  INDEX `fk_event_location1_idx` (`location_idlocation` ASC),
+  INDEX `fk_event_sub_category1_idx` (`sub_category_idsub_category` ASC),
+  CONSTRAINT `fk_event_location1`
+    FOREIGN KEY (`location_idlocation`)
+    REFERENCES `Fillboard`.`location` (`idlocation`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_event_sub_category1`
+    FOREIGN KEY (`sub_category_idsub_category`)
+    REFERENCES `Fillboard`.`sub_category` (`idsub_category`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `Fillboard`.`participates`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `Fillboard`.`participates` (
+  `user_id` INT NOT NULL,
+  `event_id` INT NOT NULL,
+  PRIMARY KEY (`user_id`, `event_id`),
+  INDEX `fk_fillboard_user_has_event_event1_idx` (`event_id` ASC),
+  INDEX `fk_fillboard_user_has_event_fillboard_user_idx` (`user_id` ASC),
+  CONSTRAINT `fk_fillboard_user_has_event_fillboard_user`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `Fillboard`.`fillboard_user` (`id_fillboard_user`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_fillboard_user_has_event_event1`
+    FOREIGN KEY (`event_id`)
+    REFERENCES `Fillboard`.`event` (`id_event`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `Fillboard`.`posts`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `Fillboard`.`posts` (
+  `idposts` INT NOT NULL AUTO_INCREMENT,
+  `heading` VARCHAR(45) NOT NULL,
+  `post_text` VARCHAR(200) NOT NULL,
+  `event_id` INT NOT NULL,
+  `user_id_posts` INT NOT NULL,
+  PRIMARY KEY (`idposts`, `event_id`, `user_id_posts`),
+  INDEX `fk_posts_event1_idx` (`event_id` ASC),
+  INDEX `fk_posts_fillboard_user1_idx` (`user_id_posts` ASC),
+  CONSTRAINT `fk_posts_event1`
+    FOREIGN KEY (`event_id`)
+    REFERENCES `Fillboard`.`event` (`id_event`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_posts_fillboard_user1`
+    FOREIGN KEY (`user_id_posts`)
+    REFERENCES `Fillboard`.`fillboard_user` (`id_fillboard_user`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `Fillboard`.`friends`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `Fillboard`.`friends` (
+  `fillboard_user_id_1` INT NOT NULL,
+  `fillboard_user_id_2` INT NOT NULL,
+  PRIMARY KEY (`fillboard_user_id_1`, `fillboard_user_id_2`),
+  INDEX `fk_fillboard_user_has_fillboard_user_fillboard_user2_idx` (`fillboard_user_id_2` ASC),
+  INDEX `fk_fillboard_user_has_fillboard_user_fillboard_user1_idx` (`fillboard_user_id_1` ASC),
+  CONSTRAINT `fk_fillboard_user_has_fillboard_user_fillboard_user1`
+    FOREIGN KEY (`fillboard_user_id_1`)
+    REFERENCES `Fillboard`.`fillboard_user` (`id_fillboard_user`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_fillboard_user_has_fillboard_user_fillboard_user2`
+    FOREIGN KEY (`fillboard_user_id_2`)
+    REFERENCES `Fillboard`.`fillboard_user` (`id_fillboard_user`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+-- -----------------------------------------------------
+-- Data for table `Fillboard`.`country`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `Fillboard`;
+INSERT INTO `Fillboard`.`country` (`country_code`, `name`) VALUES ('USA', 'United States of America');
+INSERT INTO `Fillboard`.`country` (`country_code`, `name`) VALUES ('MEX', 'Mexico');
+INSERT INTO `Fillboard`.`country` (`country_code`, `name`) VALUES ('DEU', 'Germany');
+INSERT INTO `Fillboard`.`country` (`country_code`, `name`) VALUES ('CAN', 'Canada');
+INSERT INTO `Fillboard`.`country` (`country_code`, `name`) VALUES ('KOR', 'South Korea');
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `Fillboard`.`location`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `Fillboard`;
+INSERT INTO `Fillboard`.`location` (`idlocation`, `country_country_code`, `city_name`, `zip`, `street_address`) VALUES (1, 'USA', 'San Jose', 95192, '1 Washington Sq');
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `Fillboard`.`category`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `Fillboard`;
+INSERT INTO `Fillboard`.`category` (`id_category`, `category_name`, `description`) VALUES (1, 'Outdoor Sports', NULL);
+INSERT INTO `Fillboard`.`category` (`id_category`, `category_name`, `description`) VALUES (2, 'Indoor Sports', NULL);
+INSERT INTO `Fillboard`.`category` (`id_category`, `category_name`, `description`) VALUES (3, 'Evening Activities', NULL);
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `Fillboard`.`sub_category`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `Fillboard`;
+INSERT INTO `Fillboard`.`sub_category` (`idsub_category`, `sub_category_name`, `sub_category_desc`, `category_id_category`) VALUES (1, 'Jogging', NULL, 1);
+INSERT INTO `Fillboard`.`sub_category` (`idsub_category`, `sub_category_name`, `sub_category_desc`, `category_id_category`) VALUES (2, 'Cycling', NULL, 1);
+INSERT INTO `Fillboard`.`sub_category` (`idsub_category`, `sub_category_name`, `sub_category_desc`, `category_id_category`) VALUES (3, 'Yoga', NULL, 2);
+INSERT INTO `Fillboard`.`sub_category` (`idsub_category`, `sub_category_name`, `sub_category_desc`, `category_id_category`) VALUES (4, 'Bar Hopping', NULL, 3);
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `Fillboard`.`event`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `Fillboard`;
+INSERT INTO `Fillboard`.`event` (`id_event`, `event_name`, `description`, `begin_date`, `end_date`, `location_idlocation`, `sub_category_idsub_category`, `min_participants`, `max_participants`) VALUES (1, 'Jogging SJSU', 'Meet with us for Jogging on Sunday. SJSU ID is required', '11/27/2022-10:00', '11/27/2022-13:00', 1, 1, 2, 10);
+
+COMMIT;
+

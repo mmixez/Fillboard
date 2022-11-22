@@ -25,7 +25,7 @@ app.use(session({
 }));
 
 const upload = multer ({
-    dest: __dirname + '/public/images/tmp'
+    dest: __dirname + '/public/images/'
 });
 
 // url parser used to decipher input from forms
@@ -240,14 +240,13 @@ app.get('/main', (req, res) => {
     })
 });
 
-
 app.post('/main_to_event',(req, res) => {
     res.redirect('/events');
 });
 
 app.post("/uploadpfp", upload.single("pic"), (req, res) => {
       const tempPath = req.file.path;
-      const targetPath = path.join(__dirname, "./public/images/tmp/", `${req.session.id_fillboard_user}pfp.png`);
+      const targetPath = path.join(__dirname, "./public/images/user_pictures/", `${req.session.id_fillboard_user}pfp.png`);
   
       if (path.extname(req.file.originalname).toLowerCase() === ".png") {
         fs.rename(tempPath, targetPath, err => {
@@ -275,12 +274,12 @@ app.post("/uploadpfp", upload.single("pic"), (req, res) => {
   );
 
 app.get("/pfp.png", (req, res) => {
-    res.sendFile(path.join(__dirname, "./public/images/tmp/", `${req.session.id_fillboard_user}pfp.png`));
+    res.sendFile(path.join(__dirname, "./public/images/user_pictures/", `${req.session.id_fillboard_user}pfp.png`));
 });
 
 app.post("/uploadbackground", upload.single("pic"), (req, res) => {
     const tempPath = req.file.path;
-    const targetPath = path.join(__dirname, "./public/images/tmp/", `${req.session.id_fillboard_user}background.png`);
+    const targetPath = path.join(__dirname, "./public/images/user_pictures/", `${req.session.id_fillboard_user}background.png`);
 
     if (path.extname(req.file.originalname).toLowerCase() === ".png") {
       fs.rename(tempPath, targetPath, err => {
@@ -308,7 +307,7 @@ app.post("/uploadbackground", upload.single("pic"), (req, res) => {
 );
 
 app.get("/background.png", (req, res) => {
-    res.sendFile(path.join(__dirname, "./public/images/tmp/", `${req.session.id_fillboard_user}background.png`));
+    res.sendFile(path.join(__dirname, "./public/images/user_pictures/", `${req.session.id_fillboard_user}background.png`));
 });
 
 app.post('/main_to_profile',(req, res) => {
@@ -348,13 +347,37 @@ app.post('/post_text', urlParser,
     if(!errs.isEmpty()) {
         return res.status(400).json({errs: errs.array()})
     } else {
-        sqlConn.query(`INSERT INTO posts (heading, post_text, event_id) VALUES ('${req.body.post_heading}', '${req.body.post_text}', 3);`);
+        sqlConn.query(`INSERT INTO posts (heading, post_text, event_id) VALUES ('${req.body.post_heading}', '${req.body.post_text}', '${req.session.id_fillboard_user}');`);
         res.redirect('/main')
     }
 });
 
 app.post('/post_img',urlParser,(req, res) => {
-    alert("Test");
+    const tempPath = req.file.path;
+    const targetPath = path.join(__dirname, "./public/images/post_pictures/", `${req.session.id_fillboard_user}${req.body.event_id}.png`);
+
+    if (path.extname(req.file.originalname).toLowerCase() === ".png") {
+      fs.rename(tempPath, targetPath, err => {
+        if (err){
+          throw err;
+        }
+        /* NEED TO ADJUST FOR ONLINE DATABASE, SECURE_FILE_PRIV WILL BE DIFFERENT AND POTENTIALLY LOAD_FILE COULD WORK BETTER THAN DESKTOP
+        sqlConn.query(`INSERT INTO profilePicture (picture_id, id_fillboard_user, image) VALUES (${req.session.id_fillboard_user}, ${req.session.id_fillboard_user}, LOAD_FILE("${targetPath}"));`), 
+          function (err, fields){
+          if(err){
+              throw err;
+          }};
+          */
+        res.redirect('/main');
+      });
+    } else {
+      fs.unlink(tempPath, err => {
+        if (err){
+          throw err;
+        }
+        res.status(403).contentType("text/plain").end("Only .png files are allowed!");
+      });
+    }
 });
 
 app.post('/signin', urlParser, 

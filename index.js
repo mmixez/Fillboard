@@ -35,7 +35,7 @@ var urlParser = bp.urlencoded({extended: false});
 var sqlConn = mysql.createConnection({
     host: "localhost",
     user: "root",
-    password: "MySQLAdmin",
+    password: "0906clcl",
     database: "Fillboard"
 })
 
@@ -261,7 +261,7 @@ app.post("/uploadpfp", upload.single("pic"), (req, res) => {
                 throw err;
             }};
             */
-          res.redirect('/main');
+          res.redirect('/profile');
         });
       } else {
         fs.unlink(tempPath, err => {
@@ -294,7 +294,7 @@ app.post("/uploadbackground", upload.single("pic"), (req, res) => {
               throw err;
           }};
           */
-        res.redirect('/main');
+        res.redirect('/profile');
       });
     } else {
       fs.unlink(tempPath, err => {
@@ -323,6 +323,9 @@ app.post('/editProfile', (req, res) => {
     res.redirect('/editProfile');
 });
 
+
+
+
 app.post('/saveProfile', urlParser, body('birthday'),body('gender'),body('biography'),(req, res) => {
     sqlConn.query(`UPDATE fillboard_user SET birthday="${req.body.birthday}", gender="${req.body.gender}", biography="${req.body.biography}" WHERE username="${req.session.username}";`);
     res.redirect('/profile');
@@ -348,7 +351,7 @@ app.post('/post_text', urlParser,
     if(!errs.isEmpty()) {
         return res.status(400).json({errs: errs.array()})
     } else {
-        sqlConn.query(`INSERT INTO posts (heading, post_text, event_id) VALUES ('${req.body.post_heading}', '${req.body.post_text}', 3);`);
+        sqlConn.query(`INSERT INTO posts (heading, post_text, event_id) VALUES ('${req.body.post_heading}', '${req.body.post_text}', '1','${req.session.id_fillboard_user}');`);
         res.redirect('/main')
     }
 });

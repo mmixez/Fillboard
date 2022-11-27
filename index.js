@@ -9,6 +9,8 @@ const fs = require("fs");
 
 var app = express();
 var {body, validationResult} = require('express-validator');
+const { getSystemErrorMap } = require('util');
+const { Console } = require('console');
 
 // sets up for css
 app.set('views', 'views');
@@ -199,7 +201,7 @@ app.get('/main', (req, res) => {
             throw err; 
         }
         else {
-            sqlConn.query(`SELECT heading, post_text, event_name, begin_date, end_date, username 
+            sqlConn.query(`SELECT heading, post_text, event_name, begin_date, end_date, username, picture_path 
             FROM posts p, event e, fillboard_user u WHERE p.event_id = e.id_event  AND p.user_id_posts =  u.id_fillboard_user 
             ORDER BY p.idposts DESC;`, 
             function (err, qres_posts, fields) {
@@ -253,14 +255,7 @@ app.post("/uploadpfp", upload.single("pic"), (req, res) => {
           if (err){
             throw err;
           }
-          /* NEED TO ADJUST FOR ONLINE DATABASE, SECURE_FILE_PRIV WILL BE DIFFERENT AND POTENTIALLY LOAD_FILE COULD WORK BETTER THAN DESKTOP
-          sqlConn.query(`INSERT INTO profilePicture (picture_id, id_fillboard_user, image) VALUES (${req.session.id_fillboard_user}, ${req.session.id_fillboard_user}, LOAD_FILE("${targetPath}"));`), 
-            function (err, fields){
-            if(err){
-                throw err;
-            }};
-            */
-          res.redirect('/main');
+          res.redirect('/profile');
         });
       } else {
         fs.unlink(tempPath, err => {
@@ -273,8 +268,26 @@ app.post("/uploadpfp", upload.single("pic"), (req, res) => {
     }
   );
 
-app.get("/pfp.png", (req, res) => {
-    res.sendFile(path.join(__dirname, "./public/images/user_pictures/", `${req.session.id_fillboard_user}pfp.png`));
+app.get("/pfp/:id_fillboard_user.png", (req, res) => {
+    sqlConn.query(`SELECT * FROM fillboard_user WHERE id_fillboard_user=${req.params.id_fillboard_user}`, (err, qres) => {
+        if(err) throw err;
+        else{
+            res.sendFile(path.join(__dirname, "./public/images/user_pictures/", `${qres[0]['id_fillboard_user']}pfp.png`));
+        }
+    })
+});
+
+app.get("/pfpPost/:username.png", (req, res) => {
+    sqlConn.query(`SELECT * FROM fillboard_user WHERE username='${req.params.username}'`, (err, qres) => {
+        if(err) throw err;
+        else{
+            res.sendFile(path.join(__dirname, "./public/images/user_pictures/", `${qres[0]['id_fillboard_user']}pfp.png`));
+        }
+    })
+});
+
+app.get("/post_picture/:post_picture_name", (req, res) => {
+    res.sendFile(path.join(__dirname, "./public/images/post_pictures/", `${req.params.post_picture_name}.png`));
 });
 
 app.post("/uploadbackground", upload.single("pic"), (req, res) => {
@@ -286,14 +299,7 @@ app.post("/uploadbackground", upload.single("pic"), (req, res) => {
         if (err){
           throw err;
         }
-        /* NEED TO ADJUST FOR ONLINE DATABASE, SECURE_FILE_PRIV WILL BE DIFFERENT AND POTENTIALLY LOAD_FILE COULD WORK BETTER THAN DESKTOP
-        sqlConn.query(`INSERT INTO profilePicture (picture_id, id_fillboard_user, image) VALUES (${req.session.id_fillboard_user}, ${req.session.id_fillboard_user}, LOAD_FILE("${targetPath}"));`), 
-          function (err, fields){
-          if(err){
-              throw err;
-          }};
-          */
-        res.redirect('/main');
+        res.redirect('/profile');
       });
     } else {
       fs.unlink(tempPath, err => {
@@ -344,30 +350,45 @@ app.post('/post_text', urlParser,
     body('post_text').isLength({min:1, max: 200}).withMessage('Text can not be empty!')
  ,(req, res) => {
     var errs = validationResult(req);
+    
     if(!errs.isEmpty()) {
         return res.status(400).json({errs: errs.array()})
     } else {
-        sqlConn.query(`INSERT INTO posts (heading, post_text, event_id) VALUES ('${req.body.post_heading}', '${req.body.post_text}', '${req.session.id_fillboard_user}');`);
+        sqlConn.query(`INSERT INTO posts (heading, post_text, event_id, user_id_posts) VALUES 
+            ('${req.body.post_heading}', '${req.body.post_text}', '1', '${req.session.id_fillboard_user}');`);
+
+        // get post id that was just created
+        sqlConn.query(`SELECT * FROM posts WHERE user_id_posts=${req.session.id_fillboard_user} AND post_text='${req.body.post_text}'`, (err, qres, fields) => {
+            if(err) throw err;
+            else{
+
+                // if image uploaded => rename image to username_postID.png, else => skip
+                const tempPath = path.join(__dirname, "./public/images/post_pictures/", `${req.session.username}.png`);
+                const targetPath = path.join(__dirname, "./public/images/post_pictures/", `${req.session.username}_${qres[0]['idposts']}.png`);
+                if(fs.existsSync(tempPath)){
+                    fs.rename(
+                        tempPath, 
+                        targetPath, 
+                        err => {
+                            if(err){ throw err; }}
+                    )
+                }
+                sqlConn.query(`UPDATE posts SET picture_path = '${req.session.username}_${qres[0]['idposts']}' WHERE idposts = '${qres[0]['idposts']}';`);
+            }
+        });
         res.redirect('/main')
     }
 });
 
-app.post('/post_img',urlParser,(req, res) => {
+app.post('/post_img', upload.single("fileToUpload"), urlParser,(req, res) => {
     const tempPath = req.file.path;
-    const targetPath = path.join(__dirname, "./public/images/post_pictures/", `${req.session.id_fillboard_user}${req.body.event_id}.png`);
+    const targetPath = path.join(__dirname, "./public/images/post_pictures/", `${req.session.username}.png`);
 
     if (path.extname(req.file.originalname).toLowerCase() === ".png") {
       fs.rename(tempPath, targetPath, err => {
         if (err){
           throw err;
         }
-        /* NEED TO ADJUST FOR ONLINE DATABASE, SECURE_FILE_PRIV WILL BE DIFFERENT AND POTENTIALLY LOAD_FILE COULD WORK BETTER THAN DESKTOP
-        sqlConn.query(`INSERT INTO profilePicture (picture_id, id_fillboard_user, image) VALUES (${req.session.id_fillboard_user}, ${req.session.id_fillboard_user}, LOAD_FILE("${targetPath}"));`), 
-          function (err, fields){
-          if(err){
-              throw err;
-          }};
-          */
         res.redirect('/main');
       });
     } else {

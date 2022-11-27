@@ -71,7 +71,7 @@
                             <p> I knew you were coming.</p>
                             <p>Logged In Account: <%= user_data[0]['email'] %>
                             </p><br>
-                            <img src="/pfp.png" class="main-pf" /><br><br>
+                            <img src="<%= '/pfp/' +user_data[0]['id_fillboard_user']%>.png" class="main-pf" /><br><br>
                             <img src="/background.png" class="main-pf" /><br><br>
 
                             <h4>ABOUT ME: </h5>
@@ -88,7 +88,7 @@
                     <div class="main-center-box">
                         <div class="write-post-container">
                             <div class="user-pf-post">
-                                <img src="/public/stylesheets/images/pf1.jpg" class="user-pf-post-img" />
+                                <img src="<%= '/pfp/' +user_data[0]['id_fillboard_user']%>.png" class="user-pf-post-img" />
 
                             </div>
                             <div class="post-msg">
@@ -116,7 +116,7 @@
                                     </form>
                                     <form action="/post_img" method="POST" enctype="multipart/form-data">
                                         <div class="post-img-up-btn">
-                                            <input type="file" accept="image/png, image/gif, image/jpeg" name="fileToUpload" id="fileToUpload">
+                                            <input type="file" name="fileToUpload" id="fileToUpload">
                                             <input type="submit" style="background-color: hsl(351, 4%, 66%)"
                                             value="UPLOAD IMG" /> 
                                         </div>
@@ -127,11 +127,13 @@
                         </div>
                     </div>
                     <% var rowSize = post_data.length;
-                    for (var i=0; i < rowSize; i++) { %>
+                    for (var i=0; i < rowSize; i++) { 
+                        var picPath = post_data[i]['picture_path']%>
                         <div class="main-center-box">
                             <div class="write-post-container">
                                 <div class="post-input-container">
                                     <div class="post-msg-heading">
+                                        <img src="<%= '/pfpPost/' +post_data[0]['username']%>.png" class="user-pf-post-img">
                                         <div class="post-img-info">
                                         <%= post_data[0]['username'] %> said
                                         </div> 
@@ -144,6 +146,7 @@
                                         <label>Event: <%= post_data[i]['event_name'] %></label><br>
                                         <label>Date: <%= post_data[i]['begin_date'] %> - <%= post_data[i]['end_date'] %></label><br>
                                     </div>
+                                    <img src="<%= '/post_picture/' + post_data[i]['picture_path']%>">
                                 </div>
                             </div>
                         </div>

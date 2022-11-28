@@ -440,6 +440,10 @@ app.post('/signup', urlParser,
 
 //----------------------------------------- IMAGE DISPLAY FUNCTIONALITY  -----------------------------------------
 
+app.get("/pfp.png", (req, res) => {
+    res.sendFile(path.join(__dirname, "./public/images/user_pictures/", `${req.session.id_fillboard_user}pfp.png`));
+});
+
 app.get("/pfp/:id_fillboard_user.png", (req, res) => {
     sqlConn.query(`SELECT * FROM fillboard_user WHERE id_fillboard_user=${req.params.id_fillboard_user}`, (err, qres) => {
         if(err) throw err;

@@ -73,17 +73,8 @@
 
                             <p>WELCOME <%= user_data[0]['username'] %> !</p><br>
                             <p> I knew you were coming.</p>
-                            <p>Logged In Account: <%= user_data[0]['email'] %>
-                            </p><br>
-                            <img src="<%= '/pfp/' +user_data[0]['id_fillboard_user']%>.png" class="main-pf" /><br><br>
-                            <img src="/background.png" class="main-pf" /><br><br>
 
-                            <h4>ABOUT ME: </h5>
-                            <p><%= user_data[0]['biography'] %></p><br>
-                            <h4>GENDER: </h5>
-                            <p><%= user_data[0]['gender'] %></p><br>
-                            <h4>BIRTHDAY: </h5>
-                            <p><%= user_data[0]['birthday'] %></p><br>
+                            <p>Logged In Account: <%= user_data[0]['email'] %></p>
                         </div>
                         
                     </div>
@@ -122,7 +113,7 @@
                                         </form> 
                                     <form action="/post_img" method="POST" enctype="multipart/form-data">
                                         <div class="post-img-up-btn">
-                                            <input type="file" name="fileToUpload" id="fileToUpload">
+                                            <input type="file" accept="image/png" name="fileToUpload" id="fileToUpload">
                                             <input type="submit" style="background-color: hsl(351, 4%, 66%)"
                                             value="UPLOAD IMG" /> 
                                         </div>

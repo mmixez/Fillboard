@@ -51,18 +51,6 @@ sqlConn.connect((err) => {
 
 app.get("/", express.static(path.join(__dirname, "./views/pages")));
 
-app.get('/', (req, res) => {
-    res.render('pages/signup')
-});
-
-app.get('/signup', (req, res) => {
-    res.render('pages/signup')
-});
-
-app.get('/signin', (req, res) => {
-    res.render('pages/login')
-});
-
 //----------------------------------------- EVENT PAGE -----------------------------------------
 
 app.get('/events', (req, res) => {
@@ -195,6 +183,67 @@ app.get('/editProfile', (req, res) => {
     })
 });
 
+app.post('/profile_to_main', (req, res) => {
+    res.redirect('/main');
+});
+
+app.post('/editProfile', (req, res) => {
+    res.redirect('/editProfile');
+});
+
+//----------------------------------------- EDIT PROFILE PAGE -----------------------------------------
+
+app.post("/uploadpfp", upload.single("pic"), (req, res) => {
+    const tempPath = req.file.path;
+    const targetPath = path.join(__dirname, "./public/images/user_pictures/", `${req.session.id_fillboard_user}pfp.png`);
+
+    if (path.extname(req.file.originalname).toLowerCase() === ".png") {
+      fs.rename(tempPath, targetPath, err => {
+        if (err){
+          throw err;
+        }
+        res.redirect('/profile');
+      });
+    } else {
+      fs.unlink(tempPath, err => {
+        if (err){
+          throw err;
+        }
+        res.status(403).contentType("text/plain").end("Only .png files are allowed!");
+      });
+    }
+  }
+);
+
+app.post("/uploadbackground", upload.single("pic"), (req, res) => {
+  const tempPath = req.file.path;
+  const targetPath = path.join(__dirname, "./public/images/user_pictures/", `${req.session.id_fillboard_user}background.png`);
+
+  if (path.extname(req.file.originalname).toLowerCase() === ".png") {
+    fs.rename(tempPath, targetPath, err => {
+      if (err){
+        throw err;
+      }
+      res.redirect('/profile');
+    });
+  } else {
+    fs.unlink(tempPath, err => {
+      if (err){
+        throw err;
+      }
+      res.status(403).contentType("text/plain").end("Only .png files are allowed!");
+    });
+  }
+}
+);
+
+app.post('/saveProfile', urlParser, body('birthday'),body('gender'),body('biography'),(req, res) => {
+    sqlConn.query(`UPDATE fillboard_user SET birthday="${req.body.birthday}", gender="${req.body.gender}", biography="${req.body.biography}" WHERE username="${req.session.username}";`);
+    res.redirect('/profile');
+});
+
+//----------------------------------------- MAIN PAGE -----------------------------------------
+
 app.get('/main', (req, res) => {
     sqlConn.query(`SELECT * FROM fillboard_user WHERE username = '${req.session.username}';`, function (err, qres_user, fields) {
         if(err){
@@ -246,90 +295,7 @@ app.post('/main_to_event',(req, res) => {
     res.redirect('/events');
 });
 
-app.post("/uploadpfp", upload.single("pic"), (req, res) => {
-      const tempPath = req.file.path;
-      const targetPath = path.join(__dirname, "./public/images/user_pictures/", `${req.session.id_fillboard_user}pfp.png`);
-  
-      if (path.extname(req.file.originalname).toLowerCase() === ".png") {
-        fs.rename(tempPath, targetPath, err => {
-          if (err){
-            throw err;
-          }
-          res.redirect('/profile');
-        });
-      } else {
-        fs.unlink(tempPath, err => {
-          if (err){
-            throw err;
-          }
-          res.status(403).contentType("text/plain").end("Only .png files are allowed!");
-        });
-      }
-    }
-  );
-
-app.get("/pfp/:id_fillboard_user.png", (req, res) => {
-    sqlConn.query(`SELECT * FROM fillboard_user WHERE id_fillboard_user=${req.params.id_fillboard_user}`, (err, qres) => {
-        if(err) throw err;
-        else{
-            res.sendFile(path.join(__dirname, "./public/images/user_pictures/", `${qres[0]['id_fillboard_user']}pfp.png`));
-        }
-    })
-});
-
-app.get("/pfpPost/:username.png", (req, res) => {
-    sqlConn.query(`SELECT * FROM fillboard_user WHERE username='${req.params.username}'`, (err, qres) => {
-        if(err) throw err;
-        else{
-            res.sendFile(path.join(__dirname, "./public/images/user_pictures/", `${qres[0]['id_fillboard_user']}pfp.png`));
-        }
-    })
-});
-
-app.get("/post_picture/:post_picture_name", (req, res) => {
-    res.sendFile(path.join(__dirname, "./public/images/post_pictures/", `${req.params.post_picture_name}.png`));
-});
-
-app.post("/uploadbackground", upload.single("pic"), (req, res) => {
-    const tempPath = req.file.path;
-    const targetPath = path.join(__dirname, "./public/images/user_pictures/", `${req.session.id_fillboard_user}background.png`);
-
-    if (path.extname(req.file.originalname).toLowerCase() === ".png") {
-      fs.rename(tempPath, targetPath, err => {
-        if (err){
-          throw err;
-        }
-        res.redirect('/profile');
-      });
-    } else {
-      fs.unlink(tempPath, err => {
-        if (err){
-          throw err;
-        }
-        res.status(403).contentType("text/plain").end("Only .png files are allowed!");
-      });
-    }
-  }
-);
-
-app.get("/background.png", (req, res) => {
-    res.sendFile(path.join(__dirname, "./public/images/user_pictures/", `${req.session.id_fillboard_user}background.png`));
-});
-
 app.post('/main_to_profile',(req, res) => {
-    res.redirect('/profile');
-});
-
-app.post('/profile_to_main', (req, res) => {
-    res.redirect('/main');
-});
-
-app.post('/editProfile', (req, res) => {
-    res.redirect('/editProfile');
-});
-
-app.post('/saveProfile', urlParser, body('birthday'),body('gender'),body('biography'),(req, res) => {
-    sqlConn.query(`UPDATE fillboard_user SET birthday="${req.body.birthday}", gender="${req.body.gender}", biography="${req.body.biography}" WHERE username="${req.session.username}";`);
     res.redirect('/profile');
 });
 
@@ -344,6 +310,12 @@ app.post('/main', (req,res) => {
     })
     res.redirect('/main');
 });
+
+app.post('/logout', (req,res) => {
+    res.redirect('/signup');
+});
+
+//----------------------------------------- MAIN PAGE: POST FUNCTIONALITY  -----------------------------------------
 
 app.post('/post_text', urlParser,
     body('post_heading').isLength({min:1, max: 45}).withMessage('heading can not be empty'),
@@ -401,6 +373,16 @@ app.post('/post_img', upload.single("fileToUpload"), urlParser,(req, res) => {
     }
 });
 
+//----------------------------------------- LOGIN PAGE -----------------------------------------
+
+app.get('/', (req, res) => {
+    res.render('pages/signup')
+});
+
+app.get('/signin', (req, res) => {
+    res.render('pages/login')
+});
+
 app.post('/signin', urlParser, 
     body('email').isEmail().withMessage('Must be email!'),
     body('password').notEmpty().withMessage('Password cannot be empty!')
@@ -429,8 +411,10 @@ app.post('/signin', urlParser,
     }
 });
 
-app.post('/logout', (req,res) => {
-    res.redirect('/signup');
+//----------------------------------------- FRONT/SIGNUP PAGE -----------------------------------------
+
+app.get('/signup', (req, res) => {
+    res.render('pages/signup')
 });
 
 app.post('/signup', urlParser,
@@ -453,6 +437,36 @@ app.post('/signup', urlParser,
         }
     }
 });
+
+//----------------------------------------- IMAGE DISPLAY FUNCTIONALITY  -----------------------------------------
+
+app.get("/pfp/:id_fillboard_user.png", (req, res) => {
+    sqlConn.query(`SELECT * FROM fillboard_user WHERE id_fillboard_user=${req.params.id_fillboard_user}`, (err, qres) => {
+        if(err) throw err;
+        else{
+            res.sendFile(path.join(__dirname, "./public/images/user_pictures/", `${qres[0]['id_fillboard_user']}pfp.png`));
+        }
+    })
+});
+
+app.get("/pfpPost/:username.png", (req, res) => {
+    sqlConn.query(`SELECT * FROM fillboard_user WHERE username='${req.params.username}'`, (err, qres) => {
+        if(err) throw err;
+        else{
+            res.sendFile(path.join(__dirname, "./public/images/user_pictures/", `${qres[0]['id_fillboard_user']}pfp.png`));
+        }
+    })
+});
+
+app.get("/post_picture/:post_picture_name", (req, res) => {
+    res.sendFile(path.join(__dirname, "./public/images/post_pictures/", `${req.params.post_picture_name}.png`));
+});
+
+app.get("/background.png", (req, res) => {
+    res.sendFile(path.join(__dirname, "./public/images/user_pictures/", `${req.session.id_fillboard_user}background.png`));
+});
+
+//----------------------------------------- SERVER LISTEN  -----------------------------------------
 
 app.listen(3000, () => {
     console.log('Server running on port 3000!');

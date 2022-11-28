@@ -31,6 +31,10 @@
                     </div>
                 </div>
                 <div class="nav-right">
+                    <div class="user-pf-post">
+                        <img src="/pfp.png" class="user-pf-post-img" />
+
+                    </div>
                     <ul>
                          <li>
                             <form action="/main_to_profile" method="POST">
@@ -81,7 +85,10 @@
                             <h4>BIRTHDAY: </h5>
                             <p><%= user_data[0]['birthday'] %></p><br>
                         </div>
+                        
                     </div>
+
+                    
                 </div>
                 <!-- center column-->
                 <div class="main-center-col">
@@ -94,6 +101,7 @@
                             <div class="post-msg">
                                 <p><%= user_data[0]['username'] %> Post your event ! </p><br>
                             </div>
+                            
                             <div class="post-input-container">
                                 <div class="post-btn-container">
                                     <form action="/post_text" method="POST">
@@ -108,10 +116,7 @@
                                         <textarea class="textarea" rows="6" cols="70" placeholder="WHATS IN YOUR MIND?"
                                             type="post_text" name="post_text" id="post_text"></textarea><br>
                                         
-                                            <div class="post-btn">
-                                                <input type="submit" style="background-color: hsl(351, 4%, 66%)"
-                                                    value="Post" />
-                                            </div>
+                                            
                                     
                                     </form>
                                     <form action="/post_img" method="POST" enctype="multipart/form-data">
@@ -122,6 +127,11 @@
                                         </div>
 
                                     </form>
+                                    <div class="post-btn">
+                                        <input type="submit" style="background-color: hsl(351, 4%, 66%)"
+                                            value="Post" />
+                                    </div>
+
                                  </div>
                             </div>
                         </div>
@@ -154,29 +164,58 @@
                 </div>
 
                 <div class="main-right-col">
-                    <br><br>
-                    <form action="/main_to_event" method="POST">
-                        <input type="submit" style="background-color: hsl(351, 4%, 66%)" value="All Events" />
-                    </form>
-                    <br>
+                    <div class="right-sidebar">
+                        <div class="sidebar-title">
+                          <h3>Suggested Events</h3>
+                          <a href="#">   
+                            <form action="/main_to_event" method="POST">
+                            <input type="submit"  value="See ALL" />
+                        </form></a>
+                        </div>
+                
+                
+                    
+      
+                      </div>
+                    
+                    
+                    
 
                    
-                    <div class="main-right-box">
+                    <div class="event">
                         <% for (var i=0; i < event_data.length; i++) { %>
-                            <div class="main-center-box">
-                                <div class="write-post-container">
+                            <div class="main-event-box">
+                                
                                     <div class="post-input-container">
-                                        <div class="post-msg-heading">
-                                            <label for="post_heading"><%= event_data[i]['event_name'] %></label><br>
+                                        <div class="post-event-heading">
+                                            
+                                            <span class="bolded"><label for="post_heading"><%= event_data[i]['event_name'] %></label></span><br>
+                                            <p>DATE: <%= event_data[i]['begin_date'] %></p>
                                             <label for="post_heading"><%= event_data[i]['description'] %></label><br>
+                                            <a href="#">More Info</a>
                                         </div>
                                     </div>
-                                </div>
+                                
                             </div>
                         <% } %>
                     </div>
+                    <br><br><br>
+                    <div class="right-sidebar">
+                    <div class="sidebar-title">
+                        <h3>Advertisement</h3>
+                         <a href="#"></a>
+                        
+                      </div>
+
+                       <img src="/public/stylesheets/images/gg2.png" class="sidebar-ads">
+                       <br>
+                       <img src="/public/stylesheets/images/gg3.png" class="sidebar-ads">
+                    </div>
+                    
                 </div>
-            </div>
+
+                </div>
+            
         
         <div id='wrapper'>
             <div>

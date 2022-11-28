@@ -12,17 +12,6 @@
     />
     <link rel="icon" href="/public/stylesheets/images/favicon.png" />
   </head>
-   <body>
-    <h1>Edit Profile</h1>
-    <form action="/uploadpfp" enctype="multipart/form-data" method="POST"> 
-      <input type="file" name="pic" />
-      <input type="submit" value="Upload profile picture"/>
-   </form>
-   <form action="/uploadbackground" enctype="multipart/form-data" method="POST"> 
-    <input type="file" name="pic" />
-    <input type="submit" value="Upload background"/>
- </form>      
-</body>
 
   <body>
     <div class="edit-profile-container">
@@ -35,6 +24,28 @@
 
         <div class="edit-profile-right-content">
           <div class="profile-edit-box">
+            <body>
+              <h3>Profile & Wallpaper Pics</h3>
+              <form
+                action="/uploadpfp"
+                enctype="multipart/form-data"
+                method="POST"
+              >
+                <input type="file" name="pic" />
+                <input type="submit" value="Upload Profile Picture" />
+              </form>
+              <br />
+              <form
+                action="/uploadbackground"
+                enctype="multipart/form-data"
+                method="POST"
+              >
+                <input type="file" name="pic" />
+                <input type="submit" value="Upload Wallpaper" />
+              </form>
+              <br />
+            </body>
+
             <form action="/saveProfile" method="POST">
               <div class="pf-input-container">
                 <label for="birthday">BIRTHDAY:</label><br />

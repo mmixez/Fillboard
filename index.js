@@ -106,11 +106,12 @@ app.get('/events_search', (req, res) => {
 
 app.post('/search_for_events', urlParser,
     body('eventname'),
+    body('country'),
     (req, res) => {
     sqlConn.query(`SELECT event_name, e.description , begin_date, end_date, 
     min_participants, max_participants, sub_category_name, category_name FROM event e, sub_category sc, category c 
     WHERE e.sub_category_idsub_category = sc.idsub_category AND sc.category_id_category = c.id_category 
-    AND e.event_name = "${req.body.eventname}"`, 
+    AND e.event_name LIKE  "%${req.body.eventname}%"`, 
     function (err, qres_event, fields) {
         if(err){
             throw err; 

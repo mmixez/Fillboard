@@ -32,73 +32,136 @@
             </div>
         </nav>
     </div>
-    <section class="event-filter-section">
-        <form action="/search_for_events" method="POST">
-            <div class="search-box">
-                <img src="/public/stylesheets/images/search.png" class="search" />
-                <input type="text" name="eventname" id="eventname" placeholder="Search Event">
-            </div>
+    <section class="event-parent-section">
+        <section class="event-filter-section">
+            <h1>Filter for Events</h1>
             <br>
-            <input list="countries" name="country" id="country" placeholder="Country">
-            <datalist id="countries">
-                <% for (var i=0; i < country_data.length; i++) { %>
-                    <a></a>
-                    <option value="<%= country_data[i]['name'] %>">
-                <% } %>
-            </datalist>
-            <input name="city" id="city" placeholder="City" />
-            <input name="zip" id="zip" placeholder="Zip" />
-            <input name="street" id="street" placeholder="Street" />
-            <br>
-            <br>
-            <!-- <form action="/events_category_chosen" method="POST">
-                <input list="categories" name="category" id="category" placeholder="Category">
-                <datalist id="categories">
-                    <% for (var i=0; i < category_data.length; i++) { %>
+            <form action="/search_for_events" method="POST">
+                <div class="search-box">
+                    <img src="/public/stylesheets/images/search.png" class="search" />
+                    <input type="text" name="eventname" id="eventname" placeholder="Search Event">
+                </div>
+                <br>
+                <input list="countries" name="country" id="country" placeholder="Country">
+                <datalist id="countries">
+                    <% for (var i=0; i < country_data.length; i++) { %>
                         <a></a>
-                        <option value="<%= category_data[i]['category_name'] %>">
+                        <option value="<%= country_data[i]['name'] %>">
                     <% } %>
                 </datalist>
-            </form> -->
-            <input name="sub_category" id="sub_category" placeholder="Sub-Category" />
-            <br><br>
-            <div id="container">
-                <div id="left"><label>Date:</label></div>
-                <div id="middle"><input type="datetime-local" id="start_date" name="start_date"></div> - 
-                <div id="right"><input type="datetime-local" id="end_date" name="end_date"></div>
-            </div>
-            <br>
-            <div class="pf-edit-btn">
-                <input type="submit" style="background-color: hsl(351, 4%, 66%)"
-                    value="Search"></button>
-            </div>
-        </form>
-        <script>
-            /* When the user clicks on the button,
-            toggle between hiding and showing the dropdown content */
-            function myFunction() {
-              document.getElementById("myDropdown").classList.toggle("show");
-            }
-            
-            function filterFunction() {
-              var input, filter, ul, li, a, i;
-              input = document.getElementById("myInput");
-              filter = input.value.toUpperCase();
-              div = document.getElementById("myDropdown");
-              a = div.getElementsByTagName("a");
-              for (i = 0; i < a.length; i++) {
-                txtValue = a[i].textContent || a[i].innerText;
-                if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                  a[i].style.display = "";
-                } else {
-                  a[i].style.display = "none";
+                <input name="city" id="city" placeholder="City" />
+                <input name="zip" id="zip" placeholder="Zip" />
+                <input name="street" id="street" placeholder="Street" />
+                <br>
+                <br>
+                <!-- <form action="/events_category_chosen" method="POST">
+                    <input list="categories" name="category" id="category" placeholder="Category">
+                    <datalist id="categories">
+                        <% for (var i=0; i < category_data.length; i++) { %>
+                            <a></a>
+                            <option value="<%= category_data[i]['category_name'] %>">
+                        <% } %>
+                    </datalist>
+                </form> -->
+                <input name="sub_category" id="sub_category" placeholder="Sub-Category" />
+                <br><br>
+                <div id="container">
+                    <div id="left"><label>Date:</label></div>
+                    <div id="middle"><input type="datetime-local" id="start_date" name="start_date"> - </div>
+                    <div id="right"><input type="datetime-local" id="end_date" name="end_date"></div>
+                </div>
+                <br>
+                <div class="pf-edit-btn">
+                    <input type="submit" style="background-color: hsl(351, 4%, 66%)"
+                        value="Search"></button>
+                </div>
+            </form>
+            <!-- <script>
+                /* When the user clicks on the button,
+                toggle between hiding and showing the dropdown content */
+                function myFunction() {
+                document.getElementById("myDropdown").classList.toggle("show");
                 }
-              }
-            }
+                
+                function filterFunction() {
+                var input, filter, ul, li, a, i;
+                input = document.getElementById("myInput");
+                filter = input.value.toUpperCase();
+                div = document.getElementById("myDropdown");
+                a = div.getElementsByTagName("a");
+                for (i = 0; i < a.length; i++) {
+                    txtValue = a[i].textContent || a[i].innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    a[i].style.display = "";
+                    } else {
+                    a[i].style.display = "none";
+                    }
+                }
+                }
+                </script> -->
+        </section>
+
+        <!-- ----------------------------- Create Event -----------------------------  -->
+
+        <section class="event-create-section">
+            <h1>Create Event</h1>
+            <br>
+            <form action="/create_event" method="POST">
+                <input type="text" name="eventname" id="eventname" placeholder="Event Name">
+                <br><br>
+                <textarea rows="2" cols="70" placeholder="Event Description"
+                type="event_description" name="event_description" id="event_description"></textarea>
+                <br><br>
+                <input list="countries" name="country" id="country" placeholder="Country">
+                <datalist id="countries">
+                    <% for (var i=0; i < country_data.length; i++) { %>
+                        <a></a>
+                        <option value="<%= country_data[i]['name'] %>">
+                    <% } %>
+                </datalist>
+                <input name="city" id="city" placeholder="City" />
+                <input name="zip" id="zip" placeholder="Zip" />
+                <input name="street" id="street" placeholder="Street" />
+                <br>
+                <br>
+                    <input list="categories" name="category" id="category" placeholder="Category" onclick="getData()">
+                    <datalist id="categories">
+                        <% for (var i=0; i < category_data.length; i++) { %>
+                            <a></a>
+                            <option value="<%= category_data[i]['category_name'] %>">
+                        <% } %>
+                    </datalist>
+                <input name="sub_category" id="sub_category" placeholder="Sub-Category" />
+                <br><br>
+                <div id="container">
+                    <div id="left"><label>Date:</label></div>
+                    <div id="middle"><input type="datetime-local" id="start_date" name="start_date"> - </div>
+                    <div id="right"><input type="datetime-local" id="end_date" name="end_date"></div>
+                </div>
+                <br>
+                <div id="container">
+                    <div id="left"><label>Participants:</label></div>
+                    <div id="middle"><input type="number" id="min_participants" name="min_participants" min="1" max="50"> - </div>
+                    <div id="right">
+                        <input type="number" id="max_participants" name="max_participants" min="1" max="50">
+                        <label>(1 - 50 participants each event)</label>
+                    </div>
+                    
+                </div>
+                <div class="pf-edit-btn">
+                    <input type="submit" style="background-color: hsl(351, 4%, 66%)"
+                        value="Create"></button>
+                </div>
+            </form>
+            <script>
+                function getData(){
+
+                }
             </script>
+        </section>
     </section>
-    <section>
-        <p>Events found: <%= event_data.length %></p>
+    <section class="event-found-amount">
+        <p>Events found: <b><%= event_data.length %></b></p>
     </section>
     <section>
         <% for (var i=0; i < event_data.length; i++) { %>

@@ -1,23 +1,220 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta name="viewport content =" width="device-width," initial-scale="1.0" />
-        <title>Main Dashboard</title>
-        <link href= "/public/stylesheets/style.css" rel="stylesheet" type="text/css" />
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>FILLBOARD PROFILE</title>
+        <link href="/public/stylesheets/style.css" rel="stylesheet" type="text/css" />
+        <link rel="icon" href="/public/stylesheets/images/favicon.png">
     </head>
     <body>
-        <form action="/editProfile" method="POST">
-            <input type="submit" value="Edit Profile"></button>
-        </form> 
 
-        <br>
+
+        <div class="main-header">
+            <nav>
+                <div class="nav-left">
+                    <img src="/public/stylesheets/images/logo3.png" class="main-logo" />
+                    <ul>
+                        <li><img src="/public/stylesheets/images/inbox.png"></li>
+                        <li><img src="/public/stylesheets/images/inbox.png"></li>
+
+                    </ul>
+                </div>
+
+                <div class="nav-center">
+
+                    <div class="search-box">
+                        <img src="/public/stylesheets/images/search.png" class="search" />
+                        <input type="text" placeholder="Search Event, people">
+                    </div>
+                </div>
+                <div class="nav-right">
+
+                    
+                    <!-- <div class="main-top-pf-btn-container">
+
+                        <form action="/main_to_profile" method="POST">
+                        <div class="main-pf-edit-btn">
+                          <input
+                            type="submit"
+                            style="background-color: hsl(351, 4%, 66%)"
+                            
+                            value=" My Profile "
+                          />
+                        </div>
+                        </form>
+
+                        <form action="/logout" method="POST">
+                            <div class="main-top-singout-btn">
+                            <input
+                                type="submit"
+                                style="background-color: hsl(351, 4%, 66%)"
+                                
+                                value=" Sign Out "
+                            />
+                            </div>
+
+                        </form>
+                    </div> -->
+
+
+
+
+                    <div class="user-pf-post">
+                        <!-- <img src="/public/stylesheets/images/pf2.jpg" class="user-pf-post-img" /> -->
+                        <img src="/pfp.png" class="user-pf-post-img" />
+
+                    </div>
+
+
+                    <ul>
+                         <li>
+                            <form action="/main_to_profile" method="POST">
+                                
+                                
+                                <div class="main-pf-edit-btn">
+                                    <input type="submit" style="background-color: hsl(351, 4%, 66%)"
+                                        value="My Profile"></button>
+                                    
+                                </div>
+                            
+                            </form>
+                        </li>
+                        <li>
+                            <form action="/logout" method="POST">
+                            
+                                <div class="main-top-signout-btn">
+                                    <input type="submit" style="background-color: hsl(351, 4%, 66%)"
+                                        value="Sign Out"></button>
+                                </div>
+                                
+                                
+                                    
+                            </form>
+                        </li>
+                   
+                    </ul>
+                </div>
+
+            </nav>
+
+            <div class="main-container">
+                <!-- left column-->
+                <div class="pf-left-col">
+                    <!-- <div class="pf-profile-box">
+                        <div class="main-left-col-title">
+                        </div>
+                        <div class="welcome-msg">
+
+                        
+                            <h4>ABOUT ME: </h5>
+                            <p><%= user_data[0]['biography'] %></p><br>
+                            
+                           
+
+
+                        </div>
+                    </div> -->
+                    
+                </div>
+                <div class="pf-center-col">
+                    <div class="pf-wallpaper">
+                    <img src="/background.png" class="main-pf" /><br><br>
+                    
+                </div><br>
+                <div class="pf-about-me-label">
+                <p>ABOUT ME</p>
+                </div>
+                <div class="pf-about-me">
+                <div class="pf-about-msg">
+
+                        <br>
+                    
+                        
+                    <p class="p4"><%= user_data[0]['biography'] %></p><br>
+                    
+                   
+
+
+                </div>
+                </div>
+                </div>
+                <div class="pf-right-col">
+                    <div class="pf-right-box">
+                        <div class="main-left-col-title">
+                        </div>
+                        <div class="welcome-msg">
+
+                            <p><%= user_data[0]['username'] %></p><br>
+                            <!-- <p> I knew you were coming.</p> -->
+                            <p>Loggd In Account: <%= user_data[0]['email'] %>
+                            </p><br>
+
+                           <!--- <img src="/public/stylesheets/images/pf2.jpg" class="main-pf" /><br><br> -->
+                            <img src="/pfp.png" class="main-pf" /><br><br>
+                           
+                            <!-- <h4>ABOUT ME: </h5>
+                            <p><%= user_data[0]['biography'] %></p><br> -->
+                            <h4>GENDER: </h5>
+                            <p><%= user_data[0]['gender'] %></p><br>
+                            <h4>BIRTHDAY: </h5>
+                            <p><%= user_data[0]['birthday'] %></p><br>
+                           
+
+                               <div class="pf-btn-box"> 
+                                 <ul>
+                                    <li>
+                                    <form action="/profile_to_main" method="POST">
+                                    
+                                       <div class="main-pf-edit-btn">
+                                           <input type="submit" style="background-color: hsl(351, 4%, 66%)"
+                                               value="Back to Main"></button>
+                                           
+                                       </div>
+                                   
+                                        </form>
+                                        </li>
+                                        <li>
+                                        <form action="/editProfile" method="POST">
+                                   
+                                       <div class="main-top-signout-btn">
+                                           <input type="submit" style="background-color: hsl(351, 4%, 66%)"
+                                               value="Edit Profile"></button>
+                                       </div>
+                                       
+                                       
+                                           
+                                        </form>
+                                        </li>
+                          
+                                    </ul>
+
+
+                                </div>
+
+
+
+
+
+                        </div>
+                    </div>
+                    
+
+                </div>
+
+
+
+        </div>
+
+        
+
+        <!-- <br>
         <h3>Biography: </h3><p><%= user_data[0]['biography'] %></p><br>
         <h3>Gender: </h3><p><%= user_data[0]['gender'] %></p><br>
-        <h3>Birthday: </h3><p><%= user_data[0]['birthday'] %></p><br>
+        <h3>Birthday: </h3><p><%= user_data[0]['birthday'] %></p><br> -->
 
-        <form action="/profile_to_main" method="POST">
-            <input type="submit" value="Go Back"></button>
-        </form> 
+        
 
     </body>
 </html> 

@@ -1,8 +1,31 @@
+.event-parent-section {
+    margin: 1%;
+    overflow: hidden;
+}
+
 .event-filter-section {
     background-color: lightblue;
-    padding: 2%;
+    float: left;
+    width: 47%;
+    padding: 1%;
+    border-radius: 20px;
+    border-style: solid;
+    border-color: whitesmoke;
 }
-  
+
+.event-create-section {
+    background-color: lightblue;
+    float: right;
+    width: 47%;
+    padding: 1%;
+    border-radius: 20px;
+    border-style: solid;
+    border-color: whitesmoke;
+}
+
+.event-found-amount {
+    text-align: center;
+}
 
 .event-display-box {
     margin: 1%;
@@ -10,4 +33,5 @@
     border-color: whitesmoke;
     padding: 0.5%;
     background-color: rgb(79, 79, 218);
+    border-radius: 20px;
 }

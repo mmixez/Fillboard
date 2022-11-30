@@ -322,8 +322,6 @@ app.get('/main', (req, res) => {
 
 app.get('/deletePost/:idposts', (req, res) => {
     sqlConn.query(`DELETE FROM posts WHERE user_id_posts = '${req.session.id_fillboard_user}' AND idposts = '${req.params.idposts}';`, function (err, qres_user, fields) {
-        console.log(`${req.session.id_fillboard_user}`);
-        console.log(`${req.params.idposts}`);        
         if (err) {
             throw err;
         }

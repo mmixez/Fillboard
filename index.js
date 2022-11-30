@@ -287,7 +287,7 @@ app.get('/main', (req, res) => {
             throw err;
         }
         else {
-            sqlConn.query(`SELECT heading, post_text, event_name, begin_date, end_date, username, picture_path 
+            sqlConn.query(`SELECT heading, post_text, event_name, begin_date, end_date, username, picture_path, idposts
             FROM posts p, event e, fillboard_user u WHERE p.event_id = e.id_event  AND p.user_id_posts =  u.id_fillboard_user 
             ORDER BY p.idposts DESC;`,
                 function (err, qres_posts, fields) {
@@ -316,6 +316,19 @@ app.get('/main', (req, res) => {
                         })
                     }
                 })
+        }
+    })
+});
+
+app.get('/deletePost/:idposts', (req, res) => {
+    sqlConn.query(`DELETE FROM posts WHERE user_id_posts = '${req.session.id_fillboard_user}' AND idposts = '${req.params.idposts}';`, function (err, qres_user, fields) {
+        console.log(`${req.session.id_fillboard_user}`);
+        console.log(`${req.params.idposts}`);        
+        if (err) {
+            throw err;
+        }
+        else {
+            res.redirect('/main');
         }
     })
 });

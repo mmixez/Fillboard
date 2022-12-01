@@ -366,13 +366,14 @@ app.post('/post_text', urlParser,
     body('post_text').isLength({ min: 1, max: 200 }).withMessage('Text can not be empty!')
     , (req, res) => {
         var errs = validationResult(req);
+        console.log("req session: " + req.session.id_fillboard_user);
 
         if (!errs.isEmpty()) {
             return res.status(400).json({ errs: errs.array() })
         } else {
             sqlConn.query(`INSERT INTO posts (heading, post_text, event_id, user_id_posts) VALUES 
             ('${req.body.post_heading}', '${req.body.post_text}', '1', '${req.session.id_fillboard_user}');`, (err, qres, fields) => {
-                console.log("req session: " + req.session);
+                
                 if (err) throw err;
             });
 
@@ -446,6 +447,7 @@ app.post('/signin', urlParser,
                 } else {
                     bcrypt.compare(req.body.password, qres[0]['password']).then((result) => {
                         if (result == true) {
+                            console.log("SUCCESSFSUL LOGIN====", qres[0]);
                             req.session.qres = qres;
                             req.session.username = qres[0]['username'];
                             req.session.id_fillboard_user = qres[0]['id_fillboard_user'];

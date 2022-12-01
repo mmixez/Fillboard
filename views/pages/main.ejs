@@ -144,7 +144,7 @@
                                         <label>Date: <%= post_data[i]['begin_date'] %> - <%= post_data[i]['end_date'] %></label><br>
                                     </div>
                                     <img src="<%= '/post_picture/' + post_data[i]['picture_path']%>">
-                                    <form action="<%= '/deletePost/' +post_data[0]['idposts']%>">
+                                    <form action="<%= '/deletePost/' + post_data[i]['idposts']%>">
                                         <div class="post-btn">
                                             <input type="submit" style="background-color: hsl(351, 4%, 66%)"
                                                 value="DELETE" />

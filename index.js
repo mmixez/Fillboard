@@ -381,7 +381,7 @@ app.post('/post_text', urlParser,
             sqlConn.query(`SELECT * FROM posts WHERE user_id_posts=${req.session.id_fillboard_user} AND post_text='${req.body.post_text}'`, (err, qres, fields) => {
                 if (err) throw err;
                 else {
-
+                    console.log({qres});
                     // if image uploaded => rename image to username_postID.png, else => skip
                     const tempPath = path.join(__dirname, "./public/images/post_pictures/", `${req.session.username}.png`);
                     const targetPath = path.join(__dirname, "./public/images/post_pictures/", `${req.session.username}_${qres[0]['idposts']}.png`);

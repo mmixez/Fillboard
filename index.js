@@ -371,7 +371,10 @@ app.post('/post_text', urlParser,
             return res.status(400).json({ errs: errs.array() })
         } else {
             sqlConn.query(`INSERT INTO posts (heading, post_text, event_id, user_id_posts) VALUES 
-            ('${req.body.post_heading}', '${req.body.post_text}', '1', '${req.session.id_fillboard_user}');`);
+            ('${req.body.post_heading}', '${req.body.post_text}', '1', '${req.session.id_fillboard_user}');`, (err, qres, fields) => {
+                console.log("req session: " + req.session);
+                if (err) throw err;
+            });
 
             // get post id that was just created
             sqlConn.query(`SELECT * FROM posts WHERE user_id_posts=${req.session.id_fillboard_user} AND post_text='${req.body.post_text}'`, (err, qres, fields) => {

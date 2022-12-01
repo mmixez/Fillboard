@@ -33,21 +33,36 @@ const upload = multer({
 // url parser used to decipher input from forms
 var urlParser = bp.urlencoded({ extended: false });
 
-// db connection obj
-var sqlConn = mysql.createConnection({
-    host: "localhost",
-    user: "root",
-    password: "MySQLAdmin",
-    database: "Fillboard"
-})
+let sqlConn;
 
-// check db connection
-sqlConn.connect((err) => {
-    if (err) console.log(err)
-    else {
-        console.log('Successfully connected to SQL database!')
-    }
-})
+// process.env.DATABASE_URL is set on the Heroku cloud server
+if (process.env.DATABASE_URL) {
+    console.log("running production database setup");
+    
+    sqlConn  = mysql.createPool(process.env.DATABASE_URL);
+      
+      sqlConn.on("connection", (connection) => {
+        console.log('Successfully connected to SQL database!');
+      });
+
+} else {
+    console.log("running local database setup");
+    sqlConn = mysql.createConnection({
+        host: "127.0.0.1",
+        user: "root",
+        password: "MySQLAdmin", //might have to change this to your pwd
+        database: "Fillboard"
+    });
+
+    // check db connection
+    sqlConn.connect((err) => {
+        if(err) console.log(err)
+        else  {
+            console.log('Successfully connected to SQL database!');
+        }
+    })
+}
+
 
 app.get("/", express.static(path.join(__dirname, "./views/pages")));
 
@@ -502,6 +517,6 @@ app.get("/background.png", (req, res) => {
 
 //----------------------------------------- SERVER LISTEN  -----------------------------------------
 
-app.listen(3000, () => {
+app.listen(process.env.PORT || 3000, () => {
     console.log('Server running on port 3000!');
 });

@@ -54,8 +54,8 @@ app.get("/", express.static(path.join(__dirname, "./views/pages")));
 //----------------------------------------- EVENT PAGE -----------------------------------------
 
 app.get('/events', (req, res) => {
-    sqlConn.query(`SELECT event_name, e.description , begin_date, end_date, 
-    min_participants, max_participants, sub_category_name, category_name FROM event e, sub_category sc, category c 
+    sqlConn.query(`SELECT event_name, e.description , begin_date, end_date,
+    min_participants, max_participants, sub_category_name, category_name, event_picture_path FROM event e, sub_category sc, category c 
     WHERE e.sub_category_idsub_category = sc.idsub_category AND sc.category_id_category = c.id_category;`,
         function (err, qres_event, fields) {
             if (err) {
@@ -99,7 +99,7 @@ app.post('/search_for_events', urlParser,
     body('country'),
     (req, res) => {
         sqlConn.query(`SELECT event_name, e.description , begin_date, end_date, 
-    min_participants, max_participants, sub_category_name, category_name FROM event e, sub_category sc, category c 
+    min_participants, max_participants, sub_category_name, category_name, event_picture_path FROM event e, sub_category sc, category c 
     WHERE e.sub_category_idsub_category = sc.idsub_category AND sc.category_id_category = c.id_category 
     AND e.event_name LIKE  "%${req.body.eventname}%"`,
             function (err, qres_event, fields) {
@@ -173,24 +173,68 @@ app.post('/create_event', urlParser,
         var errs = validationResult(req);
 
         if (!errs.isEmpty()) {
-            return res.status(400).json({ errs: errs.array() })
+            return res.status(400).json({ errs: errs.array() });
         } else {
             sqlConn.query(`SELECT country_code FROM country WHERE name = '${req.body.country}';`, (err, qres, fields) => {
-                if(err) throw err;
+                if (err) throw err;
                 else {
                     sqlConn.query(`INSERT INTO location (country_country_code, city_name, zip, street_address) 
-                    VALUES ('${qres[0]['country_code']}', '${req.body.city}', ${req.body.zip}, '${req.body.street}');`)
+                    VALUES ('${qres[0]['country_code']}', '${req.body.city}', ${req.body.zip}, '${req.body.street}');`);
 
                     sqlConn.query(`INSERT INTO event (event_name, description, begin_date, end_date, location_idlocation, 
                     sub_category_idsub_category, min_participants, max_participants) 
                     VALUES ('${req.body.eventname}', '${req.body.event_description}', 
                     '${req.body.start_date}', '${req.body.end_date}', 
-                    LAST_INSERT_ID(), 1, ${req.body.min_participants}, ${req.body.max_participants});`)
+                    LAST_INSERT_ID(), 1, ${req.body.min_participants}, ${req.body.max_participants});`);
+
+                    // get event id that was just created
+                    sqlConn.query(`SELECT * FROM event WHERE event_name='${req.body.eventname}' AND description='${req.body.event_description}';`, (err, qres, fields) => {
+                        if (err) {
+                            throw err;
+                        }
+                        else {
+                            // if image uploaded => rename image to eventID.png, else => skip
+                            const tempPath = path.join(__dirname, "./public/images/event_pictures/", `${req.session.username}.png`);
+                            const targetPath = path.join(__dirname, "./public/images/event_pictures/", `${req.session.username}_${qres[0]['id_event']}.png`);
+                            if (fs.existsSync(tempPath)) {
+                                fs.rename(
+                                    tempPath,
+                                    targetPath,
+                                    err => {
+                                        if (err) { throw err; }
+                                    }
+                                )
+                            }
+                            sqlConn.query(`UPDATE event SET event_picture_path = '${req.session.username}_${qres[0]['id_event']}' WHERE id_event='${qres[0]['id_event']}';`);
+                        }
+                    });
                 }
             })
             res.redirect('/events')
         }
-    });
+    }
+);
+
+app.post('/event_img', upload.single("fileToUpload"), urlParser, (req, res) => {
+    const tempPath = req.file.path;
+    const targetPath = path.join(__dirname, "./public/images/event_pictures/", `${req.session.username}.png`);
+
+    if (path.extname(req.file.originalname).toLowerCase() === ".png") {
+        fs.rename(tempPath, targetPath, err => {
+            if (err) {
+                throw err;
+            }
+            res.redirect('/events');
+        });
+    } else {
+        fs.unlink(tempPath, err => {
+            if (err) {
+                throw err;
+            }
+            res.status(403).contentType("text/plain").end("Only .png files are allowed!");
+        });
+    }
+});
 
 //----------------------------------------- PROFILE PAGE -----------------------------------------
 
@@ -287,7 +331,7 @@ app.get('/main', (req, res) => {
             throw err;
         }
         else {
-            sqlConn.query(`SELECT heading, post_text, event_name, begin_date, end_date, username, picture_path, idposts
+            sqlConn.query(`SELECT heading, post_text, event_name, begin_date, end_date, username, post_picture_path, idposts
             FROM posts p, event e, fillboard_user u WHERE p.event_id = e.id_event  AND p.user_id_posts =  u.id_fillboard_user 
             ORDER BY p.idposts DESC;`,
                 function (err, qres_posts, fields) {
@@ -386,7 +430,7 @@ app.post('/post_text', urlParser,
                             }
                         )
                     }
-                    sqlConn.query(`UPDATE posts SET picture_path = '${req.session.username}_${qres[0]['idposts']}' WHERE idposts = '${qres[0]['idposts']}';`);
+                    sqlConn.query(`UPDATE posts SET post_picture_path = '${req.session.username}_${qres[0]['idposts']}' WHERE idposts = '${qres[0]['idposts']}';`);
                 }
             });
             res.redirect('/main')
@@ -509,6 +553,10 @@ app.get("/post_picture/:post_picture_name", (req, res) => {
 
 app.get("/background.png", (req, res) => {
     res.sendFile(path.join(__dirname, "./public/images/user_pictures/", `${req.session.id_fillboard_user}background.png`));
+});
+
+app.get("/event_picture/:event_picture_name", (req, res) => {
+    res.sendFile(path.join(__dirname, "./public/images/event_pictures/", `${req.params.event_picture_name}.png`));
 });
 
 //----------------------------------------- SERVER LISTEN  -----------------------------------------

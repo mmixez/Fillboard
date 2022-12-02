@@ -116,7 +116,6 @@
                                             <input type="submit" style="background-color: hsl(351, 4%, 66%)"
                                             value="UPLOAD IMG" /> 
                                         </div>
-
                                     </form>
                                     
                                  </div>
@@ -124,8 +123,7 @@
                         </div>
                     </div>
                     <% var rowSize = post_data.length;
-                    for (var i=0; i < rowSize; i++) { 
-                        var picPath = post_data[i]['picture_path']%>
+                    for (var i=0; i < rowSize; i++) { %>
                         <div class="main-center-box">
                             <div class="write-post-container">
                                 <div class="post-input-container">
@@ -143,7 +141,7 @@
                                         <label>Event: <%= post_data[i]['event_name'] %></label><br>
                                         <label>Date: <%= post_data[i]['begin_date'] %> - <%= post_data[i]['end_date'] %></label><br>
                                     </div>
-                                    <img src="<%= '/post_picture/' + post_data[i]['picture_path']%>">
+                                    <img src="<%= '/post_picture/' + post_data[i]['post_picture_path']%>">
                                     <form action="<%= '/deletePost/' + post_data[i]['idposts']%>">
                                         <div class="post-btn">
                                             <input type="submit" style="background-color: hsl(351, 4%, 66%)"

@@ -1035,6 +1035,10 @@
     font-size: 20px;
 }
 
+.post-comment-heading {
+    margin-top: 5%;
+}
+
 .post-event-heading {
     
     margin-left: 5%;
@@ -1049,6 +1053,13 @@
     margin-right:1%;
 }
 
+.red {
+    color: red;
+}
+
+.comment_text {
+    font-size: 80px;
+}
 
 #wrapper {
     height: auto;

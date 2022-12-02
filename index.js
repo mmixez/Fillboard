@@ -302,14 +302,15 @@ app.get('/main', (req, res) => {
             throw err;
         }
         else {
-            sqlConn.query(`SELECT heading, post_text, event_name, begin_date, end_date, username, picture_path 
-            FROM posts p, event e, fillboard_user u WHERE p.event_id = e.id_event  AND p.user_id_posts =  u.id_fillboard_user 
+            sqlConn.query(`SELECT p.idposts, heading, post_text, event_name, begin_date, end_date, username, picture_path
+            FROM posts p, event e, fillboard_user u WHERE p.event_id = e.id_event AND p.user_id_posts = u.id_fillboard_user 
             ORDER BY p.idposts DESC;`,
                 function (err, qres_posts, fields) {
                     if (err) {
                         throw err;
                     }
                     else {
+                        
                         sqlConn.query(`SELECT * FROM category;`, function (err, qres_categories, fields) {
                             if (err) {
                                 throw err;
@@ -319,12 +320,41 @@ app.get('/main', (req, res) => {
                                         throw err;
                                     }
                                     else {
-                                        res.render('pages/main', {
-                                            user_data: qres_user,
-                                            post_data: qres_posts,
-                                            category_data: qres_categories,
-                                            event_data: qres_events,
+                                        let postIds = qres_posts.map(q => q.idposts);
+                                        let postIdQuery = postIds.join(",");
+                                        
+
+                                        sqlConn.query(`SELECT f.username, c.* FROM comments c, fillboard_user f WHERE f.id_fillboard_user = c.user_id_comments AND idposts IN (${postIdQuery});`, function (err, qres_comments, fields) {
+                                            if (err) {
+                                                throw err;
+                                            }
+                                            
+                                            for (let i = 0; i < qres_comments.length; i++) {
+                                                let comment = qres_comments[i];
+                                                let id = comment.idposts;
+                                                for (let j = 0; j < qres_posts.length; j++) {
+                                                    let post = qres_posts[j];
+                                                    if (post.idposts === id) {
+                                                        
+                                                        if (post.comments === undefined) {
+                                                            post.comments = [comment];
+                                                        } else {
+                                                            post.comments.push(comment);
+                                                        }
+                                                        break;
+                                                    }
+                                                }
+                                            }
+                                            
+                                            res.render('pages/main', {
+                                                user_data: qres_user,
+                                                post_data: qres_posts,
+                                                category_data: qres_categories,
+                                                event_data: qres_events,
+                                            });
                                         });
+
+                                        
                                     }
                                 })
                             }
@@ -366,7 +396,6 @@ app.post('/post_text', urlParser,
     body('post_text').isLength({ min: 1, max: 200 }).withMessage('Text can not be empty!')
     , (req, res) => {
         var errs = validationResult(req);
-        console.log("req session: " + req.session.id_fillboard_user);
 
         if (!errs.isEmpty()) {
             return res.status(400).json({ errs: errs.array() })
@@ -381,7 +410,7 @@ app.post('/post_text', urlParser,
             sqlConn.query(`SELECT * FROM posts WHERE user_id_posts=${req.session.id_fillboard_user} AND post_text='${req.body.post_text}'`, (err, qres, fields) => {
                 if (err) throw err;
                 else {
-                    console.log({qres});
+                    
                     // if image uploaded => rename image to username_postID.png, else => skip
                     const tempPath = path.join(__dirname, "./public/images/post_pictures/", `${req.session.username}.png`);
                     const targetPath = path.join(__dirname, "./public/images/post_pictures/", `${req.session.username}_${qres[0]['idposts']}.png`);
@@ -421,6 +450,25 @@ app.post('/post_img', upload.single("fileToUpload"), urlParser, (req, res) => {
         });
     }
 });
+
+app.post('/comments_text', urlParser,
+    body('comments_text').isLength({ min: 1, max: 200 }).withMessage('Text can not be empty!')
+    , (req, res) => {
+        var errs = validationResult(req);
+
+        if (!errs.isEmpty()) {
+            return res.status(400).json({ errs: errs.array() })
+        } else {
+            sqlConn.query(`INSERT INTO comments (comments_text, idposts, user_id_comments) VALUES 
+            ('${req.body.comments_text}', '${req.body.idposts}', '${req.session.id_fillboard_user}');`, (err, qres, fields) => {
+                
+                if (err) throw err;
+            });
+        }
+        res.redirect('/main');
+});
+    
+
 
 //----------------------------------------- LOGIN PAGE -----------------------------------------
 

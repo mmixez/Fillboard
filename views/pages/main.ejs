@@ -143,12 +143,37 @@
                                         <label>Event: <%= post_data[i]['event_name'] %></label><br>
                                         <label>Date: <%= post_data[i]['begin_date'] %> - <%= post_data[i]['end_date'] %></label><br>
                                     </div>
+                                    <div class="comments">
+                                       
+                                        <% var numComments = post_data[i].comments && post_data[i].comments.length || 0;
+                                        
+                                        for (var c = 0; c < numComments; c++) {%>
+                                            <div class="post-comment-heading">
+                                                <div class="red"><%= post_data[i].comments[c]['username'] %> replied: </div>
+                                                <div class = "comment_text"><%= post_data[i].comments[c]['comments_text'] %> </div>
+                                                
+                                            </div>
+                                    
+                                      <%  } %>
+                                    </div>
+                                    
+                                    <div class="post-comment-heading">
+                                        <form action="/comments_text" method = "POST">
+                                            <textarea class="textarea" rows="3" cols="70" placeholder="Leave a comment!"
+                                                type="text" name="comments_text" id="comments_text"></textarea><br>
+                                                <div class="comments-btn">
+                                                    <input type="hidden" name="idposts" value="<%= post_data[i]['idposts']%>" />
+                                                    <input type="submit" style="background-color: hsl(351, 4%, 66%)"
+                                                        value="reply" />
+                                                </div>
+                                        </form>
+                                    </div>
                                     <img src="<%= '/post_picture/' + post_data[i]['picture_path']%>">
                                 </div>
                             </div>
                         </div>
                     <% } %>
-                </div>
+               
 
                 <div class="main-right-col">
                     <div class="right-sidebar">

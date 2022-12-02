@@ -54,7 +54,7 @@ app.get("/", express.static(path.join(__dirname, "./views/pages")));
 //----------------------------------------- EVENT PAGE -----------------------------------------
 
 app.get('/events', (req, res) => {
-    sqlConn.query(`SELECT event_name, e.description , begin_date, end_date, 
+    sqlConn.query(`SELECT e.id_event, event_name, e.description , begin_date, end_date, 
     min_participants, max_participants, sub_category_name, category_name FROM event e, sub_category sc, category c 
     WHERE e.sub_category_idsub_category = sc.idsub_category AND sc.category_id_category = c.id_category;`,
         function (err, qres_event, fields) {
@@ -192,6 +192,28 @@ app.post('/create_event', urlParser,
         }
     });
 
+    app.post('/join_event', urlParser,
+    body('event_id'),
+    (req, res) => {
+        console.log("Joining event - Username: " + req.session.username + " event id: " + req.body.event_id)
+        sqlConn.query(`SELECT id_fillboard_user FROM fillboard_user WHERE username = "${req.session.username}";`, (err, qres, fields) => {
+            if(err) throw err;
+            else {
+                sqlConn.query(`INSERT INTO participates (user_id, event_id) VALUES (${qres[0]['id_fillboard_user']},${req.body.event_id});`
+                , (err) => {
+                    if (err){
+                        if(err.code = "ER_DUP_ENTRY"){
+                            console.log("You already joined this event")
+                        } else {
+                            throw err;
+                        }
+                    }
+                })
+            }
+        })
+        res.redirect('/events');
+    });
+
 //----------------------------------------- PROFILE PAGE -----------------------------------------
 
 app.get('/profile', (req, res) => {
@@ -287,7 +309,7 @@ app.get('/main', (req, res) => {
             throw err;
         }
         else {
-            sqlConn.query(`SELECT heading, post_text, event_name, begin_date, end_date, username, picture_path 
+            sqlConn.query(`SELECT heading, post_text, event_name, begin_date, end_date, username, picture_path
             FROM posts p, event e, fillboard_user u WHERE p.event_id = e.id_event  AND p.user_id_posts =  u.id_fillboard_user 
             ORDER BY p.idposts DESC;`,
                 function (err, qres_posts, fields) {
@@ -304,12 +326,21 @@ app.get('/main', (req, res) => {
                                         throw err;
                                     }
                                     else {
-                                        res.render('pages/main', {
-                                            user_data: qres_user,
-                                            post_data: qres_posts,
-                                            category_data: qres_categories,
-                                            event_data: qres_events,
-                                        });
+                                        sqlConn.query(`SELECT event_name FROM event e, fillboard_user u, participates p WHERE e.id_event = p.event_id AND u.id_fillboard_user = p.user_id AND u.username = 
+                                        "${req.session.username}";`, function (err, qres_events_participated, fields) {
+                                            if (err) {
+                                                throw err;
+                                            }
+                                            else {
+                                                res.render('pages/main', {
+                                                    user_data: qres_user,
+                                                    post_data: qres_posts,
+                                                    category_data: qres_categories,
+                                                    event_data: qres_events,
+                                                    events_participated: qres_events_participated,
+                                                });
+                                            }
+                                        })
                                     }
                                 })
                             }
@@ -348,15 +379,19 @@ app.post('/logout', (req, res) => {
 
 app.post('/post_text', urlParser,
     body('post_heading').isLength({ min: 1, max: 45 }).withMessage('heading can not be empty'),
-    body('post_text').isLength({ min: 1, max: 200 }).withMessage('Text can not be empty!')
-    , (req, res) => {
+    body('post_text').isLength({ min: 1, max: 200 }).withMessage('Text can not be empty!'),
+    body('post_event'),
+    (req, res) => {
         var errs = validationResult(req);
 
         if (!errs.isEmpty()) {
             return res.status(400).json({ errs: errs.array() })
         } else {
-            sqlConn.query(`INSERT INTO posts (heading, post_text, event_id, user_id_posts) VALUES 
-            ('${req.body.post_heading}', '${req.body.post_text}', '1', '${req.session.id_fillboard_user}');`);
+            sqlConn.query(`SELECT id_event FROM event WHERE event_name = "${req.body.post_event}";`, (err, event_id, fields) => {
+                sqlConn.query(`INSERT INTO posts (heading, post_text, event_id, user_id_posts) VALUES 
+                ('${req.body.post_heading}', '${req.body.post_text}', '${event_id[0]['id_event']}', 
+                '${req.session.id_fillboard_user}');`);
+            })
 
             // get post id that was just created
             sqlConn.query(`SELECT * FROM posts WHERE user_id_posts=${req.session.id_fillboard_user} AND post_text='${req.body.post_text}'`, (err, qres, fields) => {

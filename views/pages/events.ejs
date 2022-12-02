@@ -174,13 +174,18 @@
                 <p>Maximum participants: <%= event_data[i]['max_participants'] %></p>
                 <p>Category: <%= event_data[i]['category_name'] %></p>
                 <p>Sub Category: <%= event_data[i]['sub_category_name'] %></p>
+                <form action="/join_event" method="POST">
+                    <div class="pf-edit-btn">
+                        <input type="hidden" id="event_id" name="event_id" value="<%= event_data[i]['id_event'] %>">
+                        <input type="submit" style="background-color: hsl(351, 4%, 66%)" value="Join"></button>
+                    </div>
+                </form>
             </div>
         <% } %>
-
     </section>
     <div id='wrapper'>
         <div>
-            <p1> FillBoard 2022</p1>
+            <p1> FillBoard 2022 </p1>
         </div>
     </div>
     <footer></footer>

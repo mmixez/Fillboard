@@ -72,7 +72,7 @@
                         <div class="welcome-msg">
 
                             <p>WELCOME <%= user_data[0]['username'] %> !</p><br>
-                            <p> I knew you were coming.</p>
+                            <p> I knew you were coming.</p> <br>
                             <p>Logged In Account: <%= user_data[0]['email'] %></p>
                         </div>
                         
@@ -104,19 +104,26 @@
                                             <label for="post_text">Post Text</label><br>
                                         </div>
                                         <textarea class="textarea" rows="6" cols="70" placeholder="WHATS IN YOUR MIND?"
-                                            type="post_text" name="post_text" id="post_text"></textarea><br>
-                                            <div class="post-btn">
-                                                <input type="submit" style="background-color: hsl(351, 4%, 66%)"
-                                                    value="Post" />
-                                            </div>
-                                        </form> 
+                                            type="post_text" name="post_text" id="post_text"></textarea>
+                                        <br>
+                                        <input list="events" name="post_event" id="post_event" placeholder="Event">
+                                        <datalist id="events">
+                                                <% for (var i=0; i < events_participated.length; i++) { %>
+                                                <a></a>
+                                                <option value="<%= events_participated[i]['event_name'] %>">
+                                            <% } %> 
+                                        </datalist><br>
+                                        <div class="post-btn">
+                                            <input type="submit" style="background-color: hsl(351, 4%, 66%)"
+                                                value="Post" />
+                                        </div>
+                                    </form> 
                                     <form action="/post_img" method="POST" enctype="multipart/form-data">
                                         <div class="post-img-up-btn">
                                             <input type="file" accept="image/png" name="fileToUpload" id="fileToUpload">
                                             <input type="submit" style="background-color: hsl(351, 4%, 66%)"
                                             value="UPLOAD IMG" /> 
                                         </div>
-
                                     </form>
                                     
                                  </div>

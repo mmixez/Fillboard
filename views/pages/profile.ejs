@@ -17,19 +17,16 @@
                     <img src="/public/stylesheets/images/logo3.png" class="main-logo" />
                     <ul>
                         <li><img src="/public/stylesheets/images/inbox.png"></li>
-                        <li><img src="/public/stylesheets/images/inbox.png"></li>
+                       
 
                     </ul>
                 </div>
 
                 <div class="nav-center">
 
-                    <div class="search-box">
-                        <img src="/public/stylesheets/images/search.png" class="search" />
-                        <input type="text" placeholder="Search Event, people">
-                    </div>
+                   
                 </div>
-                <div class="nav-right">
+                <div class="pf-nav-right">
 
                     
                     <!-- <div class="main-top-pf-btn-container">
@@ -68,23 +65,20 @@
                     </div>
 
 
-                    <ul>
-                         <li>
-                            <form action="/main_to_profile" method="POST">
-                                
-                                
-                                <div class="main-pf-edit-btn">
-                                    <input type="submit" style="background-color: hsl(351, 4%, 66%)"
-                                        value="My Profile"></button>
+                         <form action="/profile_to_main" method="POST">
                                     
-                                </div>
+                                       <div class="main-pf-edit-btn">
+                                           <input type="submit" style="background-color: hsl(351, 4%, 66%)"
+                                               value="Back to Main"></button>
+                                           
+                                       </div>
+                                   
+                                        </form>
+
+                        
+                            <!-- <form action="/logout" method="POST">
                             
-                            </form>
-                        </li>
-                        <li>
-                            <form action="/logout" method="POST">
-                            
-                                <div class="main-top-signout-btn">
+                                <div class="pf-top-signout-btn">
                                     <input type="submit" style="background-color: hsl(351, 4%, 66%)"
                                         value="Sign Out"></button>
                                 </div>
@@ -92,9 +86,9 @@
                                 
                                     
                             </form>
-                        </li>
+                         -->
                    
-                    </ul>
+                    
                 </div>
 
             </nav>
@@ -163,9 +157,9 @@
                            
 
                                <div class="pf-btn-box"> 
-                                 <ul>
-                                    <li>
-                                    <form action="/profile_to_main" method="POST">
+                                 
+                                    
+                                    <!-- <form action="/profile_to_main" method="POST">
                                     
                                        <div class="main-pf-edit-btn">
                                            <input type="submit" style="background-color: hsl(351, 4%, 66%)"
@@ -173,12 +167,12 @@
                                            
                                        </div>
                                    
-                                        </form>
-                                        </li>
-                                        <li>
+                                        </form> -->
+                                        
+                                        
                                         <form action="/editProfile" method="POST">
                                    
-                                       <div class="main-top-signout-btn">
+                                       <div class="pf-top-signout-btn">
                                            <input type="submit" style="background-color: hsl(351, 4%, 66%)"
                                                value="Edit Profile"></button>
                                        </div>
@@ -186,9 +180,9 @@
                                        
                                            
                                         </form>
-                                        </li>
+                                        
                           
-                                    </ul>
+                                    
 
 
                                 </div>

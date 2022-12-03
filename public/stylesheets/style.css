@@ -49,6 +49,10 @@ nav {
 .user-pf.post {
   display: flex;
   align-items: center;
+}
+.user-pf.post li {
+  display: flex;
+  align-items: center;
   display: inline-block;
 }
 
@@ -563,7 +567,7 @@ nav {
   border-radius: 4px;
   position: sticky;
   position: -webkit-sticky;
-  top: 78px;
+  top: 84px;
   padding-top: 1%;
   padding-bottom: 1.2%;
   padding-left: 2%;
@@ -868,6 +872,10 @@ input[type="submit"] {
   margin-bottom: 1%;
   font-size: 20px;
 }
+
+.post-msg-heading li {
+  display: inline-block;
+}
 .post-msg-text {
   color: white;
   margin-left: 1%;
@@ -884,6 +892,7 @@ input[type="submit"] {
 }
 
 .post-img-info {
+  align-items: center;
 }
 .post-input-container {
   margin-right: 1%;

@@ -18,7 +18,7 @@
                     <img src="/public/stylesheets/images/logo3.png" class="main-logo" />
                     <ul>
                         <li><img src="/public/stylesheets/images/inbox.png"></li>
-                        <li><img src="/public/stylesheets/images/inbox.png"></li>
+                        
 
                     </ul>
                 </div>
@@ -31,11 +31,15 @@
                     </div>
                 </div>
                 <div class="nav-right">
-                    <div class="user-pf-post">
-                        <img src="/pfp.png" class="user-pf-post-img" />
-
-                    </div>
                     <ul>
+                    <li><div class="user-pf-post">
+                        <img src="/pfp.png" class="user-pf-post-img" />
+                        
+                    </div></li>
+                   <li> <%= user_data[0]['username'] %></li>
+
+                
+                    <!-- <ul>
                          <li>
                             <form action="/main_to_profile" method="POST">
                                 
@@ -57,7 +61,7 @@
                                 </div>        
                             </form>
                         </li>
-                    </ul> -->
+                    </ul>  -->
             <li>
               <div class="nav-drop">
                 <div class="dropdown">
@@ -70,7 +74,7 @@
                   </div>
                 </div>
               </div>
-            </li>
+            </li></ul>
             <script>
               /* When the user clicks on the button, 
                         toggle between hiding and showing the dropdown content */
@@ -179,25 +183,45 @@
                         <div class="main-center-box">
                             <div class="write-post-container">
                                 <div class="post-input-container">
-                                    <div class="post-msg-heading">
-                                        <img src="<%= '/pfpPost/' +post_data[i]['username']%>.png" class="user-pf-post-img">
-                                        <div class="post-img-info">
-                                        <%= post_data[i]['username'] %> said
-                                        </div> 
-                                        <label for="post_heading"><%= post_data[i]['heading'] %></label><br>
+                                    <!-- <div class="post-msg-heading">
+                                        <ul>
+                                            <li><img src="<%= '/pfpPost/' +post_data[i]['username']%>.png" class="user-pf-post-img"></li>
+                                            <li><div class="post-img-info"><%= post_data[i]['username'] %> said
+                                                </div> </li> 
+                                            <label for="post_heading"><%= post_data[i]['heading'] %></label><br>
+                                        </ul>
+                                    </div> -->
+                                    <div class="user-pf-post">
+                                        <img
+                                          src="<%= '/pfp/' +user_data[0]['id_fillboard_user']%>.png"
+                                          class="user-pf-post-img"
+                                        />
+                                        <div class="post-msg">
+                                          <p><%= post_data[i]['username'] %> said <%= post_data[i]['heading'] %></p>
+                                            <form action="<%= '/deletePost/' + post_data[i]['idposts']%>">
+                                                <div class="post-btn" style="float: right;">
+                                                    <input type="submit" style="background-color: hsl(351, 4%, 66%);"
+                                                        value="DELETE" />
+                                                </div>
+                                            </form>
+                                        
+                                          <br />
+                                        </div>
+                                        
                                     </div>
+                                   
+
+                                    <img src="<%= '/post_picture/' + post_data[i]['post_picture_path']%>"><br><br>
                                     <textarea readonly class="textarea" rows="6" cols="70" type="post_text" name="post_text" id="post_text"><%= post_data[i]['post_text'] %></textarea>
+                                    
+                                    
+                                    
                                     <div class="post-msg-heading">
                                         <label>Event: <%= post_data[i]['event_name'] %></label><br>
                                         <label>Date: <%= post_data[i]['begin_date'] %> - <%= post_data[i]['end_date'] %></label><br>
                                     </div>
-                                    <img src="<%= '/post_picture/' + post_data[i]['post_picture_path']%>">
-                                    <form action="<%= '/deletePost/' + post_data[i]['idposts']%>">
-                                        <div class="post-btn">
-                                            <input type="submit" style="background-color: hsl(351, 4%, 66%)"
-                                                value="DELETE" />
-                                        </div>
-                                    </form>
+                                    
+                                    
                                 </div>
                             </div>
                         </div>

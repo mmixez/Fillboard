@@ -815,7 +815,7 @@ img {
   padding: 14px 16px;
   box-sizing: border-box;
   outline: none;
-
+  overflow-y: scroll;
   border: 1px solid rgb(226, 220, 220);
   border-radius: 6px;
   margin: 8px 0;

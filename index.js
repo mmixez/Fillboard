@@ -37,7 +37,7 @@ var urlParser = bp.urlencoded({ extended: false });
 var sqlConn = mysql.createConnection({
     host: "localhost",
     user: "root",
-    password: "MySQLAdmin",
+    password: "0906clcl",
     database: "Fillboard"
 })
 

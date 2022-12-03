@@ -1,52 +1,41 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>FILLBOARD MAIN</title>
-    <link
-      href="/public/stylesheets/style.css"
-      rel="stylesheet"
-      type="text/css"
-    />
-    <link
-      href="/public/stylesheets/hover_button.css"
-      rel="stylesheet"
-      type="text/css"
-    />
-    <link rel="icon" href="/public/stylesheets/images/favicon.png" />
-  </head>
 
-  <body>
-    <div class="main-header">
-      <nav>
-        <div class="nav-left">
-          <img src="/public/stylesheets/images/logo3.png" class="main-logo" />
-          <ul>
-            <li><img src="/public/stylesheets/images/inbox.png" /></li>
-          </ul>
-        </div>
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>FILLBOARD MAIN</title>
+        <link href="/public/stylesheets/style.css" rel="stylesheet" type="text/css" />
+        <link href="/public/stylesheets/hover_button.css" rel="stylesheet" type="text/css" />
+        <link rel="icon" href="/public/stylesheets/images/favicon.png">
+    </head>
 
-        <div class="nav-center">
-          <div class="search-box">
-            <img src="/public/stylesheets/images/search.png" class="search" />
-            <input type="text" placeholder="Search Event, people" />
-          </div>
-        </div>
-        <div class="nav-right">
-          <ul>
-            <li>
-              <div class="user-pf-post">
-                <img src="/pfp.png" class="user-pf-post-img" />
-              </div>
-            </li>
-            <li>
-              <div class="nav-username">
-                <p><b><%= user_data[0]['username'] %></b></p>
-              </div>
-            </li>
-            <!-- <ul>
+    <body>
+        <div class="main-header">
+            <nav>
+                <div class="nav-left">
+                    <img src="/public/stylesheets/images/logo3.png" class="main-logo" />
+                    <ul>
+                        <li><img src="/public/stylesheets/images/inbox.png"></li>
+                        <li><img src="/public/stylesheets/images/inbox.png"></li>
+
+                    </ul>
+                </div>
+
+                <div class="nav-center">
+
+                    <div class="search-box">
+                        <img src="/public/stylesheets/images/search.png" class="search" />
+                        <input type="text" placeholder="Search Event, people">
+                    </div>
+                </div>
+                <div class="nav-right">
+                    <div class="user-pf-post">
+                        <img src="/pfp.png" class="user-pf-post-img" />
+
+                    </div>
+                    <ul>
                          <li>
                             <form action="/main_to_profile" method="POST">
                                 
@@ -60,15 +49,13 @@
                             </form>
                         </li>
                         <li>
-                            
                             <form action="/logout" method="POST">
-                              </id>
+                            
                                 <div class="main-top-signout-btn">
                                     <input type="submit" style="background-color: hsl(351, 4%, 66%)"
                                         value="Sign Out"></button>
                                 </div>        
                             </form>
-                      
                         </li>
                     </ul> -->
             <li>
@@ -171,104 +158,76 @@
                     />
                   </div>
                 </form>
-                <form
-                  action="/post_img"
-                  method="POST"
-                  enctype="multipart/form-data"
-                >
-                  <div class="post-img-up-btn">
-                    <input
-                      type="file"
-                      accept="image/png"
-                      name="fileToUpload"
-                      id="fileToUpload"
-                    />
-                    <input
-                      type="submit"
-                      style="background-color: hsl(351, 4%, 66%)"
-                      value="UPLOAD IMG"
-                    />
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
-        </div>
-        <% var rowSize = post_data.length; for (var i=0; i < rowSize; i++) { %>
-        <div class="main-center-box">
-          <div class="write-post-container">
-            <div class="post-input-container">
-              <div class="post-msg-heading">
-                <img
-                  src="<%= '/pfpPost/' +post_data[i]['username']%>.png"
-                  class="user-pf-post-img"
-                />
-                <div class="post-img">
-                  <p><%= post_data[i]['username'] %> said</p>
+                                    <form action="/post_img" method="POST" enctype="multipart/form-data">
+                                        <div class="post-img-up-btn">
+                                            <input type="file" accept="image/png" name="fileToUpload" id="fileToUpload">
+                                            <input type="submit" style="background-color: hsl(351, 4%, 66%)"
+                                            value="UPLOAD IMG" /> 
+                                        </div>
+                                    </form>
+                                    
+                                 </div>
+                            </div>
+
+
+
+
+                        </div>
+                    </div>
+                    <% var rowSize = post_data.length;
+                    for (var i=0; i < rowSize; i++) { %>
+                        <div class="main-center-box">
+                            <div class="write-post-container">
+                                <div class="post-input-container">
+                                    <div class="post-msg-heading">
+                                        <img src="<%= '/pfpPost/' +post_data[i]['username']%>.png" class="user-pf-post-img">
+                                        <div class="post-img-info">
+                                        <%= post_data[i]['username'] %> said
+                                        </div> 
+                                        <label for="post_heading"><%= post_data[i]['heading'] %></label><br>
+                                    </div>
+                                    <textarea readonly class="textarea" rows="6" cols="70" type="post_text" name="post_text" id="post_text"><%= post_data[i]['post_text'] %></textarea>
+                                    <div class="post-msg-heading">
+                                        <label>Event: <%= post_data[i]['event_name'] %></label><br>
+                                        <label>Date: <%= post_data[i]['begin_date'] %> - <%= post_data[i]['end_date'] %></label><br>
+                                    </div>
+                                    <img src="<%= '/post_picture/' + post_data[i]['post_picture_path']%>">
+                                    <form action="<%= '/deletePost/' + post_data[i]['idposts']%>">
+                                        <div class="post-btn">
+                                            <input type="submit" style="background-color: hsl(351, 4%, 66%)"
+                                                value="DELETE" />
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+
+                    <% } %>
                 </div>
 
-                <label for="post_heading"><%= post_data[i]['heading'] %></label
-                ><br />
-                <form action="<%= '/deletePost/' +post_data[0]['idposts']%>">
-                  <div class="post-btn">
-                    <input
-                      type="submit"
-                      style="background-color: hsl(351, 4%, 66%)"
-                      value="DELETE"
-                    />
-                  </div>
-                </form>
-              </div>
+                <div class="main-right-col">
+                    <div class="right-sidebar">
+                        <div class="sidebar-title">
+                          <h3>Suggested Events</h3>
+                          <a href="#">   
+                            <form action="/main_to_event" method="POST">
+                            <input type="submit"  value="See ALL" />
+                        </form></a>
+                        </div>
+                
+                
+                    
+      
+                      </div>
+                    
+                    
+                    
 
-              <!-- <div class="user-pf-post">
-                                        <img src="<%= '/pfp/' +user_data[0]['id_fillboard_user']%>.png" class="user-pf-post-img" />
-                                        <div class="post-msg">
-                                            <p><%= user_data[0]['username'] %> Post your event ! </p><br>
-                                        </div>
-                                    </div> -->
-
-              <div class="post-loaded-img">
-                <img
-                  src="<%= '/post_picture/' + post_data[i]['picture_path']%>"
-                />
-              </div>
-
-              <textarea
-                class="textarea"
-                rows="6"
-                cols="70"
-                type="post_text"
-                name="post_text"
-                id="post_text"
-              >
-                                        <%= post_data[i]['post_text'] %>
-                                    </textarea
-              >
-              <div class="post-msg-heading">
-                <label>Event: <%= post_data[i]['event_name'] %></label><br />
-                <label
-                  >Date: <%= post_data[i]['begin_date'] %> - <%=
-                  post_data[i]['end_date'] %></label
-                ><br />
-              </div>
-            </div>
-          </div>
-        </div>
-        <% } %>
-      </div>
-
-      <div class="main-right-col">
-        <div class="right-sidebar">
-          <div class="sidebar-title">
-            <h3>Suggested Events</h3>
-            <a href="#">
-              <form action="/main_to_event" method="POST">
-                <input type="submit" value="See ALL" /></form
-            ></a>
-          </div>
-        </div>
-
-        <!--                    
+                   
                     <div class="event">
                         <% for (var i=0; i < event_data.length; i++) { %>
                             <div class="main-event-box">
@@ -284,50 +243,31 @@
                                     </div>
                                 
                             </div>
-                        <% } %> -->
+                        <% } %>
+                    </div>
+                    <br><br><br>
+                    <div class="right-sidebar">
+                    <div class="sidebar-title">
+                        <h3>Advertisement</h3>
+                         <a href="#"></a>
+                        
+                      </div>
 
-        <% for (var i=0; i < event_data.length; i++) { %>
-        <div class="event">
-          <div class="main-event-box">
-            <div class="post-input-container">
-              <div class="post-event-heading">
-                <span class="bolded"
-                  ><label for="post_heading"
-                    ><%= event_data[i]['event_name'] %></label
-                  ></span
-                ><br />
-                <p>DATE: <%= event_data[i]['begin_date'] %></p>
-                <label for="post_heading"
-                  ><%= event_data[i]['description'] %></label
-                ><br />
-                <a href="#">More Info</a>
-              </div>
+                       <img src="/public/stylesheets/images/gg2.png" class="sidebar-ads">
+                       <br>
+                       <img src="/public/stylesheets/images/gg3.png" class="sidebar-ads">
+                    </div>
+                    
+                </div>
+
+                </div>
+            
+        
+        <div id='wrapper'>
+            <div>
+                <p1> FillBoard 2022</p1>
             </div>
-          </div>
         </div>
-
-        <br />
-        <% } %>
-
-        <br /><br /><br />
-        <div class="right-sidebar">
-          <div class="sidebar-title">
-            <h3>Advertisement</h3>
-            <a href="#"></a>
-          </div>
-
-          <img src="/public/stylesheets/images/gg2.png" class="sidebar-ads" />
-          <br />
-          <img src="/public/stylesheets/images/gg3.png" class="sidebar-ads" />
-        </div>
-      </div>
-    </div>
-
-    <div id="wrapper">
-      <div>
-        <p1> FillBoard 2022</p1>
-      </div>
-    </div>
-    <footer></footer>
-  </body>
+        <footer></footer>
+    </body>
 </html>

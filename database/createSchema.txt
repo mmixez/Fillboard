@@ -100,6 +100,7 @@ CREATE TABLE IF NOT EXISTS `Fillboard`.`event` (
   `sub_category_idsub_category` INT NOT NULL,
   `min_participants` INT NOT NULL,
   `max_participants` INT NOT NULL,
+  `event_picture_path` VARCHAR(200),
   PRIMARY KEY (`id_event`, `location_idlocation`, `sub_category_idsub_category`),
   INDEX `fk_event_location1_idx` (`location_idlocation` ASC),
   INDEX `fk_event_sub_category1_idx` (`sub_category_idsub_category` ASC),
@@ -147,7 +148,7 @@ CREATE TABLE IF NOT EXISTS `Fillboard`.`posts` (
   `post_text` VARCHAR(200) NOT NULL,
   `event_id` INT NOT NULL,
   `user_id_posts` INT NOT NULL,
-  `picture_path` VARCHAR(200) NULL,
+  `post_picture_path` VARCHAR(200),
   PRIMARY KEY (`idposts`, `event_id`, `user_id_posts`),
   INDEX `fk_posts_event1_idx` (`event_id` ASC),
   INDEX `fk_posts_fillboard_user1_idx` (`user_id_posts` ASC),
@@ -246,8 +247,26 @@ START TRANSACTION;
 USE `Fillboard`;
 INSERT INTO `Fillboard`.`event` (`id_event`, `event_name`, `description`, `begin_date`, `end_date`, `location_idlocation`, `sub_category_idsub_category`, `min_participants`, `max_participants`) VALUES (1, 'Jogging SJSU', 'Meet with us for Jogging on Sunday. SJSU ID is required', '11/27/2022-10:00', '11/27/2022-13:00', 1, 1, 2, 10);
 
-INSERT INTO `fillboard`.`event` 
-(`id_event`, `event_name`, `description`, `begin_date`, `end_date`, `location_idlocation`, `sub_category_idsub_category`, `min_participants`, `max_participants`) VALUES ('2', 'Park Yoga', 'Yoga in the Park ', '11/17/2022-09:00', '11/17/2022-11:00', '1', '3', '2', '20');
-
 COMMIT;
 
+
+
+/* creation of pfp table */
+CREATE TABLE images (
+    picture_id int,
+    post_id int,
+    id_fillboard_user int
+);
+
+/* adding primary key */
+ALTER TABLE images 
+ADD PRIMARY KEY (picture_id);
+
+/* adding foreign keys */
+ALTER TABLE images
+ADD FOREIGN KEY (id_fillboard_user) REFERENCES fillboard_user(id_fillboard_user);
+
+/* granting file privileges  */
+GRANT FILE ON *.* TO 'root'@'localhost';
+FLUSH privileges;
+select @@GLOBAL.secure_file_priv;

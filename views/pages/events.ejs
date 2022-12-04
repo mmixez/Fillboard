@@ -105,7 +105,13 @@
 
         <section class="event-create-section">
             <h1>Create Event</h1>
-            <br>
+            <form action="/event_img" method="POST" enctype="multipart/form-data">
+                <div class="post-img-up-btn">
+                    <input type="file" accept="image/png" name="fileToUpload" id="fileToUpload">
+                    <input type="submit" style="background-color: hsl(351, 4%, 66%)"
+                    value="UPLOAD EVENT PNG" /> 
+                </div>
+            </form>
             <form action="/create_event" method="POST">
                 <input type="text" name="eventname" id="eventname" placeholder="Event Name">
                 <br><br>
@@ -180,6 +186,7 @@
                         <input type="submit" style="background-color: hsl(351, 4%, 66%)" value="Join"></button>
                     </div>
                 </form>
+                <img src="<%= '/event_pictures/' + event_data[i]['event_picture_path']%>">
             </div>
         <% } %>
     </section>

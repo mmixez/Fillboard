@@ -618,12 +618,16 @@ app.post('/signin', urlParser,
     , (req, res) => {
         var errs = validationResult(req);
         if (!errs.isEmpty()) {
-            return res.status(400).json({ errs: errs.array() })
+            res.render('./pages/error', {
+                error: "Something went wrong with signing in! Check all fields are correct."
+            })
         } else {
             sqlConn.query(`SELECT * FROM fillboard_user WHERE email='${req.body.email}'`, (err, qres, fields) => {
                 if (err) throw err;
                 if (qres.length == 0) {
-                    console.log('There is no user that exists with that email!')
+                    res.render('./pages/error', {
+                        error: "No user with that email!"
+                    })
                 } else {
                     bcrypt.compare(req.body.password, qres[0]['password']).then((result) => {
                         if (result == true) {
@@ -633,7 +637,9 @@ app.post('/signin', urlParser,
                             req.session.id_fillboard_user = qres[0]['id_fillboard_user'];
                             res.redirect('/main');
                         } else {
-                            console.log('Wrong username and password combo!')
+                            res.render('./pages/error', {
+                                error: "Wrong username and password combo!"
+                            })
                         }
                     })
                 }
@@ -658,7 +664,12 @@ app.post('/signup', urlParser,
             res.redirect('/signin');
         } else {
             if (!errs.isEmpty()) {
-                return res.status(400).json({ errs: errs.array() })
+                //console.log(errs[0].msg);
+                res.render('./pages/error', {
+                    //error: errs[0].msg
+                    error: "Something went wrong with signing up! Check all fields are correct."
+                })
+                
             } else {
                 bcrypt.hash(req.body.password, 10, (err, hash) => {
                     sqlConn.query(`INSERT INTO fillboard_user (username, email, password)VALUES ('${req.body.username}', '${req.body.email}', '${hash}');`);

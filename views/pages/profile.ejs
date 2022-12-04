@@ -9,50 +9,52 @@
         <link rel="icon" href="/public/stylesheets/images/favicon.png">
     </head>
     <body>
-
-
         <div class="main-header">
             <nav>
                 <div class="nav-left">
                     <img src="/public/stylesheets/images/logo3.png" class="main-logo" />
                     <ul>
                         <li><img src="/public/stylesheets/images/inbox.png"></li>
-                       
-
                     </ul>
                 </div>
 
                 <div class="nav-center">
-
                    
                 </div>
                 <div class="pf-nav-right">
-
                     <div class="user-pf-post">
                        
-                        <img src="/pfp.png" class="user-pf-post-img" />
-
-                    </div>
-
-
-                         <form action="/profile_to_main" method="POST">
-                                    
-                                       <div class="main-pf-edit-btn">
-                                           <input type="submit" style="background-color: hsl(351, 4%, 66%)"
-                                               value="Back to Main"></button>
-                                           
-                                       </div>
-                                   
-                                        </form>
-
+                    <img src="/pfp.png" class="user-pf-post-img" />
                 </div>
-
+                    <form action="/profile_to_main" method="POST">
+                    <div class="main-pf-edit-btn">
+                        <input type="submit" style="background-color: hsl(351, 4%, 66%)"
+                            value="Back to Main"></button>
+                        
+                    </div>
+                    </form>
+                </div>
             </nav>
 
             <div class="main-container">
                 <!-- left column-->
                 <div class="pf-left-col">
-                    
+                    <h3 style="color: white;">Your upcomming events: </h3><br>
+                    <% for (var i=0; i < event_data.length; i++) { %>
+                        <div class="event">
+                            <div class="main-event-box">
+                                <div class="post-input-container">
+                                    <div class="post-event-heading">
+                                        <span class="bolded"><label for="post_heading"><%= event_data[i]['event_name'] %></label></span>
+                                        <br><br>
+                                        <p><b>DATE:</b> <%= event_data[i]['begin_date'] %></p><br>
+                                        <p><%= event_data[i]['description'] %></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                    <% } %>
                     
                 </div>
                 <div class="pf-center-col">
@@ -95,27 +97,18 @@
                             <p><%= user_data[0]['birthday'] %></p><br>
                            
 
-                               <div class="pf-btn-box"> 
-                                 
-                                        
-                                        <form action="/editProfile" method="POST">
-                                   
-                                       <div class="pf-top-signout-btn">
-                                           <input type="submit" style="background-color: hsl(351, 4%, 66%)"
-                                               value="Edit Profile"></button>
-                                       </div>
-                                       
-                                           
-                                        </form>
+                            <div class="pf-btn-box"> 
+                                <form action="/editProfile" method="POST">
+                                    <div class="pf-top-signout-btn">
+                                        <input type="submit" style="background-color: hsl(351, 4%, 66%)"
+                                            value="Edit Profile"></button>
+                                    </div>       
+                                </form>
 
-                                </div>
-
+                            </div>
                         </div>
                     </div>
-                    
                 </div>
-
         </div>
-
     </body>
 </html>

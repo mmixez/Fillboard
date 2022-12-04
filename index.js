@@ -281,9 +281,17 @@ app.get('/profile', (req, res) => {
             throw err;
         }
         else {
-            res.render('pages/profile', {
-                user_data: qres_user
-            });
+            sqlConn.query(`SELECT * FROM event e, participates p WHERE e.id_event = p.event_id AND user_id = ${req.session.id_fillboard_user};`, function (err, qres_event, fields) {
+                if (err) {
+                    throw err;
+                }
+                else {
+                    res.render('pages/profile', {
+                        user_data: qres_user,
+                        event_data: qres_event
+                    });
+                }
+            })
         }
     })
 });
@@ -521,36 +529,36 @@ app.post('/post_text', urlParser,
         if (!errs.isEmpty()) {
             return res.status(400).json({ errs: errs.array() })
         } else {
-            sqlConn.query(`SELECT id_event FROM event WHERE event_name = "${req.body.post_event}";`, (err, event_id, fields) => {
-                sqlConn.query(`INSERT INTO posts (heading, post_text, event_id, user_id_posts) VALUES 
-                ('${req.body.post_heading}', '${req.body.post_text}', '${event_id[0]['id_event']}', 
-                '${req.session.id_fillboard_user}');`);
-            })
+            // if(!req.body.post_events){
+            //     console.log("Empty")
+            // } else {
+                sqlConn.query(`SELECT id_event FROM event WHERE event_name = "${req.body.post_event}";`, (err, event_id, fields) => {
+                    sqlConn.query(`INSERT INTO posts (heading, post_text, event_id, user_id_posts) VALUES 
+                    ('${req.body.post_heading}', '${req.body.post_text}', '${event_id[0]['id_event']}', 
+                    '${req.session.id_fillboard_user}');`);
 
-            // LAST_INSERT_ID()
-            // get post id that was just created
-            console.log("User ID: " + req.session.id_fillboard_user + " Text: " + req.body.post_text)
-            sqlConn.query(`SELECT * FROM posts WHERE user_id_posts=${req.session.id_fillboard_user} AND post_text='${req.body.post_text}'`, (err, qres, fields) => {
-                if (err) throw err;
-                else {
-                    console.log(qres.length)
-                    //console.log("Post ID: "+ qres[0]['idposts'])
-                    // if image uploaded => rename image to username_postID.png, else => skip
-                    const tempPath = path.join(__dirname, "./public/images/post_pictures/", `${req.session.username}.png`);
-                    const targetPath = path.join(__dirname, "./public/images/post_pictures/", `${req.session.username}_${qres[0]['idposts']}.png`);
-                    if (fs.existsSync(tempPath)) {
-                        fs.rename(
-                            tempPath,
-                            targetPath,
-                            err => {
-                                if (err) { throw err; }
+                    // get post id that was just created
+                    sqlConn.query(`SELECT * FROM posts WHERE user_id_posts=${req.session.id_fillboard_user} AND post_text='${req.body.post_text}'`, (err, qres, fields) => {
+                        if (err) throw err;
+                        else {
+                            // if image uploaded => rename image to username_postID.png, else => skip
+                            const tempPath = path.join(__dirname, "./public/images/post_pictures/", `${req.session.username}.png`);
+                            const targetPath = path.join(__dirname, "./public/images/post_pictures/", `${req.session.username}_${qres[0]['idposts']}.png`);
+                            if (fs.existsSync(tempPath)) {
+                                fs.rename(
+                                    tempPath,
+                                    targetPath,
+                                    err => {
+                                        if (err) { throw err; }
+                                    }
+                                )
                             }
-                        )
-                    }
-                    sqlConn.query(`UPDATE posts SET post_picture_path = '${req.session.username}_${qres[0]['idposts']}' WHERE idposts = '${qres[0]['idposts']}';`);
-                }
-            });
-            res.redirect('/main')
+                            sqlConn.query(`UPDATE posts SET post_picture_path = '${req.session.username}_${qres[0]['idposts']}' WHERE idposts = '${qres[0]['idposts']}';`);
+                        }
+                    });
+                    res.redirect('/main')
+                })
+            // }
         }
     });
 

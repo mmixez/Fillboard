@@ -17,93 +17,34 @@
                     <img src="/public/stylesheets/images/logo3.png" class="main-logo" />
                     <ul>
                         <li><img src="/public/stylesheets/images/inbox.png"></li>
-                        <li><img src="/public/stylesheets/images/inbox.png"></li>
+                       
 
                     </ul>
                 </div>
 
                 <div class="nav-center">
 
-                    <div class="search-box">
-                        <img src="/public/stylesheets/images/search.png" class="search" />
-                        <input type="text" placeholder="Search Event, people">
-                    </div>
+                   
                 </div>
-                <div class="nav-right">
-
-                    
-                    <!-- <div class="main-top-pf-btn-container">
-
-                        <form action="/main_to_profile" method="POST">
-                        <div class="main-pf-edit-btn">
-                          <input
-                            type="submit"
-                            style="background-color: hsl(351, 4%, 66%)"
-                            
-                            value=" My Profile "
-                          />
-                        </div>
-                        </form>
-
-                        <form action="/logout" method="POST">
-                            <div class="main-top-singout-btn">
-                            <input
-                                type="submit"
-                                style="background-color: hsl(351, 4%, 66%)"
-                                
-                                value=" Sign Out "
-                            />
-                            </div>
-
-                        </form>
-                    </div> -->
-
-
-
+                <div class="pf-nav-right">
 
                     <div class="user-pf-post">
-                        <!-- <img src="/public/stylesheets/images/pf2.jpg" class="user-pf-post-img" /> -->
+                       
                         <img src="/pfp.png" class="user-pf-post-img" />
 
                     </div>
 
 
-                    <ul>
-                         <li>
-                            <!-- <form action="/main_to_profile" method="POST">
-                                
-                                
-                                <div class="main-pf-edit-btn">
-                                    <input type="submit" style="background-color: hsl(351, 4%, 66%)"
-                                        value="My Profile"></button>
+                         <form action="/profile_to_main" method="POST">
                                     
-                                </div>
-                            
-                            </form> -->
-                            <form action="/profile_to_main" method="POST">
-                                    
-                                <div class="main-pf-edit-btn">
-                                    <input type="submit" style="background-color: hsl(351, 4%, 66%)"
-                                        value="Back to Main"></button>
-                                    
-                                </div>
-                            
-                                 </form>
-                        </li>
-                        <li>
-                            <form action="/logout" method="POST">
-                            
-                                <div class="main-top-signout-btn">
-                                    <input type="submit" style="background-color: hsl(351, 4%, 66%)"
-                                        value="Sign Out"></button>
-                                </div>
-                                
-                                
-                                    
-                            </form>
-                        </li>
-                   
-                    </ul>
+                                       <div class="main-pf-edit-btn">
+                                           <input type="submit" style="background-color: hsl(351, 4%, 66%)"
+                                               value="Back to Main"></button>
+                                           
+                                       </div>
+                                   
+                                        </form>
+
                 </div>
 
             </nav>
@@ -111,20 +52,7 @@
             <div class="main-container">
                 <!-- left column-->
                 <div class="pf-left-col">
-                    <!-- <div class="pf-profile-box">
-                        <div class="main-left-col-title">
-                        </div>
-                        <div class="welcome-msg">
-
-                        
-                            <h4>ABOUT ME: </h5>
-                            <p><%= user_data[0]['biography'] %></p><br>
-                            
-                           
-
-
-                        </div>
-                    </div> -->
+                    
                     
                 </div>
                 <div class="pf-center-col">
@@ -143,9 +71,6 @@
                         
                     <p class="p4"><%= user_data[0]['biography'] %></p><br>
                     
-                   
-
-
                 </div>
                 </div>
                 </div>
@@ -156,15 +81,14 @@
                         <div class="welcome-msg">
 
                             <p><%= user_data[0]['username'] %></p><br>
-                            <!-- <p> I knew you were coming.</p> -->
+                           
                             <p>Loggd In Account: <%= user_data[0]['email'] %>
                             </p><br>
 
-                           <!--- <img src="/public/stylesheets/images/pf2.jpg" class="main-pf" /><br><br> -->
+                          
                             <img src="/pfp.png" class="main-pf" /><br><br>
                            
-                            <!-- <h4>ABOUT ME: </h5>
-                            <p><%= user_data[0]['biography'] %></p><br> -->
+                          
                             <h4>GENDER: </h5>
                             <p><%= user_data[0]['gender'] %></p><br>
                             <h4>BIRTHDAY: </h5>
@@ -172,50 +96,26 @@
                            
 
                                <div class="pf-btn-box"> 
-                                 <ul>
-                                    <li>
-                                    
-                                        </li>
-                                        <li>
+                                 
+                                        
                                         <form action="/editProfile" method="POST">
                                    
-                                       <div class="main-top-signout-btn">
+                                       <div class="pf-top-signout-btn">
                                            <input type="submit" style="background-color: hsl(351, 4%, 66%)"
                                                value="Edit Profile"></button>
                                        </div>
                                        
-                                       
                                            
                                         </form>
-                                        </li>
-                          
-                                    </ul>
-
 
                                 </div>
-
-
-
-
 
                         </div>
                     </div>
                     
-
                 </div>
-
-
 
         </div>
 
-        
-
-        <!-- <br>
-        <h3>Biography: </h3><p><%= user_data[0]['biography'] %></p><br>
-        <h3>Gender: </h3><p><%= user_data[0]['gender'] %></p><br>
-        <h3>Birthday: </h3><p><%= user_data[0]['birthday'] %></p><br> -->
-
-        
-
     </body>
-</html> 
+</html>

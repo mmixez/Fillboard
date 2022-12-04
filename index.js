@@ -632,6 +632,21 @@ app.get("/event_pictures/:event_picture_name", (req, res) => {
     res.sendFile(path.join(__dirname, "./public/images/event_pictures/", `${req.params.event_picture_name}.png`));
 });
 
+app.get("/event_picture/:event_picture_name", (req, res) => {
+    res.sendFile(path.join(__dirname, "./public/images/event_pictures/", `${req.params.event_picture_name}.png`));
+});
+
+
+//------------------------------------------Aboutus page--------------------------------------------
+
+// app.post('/main_to_aboutus', (req, res) => {
+//     res.redirect('/main');
+// });
+app.get('/aboutus', (req, res) => {
+    res.render('pages/aboutus')
+});
+
+
 //----------------------------------------- SERVER LISTEN  -----------------------------------------
 
 app.listen(3000, () => {

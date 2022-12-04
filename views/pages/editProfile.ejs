@@ -71,12 +71,19 @@
 
               <div class="pfb-input-container">
                 <label for="biography">ABOUT ME:</label><br />
-                <input
+                <textarea
+                  class=".textarea"
+                  style="
+                    width: 100%;
+                    min-height: 100px;
+                    height: 15%;
+                    resize: none;
+                  "
+                  placeholder="About me"
                   type="biography"
                   name="biography"
                   id="biography"
-                  value="<%= user_data[0]['biography'] %>"
-                />
+                ><%= user_data[0]['biography'] %></textarea>
               </div>
               <br />
 

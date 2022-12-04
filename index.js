@@ -555,7 +555,7 @@ app.get("/background.png", (req, res) => {
     res.sendFile(path.join(__dirname, "./public/images/user_pictures/", `${req.session.id_fillboard_user}background.png`));
 });
 
-app.get("/event_picture/:event_picture_name", (req, res) => {
+app.get("/event_pictures/:event_picture_name", (req, res) => {
     res.sendFile(path.join(__dirname, "./public/images/event_pictures/", `${req.params.event_picture_name}.png`));
 });
 

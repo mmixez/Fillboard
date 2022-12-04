@@ -486,12 +486,11 @@ app.post('/post_text', urlParser,
             // LAST_INSERT_ID()
             // get post id that was just created
             console.log("User ID: " + req.session.id_fillboard_user + " Text: " + req.body.post_text)
-            // sqlConn.query(`SELECT * FROM posts WHERE user_id_posts=${req.session.id_fillboard_user} AND post_text="${req.body.post_text}";`, (err, qres, fields) => {
-            sqlConn.query(`SELECT * FROM posts WHERE idposts = LAST_INSERT_ID()";`, (err, qres, fields) => {
+            sqlConn.query(`SELECT * FROM posts WHERE user_id_posts=${req.session.id_fillboard_user} AND post_text='${req.body.post_text}'`, (err, qres, fields)  => {
                 if (err) throw err;
                 else {
                     console.log(qres.length)
-                    console.log("Post ID: "+ qres[0]['idposts'])
+                    //console.log("Post ID: "+ qres[0]['idposts'])
                     // if image uploaded => rename image to username_postID.png, else => skip
                     const tempPath = path.join(__dirname, "./public/images/post_pictures/", `${req.session.username}.png`);
                     const targetPath = path.join(__dirname, "./public/images/post_pictures/", `${req.session.username}_${qres[0]['idposts']}.png`);

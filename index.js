@@ -72,7 +72,6 @@ app.get('/events', (req, res) => {
                                 throw err;
                             }
                             else {
-                                // req.session.qres_category = qres_category;
                                 res.render('pages/events', {
                                     event_data: qres_event,
                                     country_data: qres_country,
@@ -536,15 +535,25 @@ app.post('/signup', urlParser,
 
 //----------------------------------------- IMAGE DISPLAY FUNCTIONALITY  -----------------------------------------
 
-app.get("/pfp.png", (req, res) => {
-    res.sendFile(path.join(__dirname, "./public/images/user_pictures/", `${req.session.id_fillboard_user}pfp.png`));
+app.get("/pfp.png", (req, res, err) => {
+    if(fs.existsSync(path.join(__dirname, "./public/images/user_pictures/", `${req.session.id_fillboard_user}pfp.png`))){
+        res.sendFile(path.join(__dirname, "./public/images/user_pictures/", `${req.session.id_fillboard_user}pfp.png`));
+    }else{
+        console.log()
+        res.sendFile(path.join(__dirname, "./public/images/user_pictures/", `missing_pfp.png`));
+    }
 });
 
 app.get("/pfp/:id_fillboard_user.png", (req, res) => {
     sqlConn.query(`SELECT * FROM fillboard_user WHERE id_fillboard_user=${req.params.id_fillboard_user}`, (err, qres) => {
         if (err) throw err;
         else {
-            res.sendFile(path.join(__dirname, "./public/images/user_pictures/", `${qres[0]['id_fillboard_user']}pfp.png`));
+            if(fs.existsSync(path.join(__dirname, "./public/images/user_pictures/", `${qres[0]['id_fillboard_user']}pfp.png`))){
+                res.sendFile(path.join(__dirname, "./public/images/user_pictures/", `${qres[0]['id_fillboard_user']}pfp.png`));
+            }else{
+                console.log()
+                res.sendFile(path.join(__dirname, "./public/images/user_pictures/", `missing_pfp.png`));
+            }
         }
     })
 });
@@ -553,7 +562,12 @@ app.get("/pfpPost/:username.png", (req, res) => {
     sqlConn.query(`SELECT * FROM fillboard_user WHERE username='${req.params.username}'`, (err, qres) => {
         if (err) throw err;
         else {
-            res.sendFile(path.join(__dirname, "./public/images/user_pictures/", `${qres[0]['id_fillboard_user']}pfp.png`));
+            if(fs.existsSync(path.join(__dirname, "./public/images/user_pictures/", `${qres[0]['id_fillboard_user']}pfp.png`))){
+                res.sendFile(path.join(__dirname, "./public/images/user_pictures/", `${qres[0]['id_fillboard_user']}pfp.png`));
+            }else{
+                console.log()
+                res.sendFile(path.join(__dirname, "./public/images/user_pictures/", `missing_pfp.png`));
+            }
         }
     })
 });

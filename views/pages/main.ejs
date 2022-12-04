@@ -72,7 +72,7 @@
                         <div class="welcome-msg">
 
                             <p>WELCOME <%= user_data[0]['username'] %> !</p><br>
-                            <p> I knew you were coming.</p>
+                            <p>I knew you were coming.</p>
                             <p>Logged In Account: <%= user_data[0]['email'] %></p>
                         </div>
                         
@@ -141,7 +141,7 @@
                                         <label>Event: <%= post_data[i]['event_name'] %></label><br>
                                         <label>Date: <%= post_data[i]['begin_date'] %> - <%= post_data[i]['end_date'] %></label><br>
                                     </div>
-                                    <img src="<%= '/post_picture/' + post_data[i]['post_picture_path']%>">
+                                    <img src="<%= '/post_picture/' + post_data[i]['post_picture_path']%>" onerror="this.style.display = 'none';" >
                                     <form action="<%= '/deletePost/' + post_data[i]['idposts']%>">
                                         <div class="post-btn">
                                             <input type="submit" style="background-color: hsl(351, 4%, 66%)"

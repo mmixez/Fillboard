@@ -1,18 +1,19 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ERROR</title>
-    <link
-      href="/public/stylesheets/style.css"
-      rel="stylesheet"
-      type="text/css"
-    />
-    <link rel="icon" href="/public/stylesheets/images/favicon.png" />
+    <head>
+      <meta charset="UTF-8" />
+      <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>ERROR</title>
+      <link href="/public/stylesheets/style.css" rel="stylesheet" type="text/css" />
+      <link href="/public/stylesheets/hover_button.css" rel="stylesheet" type="text/css" />
+      <link rel="icon" href="/public/stylesheets/images/favicon.png">
   </head>
   <body>
+    <div class="nav-left">
+      <img src="/public/stylesheets/images/logo3.png" class="main-logo" />
+  </div>
     <div class="topcontainer">
       <div class="si-container">
         <div class="si-content">
@@ -20,7 +21,8 @@
             <br /><br /><br /><br /><br />
           </div>
             <div class="signin-box">
-              <p>Error: <%= error %></p>
+              <p>Error:</p><br>
+              <p><%= error %></p>
               <br><br><br>
 
               <button onclick="history.go(-1)" style="background-color: hsl(351, 4%, 66%)">

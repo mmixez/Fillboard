@@ -55,7 +55,7 @@ app.get("/", express.static(path.join(__dirname, "./views/pages")));
 
 app.get('/events', (req, res) => {
     sqlConn.query(`SELECT e.id_event, event_name, e.description , begin_date, end_date, 
-    min_participants, max_participants, sub_category_name, category_name FROM event e, sub_category sc, category c 
+    min_participants, max_participants, sub_category_name, category_name, event_picture_path FROM event e, sub_category sc, category c 
     WHERE e.sub_category_idsub_category = sc.idsub_category AND sc.category_id_category = c.id_category;`,
         function (err, qres_event, fields) {
             if (err) {

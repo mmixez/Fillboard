@@ -163,7 +163,7 @@
                                 </p>
                             </div>
 
-                            <img src="<%= '/post_picture/' + post_data[i]['post_picture_path']%>"><br>
+                            <img onerror="this.style.display = 'none';" src="<%= '/post_picture/' + post_data[i]['post_picture_path']%>"><br>
 
                             <div class="post-msg-heading">
                                 <label>Event: <%= post_data[i]['event_name'] %></label><br>

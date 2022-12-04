@@ -33,21 +33,36 @@ const upload = multer({
 // url parser used to decipher input from forms
 var urlParser = bp.urlencoded({ extended: false });
 
-// db connection obj
-var sqlConn = mysql.createConnection({
-    host: "localhost",
-    user: "root",
-    password: "MySQLAdmin",
-    database: "Fillboard"
-})
+let sqlConn;
 
-// check db connection
-sqlConn.connect((err) => {
-    if (err) console.log(err)
-    else {
-        console.log('Successfully connected to SQL database!')
-    }
-})
+// process.env.DATABASE_URL is set on the Heroku cloud server
+if (process.env.DATABASE_URL) {
+    console.log("running production database setup");
+
+    sqlConn = mysql.createPool(process.env.DATABASE_URL);
+
+    sqlConn.on("connection", (connection) => {
+        console.log('Successfully connected to SQL database!');
+    });
+
+} else {
+    console.log("running local database setup");
+    sqlConn = mysql.createConnection({
+        host: "127.0.0.1",
+        user: "root",
+        password: "MySQLAdmin", //might have to change this to your pwd
+        database: "Fillboard"
+    });
+
+    // check db connection
+    sqlConn.connect((err) => {
+        if (err) console.log(err)
+        else {
+            console.log('Successfully connected to SQL database!');
+        }
+    })
+}
+
 
 app.get("/", express.static(path.join(__dirname, "./views/pages")));
 
@@ -236,23 +251,23 @@ app.post('/event_img', upload.single("fileToUpload"), urlParser, (req, res) => {
     }
 });
 
-    app.post('/join_event', urlParser,
+app.post('/join_event', urlParser,
     body('event_id'),
     (req, res) => {
         console.log("Joining event - Username: " + req.session.username + " event id: " + req.body.event_id)
         sqlConn.query(`SELECT id_fillboard_user FROM fillboard_user WHERE username = "${req.session.username}";`, (err, qres, fields) => {
-            if(err) throw err;
+            if (err) throw err;
             else {
                 sqlConn.query(`INSERT INTO participates (user_id, event_id) VALUES (${qres[0]['id_fillboard_user']},${req.body.event_id});`
-                , (err) => {
-                    if (err){
-                        if(err.code = "ER_DUP_ENTRY"){
-                            console.log("You already joined this event")
-                        } else {
-                            throw err;
+                    , (err) => {
+                        if (err) {
+                            if (err.code = "ER_DUP_ENTRY") {
+                                console.log("You already joined this event")
+                            } else {
+                                throw err;
+                            }
                         }
-                    }
-                })
+                    })
             }
         })
         res.redirect('/events');
@@ -353,14 +368,15 @@ app.get('/main', (req, res) => {
             throw err;
         }
         else {
-            sqlConn.query(`SELECT heading, post_text, event_name, begin_date, end_date, username, post_picture_path, idposts
-            FROM posts p, event e, fillboard_user u WHERE p.event_id = e.id_event  AND p.user_id_posts =  u.id_fillboard_user 
+            sqlConn.query(`SELECT p.idposts, heading, post_text, event_name, begin_date, end_date, username, post_picture_path
+            FROM posts p, event e, fillboard_user u WHERE p.event_id = e.id_event AND p.user_id_posts = u.id_fillboard_user 
             ORDER BY p.idposts DESC;`,
                 function (err, qres_posts, fields) {
                     if (err) {
                         throw err;
                     }
                     else {
+
                         sqlConn.query(`SELECT * FROM category;`, function (err, qres_categories, fields) {
                             if (err) {
                                 throw err;
@@ -376,13 +392,41 @@ app.get('/main', (req, res) => {
                                                 throw err;
                                             }
                                             else {
-                                                res.render('pages/main', {
-                                                    user_data: qres_user,
-                                                    post_data: qres_posts,
-                                                    category_data: qres_categories,
-                                                    event_data: qres_events,
-                                                    events_participated: qres_events_participated,
+                                                let postIds = qres_posts.map(q => q.idposts);
+                                                let postIdQuery = postIds.join(",");
+
+
+                                                sqlConn.query(`SELECT f.username, c.* FROM comments c, fillboard_user f WHERE f.id_fillboard_user = c.user_id_comments AND idposts IN (${postIdQuery});`, function (err, qres_comments, fields) {
+                                                    if (err) {
+                                                        throw err;
+                                                    }
+
+                                                    for (let i = 0; i < qres_comments.length; i++) {
+                                                        let comment = qres_comments[i];
+                                                        let id = comment.idposts;
+                                                        for (let j = 0; j < qres_posts.length; j++) {
+                                                            let post = qres_posts[j];
+                                                            if (post.idposts === id) {
+
+                                                                if (post.comments === undefined) {
+                                                                    post.comments = [comment];
+                                                                } else {
+                                                                    post.comments.push(comment);
+                                                                }
+                                                                break;
+                                                            }
+                                                        }
+                                                    }
+
+                                                    res.render('pages/main', {
+                                                        user_data: qres_user,
+                                                        post_data: qres_posts,
+                                                        category_data: qres_categories,
+                                                        event_data: qres_events,
+                                                        events_participated: qres_events_participated,
+                                                    });
                                                 });
+
                                             }
                                         })
                                     }
@@ -486,7 +530,7 @@ app.post('/post_text', urlParser,
             // LAST_INSERT_ID()
             // get post id that was just created
             console.log("User ID: " + req.session.id_fillboard_user + " Text: " + req.body.post_text)
-            sqlConn.query(`SELECT * FROM posts WHERE user_id_posts=${req.session.id_fillboard_user} AND post_text='${req.body.post_text}'`, (err, qres, fields)  => {
+            sqlConn.query(`SELECT * FROM posts WHERE user_id_posts=${req.session.id_fillboard_user} AND post_text='${req.body.post_text}'`, (err, qres, fields) => {
                 if (err) throw err;
                 else {
                     console.log(qres.length)
@@ -531,6 +575,25 @@ app.post('/post_img', upload.single("fileToUpload"), urlParser, (req, res) => {
     }
 });
 
+app.post('/comments_text', urlParser,
+    body('comments_text').isLength({ min: 1, max: 200 }).withMessage('Text can not be empty!')
+    , (req, res) => {
+        var errs = validationResult(req);
+
+        if (!errs.isEmpty()) {
+            return res.status(400).json({ errs: errs.array() })
+        } else {
+            sqlConn.query(`INSERT INTO comments (comments_text, idposts, user_id_comments) VALUES 
+            ('${req.body.comments_text}', '${req.body.idposts}', '${req.session.id_fillboard_user}');`, (err, qres, fields) => {
+
+                if (err) throw err;
+            });
+        }
+        res.redirect('/main');
+    });
+
+
+
 //----------------------------------------- LOGIN PAGE -----------------------------------------
 
 app.get('/', (req, res) => {
@@ -556,6 +619,7 @@ app.post('/signin', urlParser,
                 } else {
                     bcrypt.compare(req.body.password, qres[0]['password']).then((result) => {
                         if (result == true) {
+                            console.log("SUCCESSFSUL LOGIN====", qres[0]);
                             req.session.qres = qres;
                             req.session.username = qres[0]['username'];
                             req.session.id_fillboard_user = qres[0]['id_fillboard_user'];
@@ -649,6 +713,6 @@ app.get('/aboutus', (req, res) => {
 
 //----------------------------------------- SERVER LISTEN  -----------------------------------------
 
-app.listen(3000, () => {
+app.listen(process.env.PORT || 3000, () => {
     console.log('Server running on port 3000!');
 });

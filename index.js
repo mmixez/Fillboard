@@ -118,6 +118,8 @@ app.post('/search_for_events', urlParser,
     body('city'),
     body('zip'),
     body('street'),
+    body('category'),
+    body('sub_category'),
     (req, res) => {
         sqlConn.query(
             `SELECT event_name, e.description , begin_date, end_date, 
@@ -128,7 +130,7 @@ app.post('/search_for_events', urlParser,
         AND e.event_name LIKE  "%${req.body.eventname}%" AND cnty.name LIKE "%${req.body.country}%" 
         AND l.city_name LIKE "%${req.body.city}%" AND l.zip LIKE "%${req.body.zip}%" 
         AND l.street_address LIKE "%${req.body.street}%"
-        AND c.category_name LIKE "%%" AND sc.sub_category_name LIKE "%%";`,
+        AND c.category_name LIKE "%${req.body.category}%" AND sc.sub_category_name LIKE "%${req.body.sub_category}%";`,
             function (err, qres_event, fields) {
                 if (err) {
                     throw err;

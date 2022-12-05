@@ -68,15 +68,13 @@
                         <input name="street" id="street" placeholder="Street" />
                         <br>
                         <br>
-                        <!-- <form action="/events_category_chosen" method="POST">
-                            <input list="categories" name="category" id="category" placeholder="Category">
-                            <datalist id="categories">
-                                <% for (var i=0; i < category_data.length; i++) { %>
-                                    <a></a>
-                                    <option value="<%= category_data[i]['category_name'] %>">
-                                <% } %>
-                            </datalist>
-                        </form> -->
+                        <input list="categories" name="category" id="category" placeholder="Category">
+                        <datalist id="categories">
+                            <% for (var i=0; i < category_data.length; i++) { %>
+                                <a></a>
+                                <option value="<%= category_data[i]['category_name'] %>">
+                            <% } %>
+                        </datalist>
                         <input name="sub_category" id="sub_category" placeholder="Sub-Category" />
                         <br><br>
                         <div id="container">
@@ -143,8 +141,8 @@
                             <div id="left"><label>Participants:</label></div>
                             <div id="middle"><input type="number" id="min_participants" name="min_participants" min="1" max="50"> - </div>
                             <div id="right">
-                                <input type="number" id="max_participants" name="max_participants" min="1" max="50">
-                                <label>(1 - 50 participants each event)</label>
+                                <input type="number" id="max_participants" name="max_participants" min="1" max="100">
+                                <label>(1 - 100 participants each event)</label>
                             </div>
                             
                         </div>

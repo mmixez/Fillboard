@@ -1,0 +1,8 @@
+<%
+changeDateFormat = function(date) {
+    var date_tokens = date.split("T")
+    var dates = date_tokens[0].split("-")
+    var final_date = dates[1] + "/" + dates[2] + "/" + dates[0] + "-" + date_tokens[1];
+    return final_date;
+}
+%>

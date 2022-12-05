@@ -11,6 +11,8 @@ var app = express();
 var { body, validationResult } = require('express-validator');
 const { getSystemErrorMap } = require('util');
 const { Console } = require('console');
+const { stringify } = require('querystring');
+const { start } = require('repl');
 
 // sets up for css
 app.set('views', 'views');
@@ -111,11 +113,20 @@ app.get('/events_search', (req, res) => {
 app.post('/search_for_events', urlParser,
     body('eventname'),
     body('country'),
+    body('city'),
+    body('zip'),
+    body('street'),
     (req, res) => {
-        sqlConn.query(`SELECT event_name, e.description , begin_date, end_date, 
-    min_participants, max_participants, sub_category_name, category_name, event_picture_path FROM event e, sub_category sc, category c 
-    WHERE e.sub_category_idsub_category = sc.idsub_category AND sc.category_id_category = c.id_category 
-    AND e.event_name LIKE  "%${req.body.eventname}%"`,
+    sqlConn.query(
+        `SELECT event_name, e.description , begin_date, end_date, 
+        min_participants, max_participants, sub_category_name, category_name, event_picture_path, cnty.name, l.city_name, l.zip, l.street_address
+        FROM event e, sub_category sc, category c, location l, country cnty
+        WHERE e.sub_category_idsub_category = sc.idsub_category AND sc.category_id_category = c.id_category AND e.location_idlocation = l.idlocation
+        AND l.country_country_code = cnty.country_code
+        AND e.event_name LIKE  "%${req.body.eventname}%" AND cnty.name LIKE "%${req.body.country}%" 
+        AND l.city_name LIKE "%${req.body.city}%" AND l.zip LIKE "%${req.body.zip}%" 
+        AND l.street_address LIKE "%${req.body.street}%"
+        AND c.category_name LIKE "%%" AND sc.sub_category_name LIKE "%%";`,
             function (err, qres_event, fields) {
                 if (err) {
                     throw err;
@@ -177,8 +188,8 @@ app.post('/create_event', urlParser,
     body('city').notEmpty().withMessage("Please select city"),
     body('zip').notEmpty().withMessage("Please select zip"),
     body('street').notEmpty().withMessage("Please select street"),
-    // body('category').notEmpty().withMessage("Please select category"),
-    // body('sub_category').notEmpty().withMessage("Please select sub category"),
+    body('category').notEmpty().withMessage("Please select category"),
+    body('sub_category').notEmpty().withMessage("Please select sub category"),
     body('start_date').notEmpty().withMessage("Please select start date"),
     body('end_date').notEmpty().withMessage("Please select end date"),
     body('min_participants').notEmpty().withMessage("Please select min participants"),
@@ -195,6 +206,8 @@ app.post('/create_event', urlParser,
                     sqlConn.query(`INSERT INTO location (country_country_code, city_name, zip, street_address) 
                     VALUES ('${qres[0]['country_code']}', '${req.body.city}', ${req.body.zip}, '${req.body.street}');`);
 
+                    console.log(changeDateFormat(req.body.start_date))
+                    console.log(req.body.end_date)
                     sqlConn.query(`INSERT INTO event (event_name, description, begin_date, end_date, location_idlocation, 
                     sub_category_idsub_category, min_participants, max_participants) 
                     VALUES ('${req.body.eventname}', '${req.body.event_description}', 

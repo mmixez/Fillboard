@@ -50,7 +50,8 @@ nav {
 .user-pf-post {
   align-items: center;
 }
-.user-pf.post li {
+
+.user-pf-post li {
   display: flex;
   align-items: center;
   display: inline-block;
@@ -63,6 +64,29 @@ nav {
   border-radius: 45%;
   cursor: pointer;
 }
+
+.user-pf-post li {
+  display: inline-block;
+}
+
+.post-img {
+  align-items: center;
+}
+
+.user-pf-post li {
+  display: flex;
+  align-items: center;
+  display: inline-block;
+  justify-content: space-between;
+}
+
+.user-pf-post-img {
+  width: 45px;
+  height: 45px;
+  border-radius: 45%;
+  cursor: pointer;
+}
+
 .user-pf-post li {
   display: inline-block;
 }
@@ -76,8 +100,8 @@ nav {
   cursor: pointer;
   padding: 1px 1px 1px 1px;
 
-  transform: translateY(-90%);
-  transform: translateX(90%);
+  transform: translateY(-100%);
+  transform: translateX(180%);
 }
 .nav-left {
   display: flex;
@@ -264,6 +288,19 @@ nav {
   margin-left: 0px;
 }
 
+/* 
+    .signup-box{
+        background: white;
+        padding-top: 30px;
+        padding-left: 20%;
+        padding-bottom: 30px;
+        width: 200px;
+        height: 280px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px 1px grey;
+        margin-top: 0;
+    } */
+
 .signup-box {
   background: white;
   width: 330px;
@@ -396,10 +433,11 @@ nav {
   background-color: #88807b;
 
   /* background-color: #BDB7AB;; */
-  padding: 2% 5% 7% 5%;
-  margin-left: 7%;
+  padding: 2% 7% 7% 5%;
+  margin-left: 20%;
+
   border-radius: 4px;
-  width: 90%;
+  width: 80%;
   height: auto;
 }
 .post-btn {
@@ -511,16 +549,32 @@ nav {
 
 .main-left-col {
   flex-basis: 25%;
+
   position: sticky;
+  /* position: -webkit-sticky; */
   top: 90px;
+
   height: auto;
   align-self: flex-start;
+  /*
+        height: 150%;
+        padding:1px 2px 1px 2px;
+        */
 }
 
 .pf-left-col {
-  margin: 2%;
-  color: black;
-  text-align: left;
+  position: sticky;
+  /* position: -webkit-sticky; */
+  top: 120px;
+
+  height: auto;
+  align-self: flex-start;
+  /*
+        height: 150%;
+        padding:1px 2px 1px 2px;
+        */
+  margin-left: 5%;
+  flex-basis: 25%;
 }
 .main-center-col {
   flex-basis: 57%;
@@ -534,6 +588,7 @@ nav {
 }
 
 .pf-center-col {
+  /*background-color:   #3e3e42;*/
   background: rgb(102, 96, 96);
   flex-basis: 65%;
   height: auto;
@@ -617,6 +672,7 @@ nav {
 
 .pf-about-me {
   width: 80%;
+  /* background-color: #BDB7AB; */
   margin-left: 10%;
 }
 .pf-about-msg {
@@ -675,7 +731,7 @@ nav {
 }
 
 .pf-wallpaper {
-  border-radius: 5px;
+  border-radius: 1px;
   width: 120%;
   margin-left: -10%;
   margin-top: -1%;
@@ -684,7 +740,7 @@ nav {
 }
 
 .main-center-box {
-  width: 80%;
+  width: 70%;
   border-radius: 4px;
 
   padding: 2px;
@@ -700,7 +756,6 @@ nav {
 
 .main-event-box {
   width: 80%;
-
   border-radius: 4px;
 
   padding: 5px;
@@ -720,8 +775,8 @@ img {
   padding-top: 1%;
   padding-left: 1%;
   padding-right: 1%;
-  border-radius: 5%;
 }
+
 .post-loaded-img {
 }
 .bolded {
@@ -830,10 +885,10 @@ input[type="submit"] {
   /* padding: 1% 10% 1% 5%; */
 
   /* margin: 1% 10% 1% 5%; */
-  margin-right: 10%;
+
   border-radius: 5px;
   border: 2px solid transparent;
-  max-width: 95%;
+  max-width: 97%;
   font-weight: 500;
   font-size: 16px;
   line-height: 1.4;
@@ -1064,12 +1119,6 @@ footer {
   justify-content: space-between;
 }
 
-.events-btn {
-  background-color: black; 
-  color: black; 
-  border: 2px solid #4CAF50;
-}
-
 .red {
   color: red;
 }
@@ -1096,13 +1145,13 @@ p5 {
 }
 
 p6 {
-  color: #bdb7ab;
+  font-size: 20px;
+  color: orange;
 }
 
 .team-img {
   max-width: 120%;
-  margin-right: 10%;
-  align-items: center;
+  margin-left: -8%;
 }
 
 .post-text {

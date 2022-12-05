@@ -117,8 +117,8 @@ app.post('/search_for_events', urlParser,
     body('zip'),
     body('street'),
     (req, res) => {
-    sqlConn.query(
-        `SELECT event_name, e.description , begin_date, end_date, 
+        sqlConn.query(
+            `SELECT event_name, e.description , begin_date, end_date, 
         min_participants, max_participants, sub_category_name, category_name, event_picture_path, cnty.name, l.city_name, l.zip, l.street_address
         FROM event e, sub_category sc, category c, location l, country cnty
         WHERE e.sub_category_idsub_category = sc.idsub_category AND sc.category_id_category = c.id_category AND e.location_idlocation = l.idlocation
@@ -280,16 +280,26 @@ app.post('/join_event', urlParser,
                     , (err) => {
                         if (err) {
                             if (err.code = "ER_DUP_ENTRY") {
-                                console.log("You already joined this event")
+                                res.render('./pages/error', {
+                                    error: "You already joined this event!"
+                                });
                             } else {
                                 throw err;
                             }
+                        } else {
+                            res.redirect('/events');
                         }
                     })
             }
+
         })
-        res.redirect('/events');
     });
+
+app.get('/join_event_error', (req, res) => {
+    res.render('./pages/error', {
+        error: "You already joined this event!"
+    });
+})
 
 //----------------------------------------- PROFILE PAGE -----------------------------------------
 
@@ -509,13 +519,15 @@ app.post('/search_for_events_main', urlParser,
 
 
 app.get('/deletePost/:idposts', (req, res) => {
-    sqlConn.query(`DELETE FROM posts WHERE user_id_posts = '${req.session.id_fillboard_user}' AND idposts = '${req.params.idposts}';`, function (err, qres_user, fields) {
-        if (err) {
-            throw err;
-        }
-        else {
-            res.redirect('/main');
-        }
+    sqlConn.query(`DELETE FROM comments WHERE idposts = '${req.params.idposts}';`, function (err, fields) {
+        sqlConn.query(`DELETE FROM posts WHERE user_id_posts = '${req.session.id_fillboard_user}' AND idposts = '${req.params.idposts}';`, function (err, fields) {
+            if (err) {
+                throw err;
+            }
+            else {
+                res.redirect('/main');
+            }
+        })
     })
 });
 
@@ -557,13 +569,17 @@ app.post('/post_text', urlParser,
                 error: "Must fill all fields! Your post should have a Title and some Post Text!"
             })
         } else {
-            // if(!req.body.post_events){
-            //     console.log("Empty")
-            // } else {
-                sqlConn.query(`SELECT id_event FROM event WHERE event_name = "${req.body.post_event}";`, (err, event_id, fields) => {
+            sqlConn.query(`SELECT id_event FROM event WHERE event_name = "${req.body.post_event}";`, (err, event_id, fields) => {
+                if (event_id == 0) {
+                    res.render('./pages/error', {
+                        error: "Must choose an event!"
+                    })
+                } else {
                     sqlConn.query(`INSERT INTO posts (heading, post_text, event_id, user_id_posts) VALUES 
                     ('${req.body.post_heading}', '${req.body.post_text}', '${event_id[0]['id_event']}', 
-                    '${req.session.id_fillboard_user}');`);
+                    '${req.session.id_fillboard_user}');`, (err) => {
+
+                    });
 
                     // get post id that was just created
                     sqlConn.query(`SELECT * FROM posts WHERE user_id_posts=${req.session.id_fillboard_user} AND post_text='${req.body.post_text}'`, (err, qres, fields) => {
@@ -585,8 +601,8 @@ app.post('/post_text', urlParser,
                         }
                     });
                     res.redirect('/main')
-                })
-            // }
+                }
+            })
         }
     });
 

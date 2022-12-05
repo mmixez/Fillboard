@@ -23,6 +23,7 @@ body {
   /* height: 45%; */
   border-color: whitesmoke;
   /* margin-left: 7%; */
+  top: 80px;
 }
 
 .event-create-section {
@@ -74,7 +75,7 @@ h1 {
   padding-top: 1.4%;
   padding-left: 3%;
   position: sticky;
-  top: 1px;
+  top: 130px;
 
   height: auto;
   align-self: flex-start;

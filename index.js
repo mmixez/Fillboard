@@ -309,7 +309,7 @@ app.get('/profile', (req, res) => {
             throw err;
         }
         else {
-            sqlConn.query(`SELECT * FROM event e, participates p WHERE e.id_event = p.event_id AND user_id = ${req.session.id_fillboard_user};`, function (err, qres_event, fields) {
+            sqlConn.query(`SELECT * FROM event e, participates p WHERE e.id_event = p.event_id AND user_id = ${req.session.id_fillboard_user} ORDER BY e.begin_date;`, function (err, qres_event, fields) {
                 if (err) {
                     throw err;
                 }

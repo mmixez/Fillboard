@@ -9,6 +9,7 @@
         <link rel="icon" href="/public/stylesheets/images/favicon.png">
     </head>
     <body>
+        <%- include('../../functions') %>
         <div class="main-header">
             <nav>
                 <div class="nav-left">
@@ -47,7 +48,7 @@
                                     <div class="post-event-heading">
                                         <span class="bolded"><label for="post_heading"><%= event_data[i]['event_name'] %></label></span>
                                         <br><br>
-                                        <p><b>DATE:</b> <%= event_data[i]['begin_date'] %></p><br>
+                                        <p><b>DATE:</b> <%= changeDateFormat(event_data[i]['begin_date']) %></p><br>
                                         <p><%= event_data[i]['description'] %></p>
                                     </div>
                                 </div>

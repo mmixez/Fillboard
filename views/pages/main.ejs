@@ -238,7 +238,10 @@
                 </div>
             </div>
 
-            <% for (var i=0; i < 1; i++) { %>
+            <% for (var i=0; i < event_data.length; i++) { 
+                if(i > 1){
+                    break;
+                } %>
                 <div class="event">
                     <div class="main-event-box">
                         <div class="post-input-container">

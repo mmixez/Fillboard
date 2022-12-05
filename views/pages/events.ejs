@@ -163,23 +163,21 @@
         <div class="event-right-col">
             <div class="event-found-amount">
                 <ul>
-                <li><b><h2>Got You, We Found</h2><b><li>
-
-                <li><h1><b><%= event_data.length %></h1></b><li>
-                <li><h2>Events</h2></li>
-            </ul>
-        </div>
+                    <li><h2>Got You, We Found</h2><li>
+                    <li><h1><%= event_data.length %></h1><li>
+                    <li><h2>Events</h2></li>
+                </ul>
+            </div>
             <div class="event_list">
                 <% for (var i=0; i < event_data.length; i++) { %>
                     <div class="event-display-box">
-                        <b><p><h3>Eventname: <%= event_data[i]['event_name'] %></h3></p></b><br>
-                        <p>WHAT:  <%= event_data[i]['description'] %></p>
-                        <p>START:  <%= changeDateFormat(event_data[i]['begin_date']) %></p>
-                        <p>END:  <%= changeDateFormat(event_data[i]['end_date']) %></p>
-                        <p>MIN-MAX Participants:<%= event_data[i]['min_participants'] %>-<%= event_data[i]['max_participants'] %></p>
-                        <!-- <p>MAX participants:  <%= event_data[i]['max_participants'] %></p> -->
-                        <p>SUB-CATEGORY:   <%= event_data[i]['category_name'] %>- <%= event_data[i]['sub_category_name'] %></p>
-                        <!-- <p>SUB CATEGORY:  <%= event_data[i]['sub_category_name'] %></p> -->
+                        <h3>Eventname: <%= event_data[i]['event_name'] %></h3><br>
+                        <p><b>WHAT:  </b><%= event_data[i]['description'] %></p>
+                        <p><b>START:  </b><%= changeDateFormat(event_data[i]['begin_date']) %></p>
+                        <p><b>END:  </b><%= changeDateFormat(event_data[i]['end_date']) %></p>
+                        <p><b>PARTICIPANTS: </b> <%= event_data[i]['min_participants'] %>-<%= event_data[i]['max_participants'] %></p>
+                        <p><b>CATEGORY: </b><%= event_data[i]['category_name'] %>/<%= event_data[i]['sub_category_name'] %></p>
+                        <p><b>WHERE:</b> <%= event_data[i]['street_address'] %>, <%= event_data[i]['city_name'] %>, <%= event_data[i]['zip']%>, <%= event_data[i]['country_code'] %></p>
                         <form action="/join_event" method="POST">
                             <div class="pf-edit-btn">
                                 <input type="hidden" id="event_id" name="event_id" value="<%= event_data[i]['id_event'] %>">

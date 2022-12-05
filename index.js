@@ -71,7 +71,7 @@ app.get("/", express.static(path.join(__dirname, "./views/pages")));
 //----------------------------------------- EVENT PAGE -----------------------------------------
 
 app.get('/events', (req, res) => {
-    sqlConn.query(`SELECT event_name, e.description , begin_date, end_date, 
+    sqlConn.query(`SELECT event_name, e.description , begin_date, end_date, id_event,
     min_participants, max_participants, sub_category_name, category_name, event_picture_path, cnty.name, l.city_name, l.zip, l.street_address, country_code
     FROM event e, sub_category sc, category c, location l, country cnty
     WHERE e.sub_category_idsub_category = sc.idsub_category AND sc.category_id_category = c.id_category AND e.location_idlocation = l.idlocation
@@ -122,7 +122,7 @@ app.post('/search_for_events', urlParser,
     body('sub_category'),
     (req, res) => {
         sqlConn.query(
-            `SELECT event_name, e.description , begin_date, end_date, 
+            `SELECT event_name, e.description , begin_date, end_date, id_event,
         min_participants, max_participants, sub_category_name, category_name, event_picture_path, cnty.name, l.city_name, l.zip, l.street_address
         FROM event e, sub_category sc, category c, location l, country cnty
         WHERE e.sub_category_idsub_category = sc.idsub_category AND sc.category_id_category = c.id_category AND e.location_idlocation = l.idlocation

@@ -102,7 +102,7 @@
                         <li>
                             <div class="post-msg">
                             
-                                <%= user_data[0]['username'] %> Post your event !
+                                <%= user_data[0]['username'] %> , What's on your mind?
                             
                             <br />
                         </div>
@@ -121,7 +121,7 @@
                                 <div class="post-msg-text">
                                     
                                 </div>
-                                <textarea class="textarea" rows="6" cols="70" placeholder="WHATS IN YOUR MIND?"
+                                <textarea class="textarea" rows="6" cols="70" placeholder="EXPRESS YOURSELF"
                                     type="post_text" name="post_text" id="post_text"></textarea>
                                 <input list="events" name="post_event" id="post_event" placeholder="Event">
                                 <datalist id="events">
@@ -165,12 +165,7 @@
                                     </div>
                                 </li>
                                    
-                               <li>  <form action="<%= '/deletePost/' + post_data[i]['idposts']%>">
-                                        <div class="post-delete">
-                                            <input type="submit" style= "background-color: hsl(351, 4%, 66%);"
-                                                value="DELETE" />
-                                        </div>
-                                    </form>
+                               
                                 </li>
                                     <br>                                    
                                 
@@ -216,11 +211,19 @@
                                         <input type="hidden" name="idposts" value="<%= post_data[i]['idposts']%>" />
                                         <input type="submit" style="background-color: hsl(351, 4%, 66%)"
                                             value="REPLY" />  
-                                    </div>
+                                    </div><br><br>
                                 </form>
                             </div>
-                        </div>     
+                        </div>   
+                        <form action="<%= '/deletePost/' + post_data[i]['idposts']%>">
+                            <div class="post-delete">
+                                <input type="submit" style= "background-color: hsl(351, 4%, 66%);"
+                                    value="DELETE" />
+                            </div>
+                        </form>  
                     </div>
+
+                  
                 </div>
                 
                 <% } %>

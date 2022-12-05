@@ -100,8 +100,11 @@ nav {
   cursor: pointer;
   padding: 1px 1px 1px 1px;
 
-  transform: translateY(-100%);
-  transform: translateX(180%);
+  /* transform: translateY(-100%); */
+  /* transform: translateX(160%); */
+  /* display:grid; */
+  float:right;
+  display:flex; 
 }
 .nav-left {
   display: flex;
@@ -1161,7 +1164,8 @@ p6 {
   background-color: white;
   width: 100%;
   border-radius: 5px;
-  padding: 2%;
+  padding:2% 0% 2% 2%;
+
   margin-top: 2%;
   margin-bottom: 2%;
 }

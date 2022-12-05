@@ -46,21 +46,39 @@ nav {
   margin-right: auto;
   width: 70%;
 }
-.user-pf {
-  display: flex;
+
+.user-pf-post {
   align-items: center;
 }
 .user-pf.post li {
   display: flex;
   align-items: center;
   display: inline-block;
+  justify-content: space-between;
 }
 
 .user-pf-post-img {
   width: 45px;
-  border-radius: 50%;
+  height: 45px;
+  border-radius: 45%;
+  cursor: pointer;
+}
+.user-pf-post li {
+  display: inline-block;
 }
 
+.post-delete {
+  border-radius: 6px;
+  width: 100px;
+  font-size: 25px;
+
+  font-weight: solid;
+  cursor: pointer;
+  padding: 1px 1px 1px 1px;
+
+  transform: translateY(-90%);
+  transform: translateX(90%);
+}
 .nav-left {
   display: flex;
   align-items: center;
@@ -202,7 +220,7 @@ nav {
   margin-top: 10px;
   font-size: 28px;
   font-weight: 530;
-  margin-left: -40px;
+  margin-left: -7%;
 }
 
 .edit-profile-intro {
@@ -245,19 +263,6 @@ nav {
 
   margin-left: 0px;
 }
-
-/* 
-    .signup-box{
-        background: white;
-        padding-top: 30px;
-        padding-left: 20%;
-        padding-bottom: 30px;
-        width: 200px;
-        height: 280px;
-        border-radius: 10px;
-        box-shadow: 0 0 10px 1px grey;
-        margin-top: 0;
-    } */
 
 .signup-box {
   background: white;
@@ -391,10 +396,11 @@ nav {
   background-color: #88807b;
 
   /* background-color: #BDB7AB;; */
-  padding: 2% 5% 3% 5%;
+  padding: 2% 5% 7% 5%;
   margin-left: 7%;
   border-radius: 4px;
-  width: 100%;
+  width: 90%;
+  height: auto;
 }
 .post-btn {
   border-radius: 6px;
@@ -404,8 +410,8 @@ nav {
   font-weight: solid;
   cursor: pointer;
   padding: 1px 1px 1px 1px;
-  display: inline-block;
 }
+
 .img-up-btn {
   border-radius: 6px;
   width: 10px;
@@ -505,25 +511,13 @@ nav {
 
 .main-left-col {
   flex-basis: 25%;
-
   position: sticky;
-  /* position: -webkit-sticky; */
   top: 90px;
-
   height: auto;
   align-self: flex-start;
-  /*
-        height: 150%;
-        padding:1px 2px 1px 2px;
-        */
 }
 
 .pf-left-col {
-  /* flex-basis: 30%; */
-  /* position: sticky; */
-  /* top: 120px; */
-  /* height: auto; */
-  /* align-self: flex-start; */
   margin: 2%;
   color: black;
   text-align: left;
@@ -540,7 +534,6 @@ nav {
 }
 
 .pf-center-col {
-  /*background-color:   #3e3e42;*/
   background: rgb(102, 96, 96);
   flex-basis: 65%;
   height: auto;
@@ -549,11 +542,6 @@ nav {
   align-self: flex-start;
   padding: 1px 2px 1px 2px;
   margin-top: 1.5%;
-}
-
-.user-pf-post-img {
-  width: 45px;
-  border-radius: 50%;
 }
 
 .main-right-col {
@@ -629,7 +617,6 @@ nav {
 
 .pf-about-me {
   width: 80%;
-  /* background-color: #BDB7AB; */
   margin-left: 10%;
 }
 .pf-about-msg {
@@ -700,7 +687,7 @@ nav {
   width: 80%;
   border-radius: 4px;
 
-  padding: 5px;
+  padding: 2px;
   box-sizing: border-box;
   margin-top: 4%;
 
@@ -708,6 +695,7 @@ nav {
   margin-right: 5%;
 
   position: sticky;
+  margin-bottom: 10%;
 }
 
 .main-event-box {
@@ -726,11 +714,13 @@ nav {
 }
 
 img {
-  width: 100%;
+  fill: #328bc7;
   height: auto;
   align-content: center;
+  padding-top: 1%;
   padding-left: 1%;
   padding-right: 1%;
+  border-radius: 5%;
 }
 .post-loaded-img {
 }
@@ -843,7 +833,7 @@ input[type="submit"] {
   margin-right: 10%;
   border-radius: 5px;
   border: 2px solid transparent;
-  max-width: 90%;
+  max-width: 95%;
   font-weight: 500;
   font-size: 16px;
   line-height: 1.4;
@@ -855,23 +845,23 @@ input[type="submit"] {
 .post-msg {
   color: white;
   margin-left: 1%;
-  margin-top: 1%;
+  margin-top: -1%;
   font-size: 20px;
-  display: inline-block;
+  display: flex;
+  margin-right: 1%;
+  width: 120%;
+  transform: translateY(-50%);
 }
 
-.post-text {
-  color: black;
-  /* margin-left: 1%;
-  margin-top: 1%; */
-  font-size: 16px;
-  display: inline-block;
-  background-color: white;
-  width: 80%;
-  border-radius: 5px;
-  padding: 2%;
-  margin-top: 2%;
-  margin-bottom: 2%;
+.post-msg-created {
+  color: white;
+  margin-left: 1%;
+  margin-top: -1%;
+  font-size: 20px;
+  display: flex;
+  margin-right: 1%;
+  width: 120%;
+  transform: translateY(-50%);
 }
 
 .post-msg-heading {
@@ -906,6 +896,7 @@ input[type="submit"] {
 }
 .post-input-container {
   margin-right: 1%;
+  margin-left: 1%;
 }
 
 #wrapper {
@@ -1083,6 +1074,33 @@ footer {
   color: red;
 }
 
-.comment_text {
-  
+.comment_user {
+  color: #f8df95;
+  padding-left: 1%;
+}
+
+.login-nav-logo {
+  display: flex;
+
+  align-items: center;
+}
+.comments-btn {
+  float: left;
+  margin-top: 1%;
+}
+
+p5 {
+  font-size: 20px;
+  /* color: #bdb7ab; */
+  color: orange;
+}
+
+p6 {
+  color: #bdb7ab;
+}
+
+.team-img {
+  max-width: 120%;
+  margin-right: 10%;
+  align-items: center;
 }

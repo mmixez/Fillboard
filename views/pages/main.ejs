@@ -17,7 +17,7 @@
             <div class="nav-left">
                 <img src="/public/stylesheets/images/logo3.png" class="main-logo" />
                 <ul>
-                    <li><img src="/public/stylesheets/images/inbox.png"></li>
+                    <!-- <li><img src="/public/stylesheets/images/inbox.png"></li> -->
 
 
                 </ul>
@@ -36,12 +36,9 @@
                 <ul>
                     <li>
                         <div class="user-pf-post">
-                            <img src="/pfp.png" class="user-pf-post-img" />
+                            <img src="/pfp.png" width="10px" height="10px" class="user-pf-post-img" />
 
                         </div>
-                    </li>
-                    <li>
-                        <%= user_data[0]['username'] %>
                     </li>
                     <li>
                         <div class="nav-drop">
@@ -99,25 +96,29 @@
             <div class="main-center-box">
                 <div class="write-post-container">
                     <div class="user-pf-post">
-                        <img src="<%= '/pfp/' +user_data[0]['id_fillboard_user']%>.png" class="user-pf-post-img" />
-                        <div class="post-msg">
-                            <p>
+                        <ul>
+                        <li><img src="<%= '/pfp/' +user_data[0]['id_fillboard_user']%>.png" class="user-pf-post-img" /></li>
+                        <li>
+                            <div class="post-msg">
+                            
                                 <%= user_data[0]['username'] %> Post your event !
-                            </p>
+                            
                             <br />
                         </div>
+                        </li>
+                    </ul>
                     </div>
 
                     <div class="post-input-container">
                         <div class="post-btn-container">
                             <form action="/post_text" method="POST">
                                 <div class="post-msg-heading">
-                                    <label for="post_heading">TITLE</label><br />
+                                    
                                 </div>
                                 <textarea class="textarea" rows="2" cols="70" placeholder="TITLE" type="post_heading"
                                     name="post_heading" id="post_heading"></textarea><br />
                                 <div class="post-msg-text">
-                                    <label for="post_text">Post Text</label><br />
+                                    
                                 </div>
                                 <textarea class="textarea" rows="6" cols="70" placeholder="WHATS IN YOUR MIND?"
                                     type="post_text" name="post_text" id="post_text"></textarea>
@@ -128,7 +129,7 @@
                                         <option value="<%= events_participated[i]['event_name'] %>">
                                             <% } %>
                                 </datalist>
-                                <br>
+                                <br><br>
                                 <div class="post-btn">
                                     <input type="submit" style="background-color: hsl(351, 4%, 66%)" value="Post" />
                                 </div>
@@ -148,22 +149,38 @@
                 <div class="main-center-box">
                     <div class="write-post-container">
                         <div class="post-input-container">
+                            
+                            
                             <div class="user-pf-post">
+                                <ul>
+                                    <li>
                                 <img src="<%= '/pfp/' +user_data[0]['id_fillboard_user']%>.png"
                                     class="user-pf-post-img" />
-                                <div class="post-msg">
-                                    <p>
+                                </li>
+                                <li>  
+                                    <div class="post-msg-created">
+                                    
                                         <%= post_data[i]['username'] %> said <%= post_data[i]['heading'] %>
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="post-text">
-                                <p>
-                                    <%= post_data[i]['post_text'] %>
-                                </p>
+                                    </div>
+                                </li>
+                                   
+                               <li>  <form action="<%= '/deletePost/' + post_data[i]['idposts']%>">
+                                        <div class="post-delete">
+                                            <input type="submit" style= "background-color: hsl(351, 4%, 66%);"
+                                                value="DELETE" />
+                                        </div>
+                                    </form>
+                                </li>
+                                    <br>                                    
+                                
+                                </ul>
                             </div>
 
-                            <img onerror="this.style.display = 'none';" src="<%= '/post_picture/' + post_data[i]['post_picture_path']%>"><br>
+                            <img src="<%= '/post_picture/' + post_data[i]['post_picture_path']%>" onerror="this.style.display = 'none';"><br><br>
+                            <textarea readonly class="textarea" rows="6" cols="70" type="post_text" name="post_text"
+                                id="post_text"><%= post_data[i]['post_text'] %></textarea>
+
+
 
                             <div class="post-msg-heading">
                                 <label>Event: <%= post_data[i]['event_name'] %></label><br>
@@ -174,35 +191,36 @@
                                 <% var numComments=post_data[i].comments && post_data[i].comments.length || 0; for (var
                                     c=0; c < numComments; c++) {%>
                                     <div class="post-comment-heading">
-                                        <div class="red">
-                                            <%= post_data[i].comments[c]['username'] %> replied:
-                                        </div>
-                                        <div class="comment_text">
-                                            <%= post_data[i].comments[c]['comments_text'] %>
-                                        </div>
+                                        
+                                        <div class="comment_user"><img src="/public/stylesheets/images/rsz_comment.png" style="color: #328bc7"><b><%= post_data[i].comments[c]['username'] %></b> - <%= post_data[i].comments[c]['comments_text'] %>
+                                        </div><br>
+                                        
+
                                     </div>
                                 <% } %>
                             </div>
                             <div class="post-comment-heading">
-                            <form action="/comments_text" method="POST">
-                                <textarea class="textarea" rows="3" cols="70" placeholder="Leave a comment!"
-                                    type="text" name="comments_text" id="comments_text"></textarea><br>
-                                <div class="comments-btn">
-                                    <input type="hidden" name="idposts" value="<%= post_data[i]['idposts']%>" />
-                                    <input type="submit" style="background-color: hsl(351, 4%, 66%)" value="reply" />
-                                </div>
-                            </form>
-                            <form action="<%= '/deletePost/' + post_data[i]['idposts']%>">
-                                <div class="post-btn">
-                                    <input type="submit" style="background-color: hsl(351, 4%, 66%);"
-                                        value="DELETE" />
-                                </div>
-                            </form>
+                                <form action="/comments_text" method="POST">
+                                    <textarea class="textarea" rows="3" cols="70" placeholder="Leave a comment!"
+                                        type="text" name="comments_text" id="comments_text"></textarea><br>
+                                    <div class="comments-btn">
+                                        <input type="hidden" name="idposts" value="<%= post_data[i]['idposts']%>" />
+                                        <input type="submit" style="background-color: hsl(351, 4%, 66%)"
+                                            value="REPLY" />
+                                            
+                                    </div>
+
+                                </form>
+                            </div>
+                           
+                          
                         </div>
-                        </div>
+
+                        
                     </div>
                 </div>
-            <% } %>
+                
+                <% } %>
 
         </div>
         <div class="main-right-col">
@@ -217,7 +235,7 @@
                 </div>
             </div>
 
-            <% for (var i=0; i < 2; i++) { %>
+            <% for (var i=0; i < 1; i++) { %>
                 <div class="event">
                     <div class="main-event-box">
                         <div class="post-input-container">
@@ -244,7 +262,6 @@
 
             </div>
         </div>
-
 
         <div id='wrapper'>
             <div>

@@ -75,7 +75,7 @@ app.get('/events', (req, res) => {
     min_participants, max_participants, sub_category_name, category_name, event_picture_path, cnty.name, l.city_name, l.zip, l.street_address, country_code
     FROM event e, sub_category sc, category c, location l, country cnty
     WHERE e.sub_category_idsub_category = sc.idsub_category AND sc.category_id_category = c.id_category AND e.location_idlocation = l.idlocation
-    AND l.country_country_code = cnty.country_code;`,
+    AND l.country_country_code = cnty.country_code ORDER BY begin_date ASC;`,
         function (err, qres_event, fields) {
             if (err) {
                 throw err;
@@ -130,7 +130,7 @@ app.post('/search_for_events', urlParser,
         AND e.event_name LIKE  "%${req.body.eventname}%" AND cnty.name LIKE "%${req.body.country}%" 
         AND l.city_name LIKE "%${req.body.city}%" AND l.zip LIKE "%${req.body.zip}%" 
         AND l.street_address LIKE "%${req.body.street}%"
-        AND c.category_name LIKE "%${req.body.category}%" AND sc.sub_category_name LIKE "%${req.body.sub_category}%";`,
+        AND c.category_name LIKE "%${req.body.category}%" AND sc.sub_category_name LIKE "%${req.body.sub_category}%" ORDER BY begin_date ASC;`,
             function (err, qres_event, fields) {
                 if (err) {
                     throw err;
@@ -193,7 +193,7 @@ app.post('/create_event', urlParser,
     body('zip').notEmpty().withMessage("Please select zip"),
     body('street').notEmpty().withMessage("Please select street"),
     body('category').notEmpty().withMessage("Please select category"),
-    body('sub_category').notEmpty().withMessage("Please select sub category"),
+    body('sub_category').notEmpty().withMessage("Please insert sub category"),
     body('start_date').notEmpty().withMessage("Please select start date"),
     body('end_date').notEmpty().withMessage("Please select end date"),
     body('min_participants').notEmpty().withMessage("Please select min participants"),
@@ -210,35 +210,47 @@ app.post('/create_event', urlParser,
                 if (err) throw err;
                 else {
                     sqlConn.query(`INSERT INTO location (country_country_code, city_name, zip, street_address) 
-                    VALUES ('${qres[0]['country_code']}', '${req.body.city}', ${req.body.zip}, '${req.body.street}');`);
-
-                    console.log(changeDateFormat(req.body.start_date))
-                    console.log(req.body.end_date)
-                    sqlConn.query(`INSERT INTO event (event_name, description, begin_date, end_date, location_idlocation, 
-                    sub_category_idsub_category, min_participants, max_participants) 
-                    VALUES ('${req.body.eventname}', '${req.body.event_description}', 
-                    '${req.body.start_date}', '${req.body.end_date}', 
-                    LAST_INSERT_ID(), 1, ${req.body.min_participants}, ${req.body.max_participants});`);
-
-                    // get event id that was just created
-                    sqlConn.query(`SELECT * FROM event WHERE event_name='${req.body.eventname}' AND description='${req.body.event_description}';`, (err, qres, fields) => {
-                        if (err) {
-                            throw err;
-                        }
+                    VALUES ('${qres[0]['country_code']}', '${req.body.city}', ${req.body.zip}, '${req.body.street}');`, (err, insert_location, fields) => {
+                        if (err) throw err;
                         else {
-                            // if image uploaded => rename image to eventID.png, else => skip
-                            const tempPath = path.join(__dirname, "./public/images/event_pictures/", `${req.session.username}.png`);
-                            const targetPath = path.join(__dirname, "./public/images/event_pictures/", `${req.session.username}_${qres[0]['id_event']}.png`);
-                            if (fs.existsSync(tempPath)) {
-                                fs.rename(
-                                    tempPath,
-                                    targetPath,
-                                    err => {
-                                        if (err) { throw err; }
-                                    }
-                                )
-                            }
-                            sqlConn.query(`UPDATE event SET event_picture_path = '${req.session.username}_${qres[0]['id_event']}' WHERE id_event='${qres[0]['id_event']}';`);
+                            sqlConn.query(`SELECT * from category WHERE category_name = '${req.body.category}';`, (err, qres_category, fields) => {
+                                if (err) throw err;
+                                else {
+                                    sqlConn.query(`INSERT INTO sub_category (sub_category_name, category_id_category) 
+                                                    VALUES ('${req.body.sub_category}', ${qres_category[0]['id_category']});`, (err, insert_sub_category, fields) => {
+                                        if (err) throw err;
+                                        else {
+                                            sqlConn.query(`INSERT INTO event (event_name, description, begin_date, end_date, location_idlocation, 
+                                                sub_category_idsub_category, min_participants, max_participants) 
+                                                VALUES ('${req.body.eventname}', '${req.body.event_description}', 
+                                                '${req.body.start_date}', '${req.body.end_date}', 
+                                                ${insert_location.insertId}, ${insert_sub_category.insertId}, ${req.body.min_participants}, ${req.body.max_participants});`);
+
+                                            // get event id that was just created
+                                            sqlConn.query(`SELECT * FROM event WHERE event_name='${req.body.eventname}' AND description='${req.body.event_description}';`, (err, qres, fields) => {
+                                                if (err) {
+                                                    throw err;
+                                                }
+                                                else {
+                                                    // if image uploaded => rename image to eventID.png, else => skip
+                                                    const tempPath = path.join(__dirname, "./public/images/event_pictures/", `${req.session.username}.png`);
+                                                    const targetPath = path.join(__dirname, "./public/images/event_pictures/", `${req.session.username}_${qres[0]['id_event']}.png`);
+                                                    if (fs.existsSync(tempPath)) {
+                                                        fs.rename(
+                                                            tempPath,
+                                                            targetPath,
+                                                            err => {
+                                                                if (err) { throw err; }
+                                                            }
+                                                        )
+                                                    }
+                                                    sqlConn.query(`UPDATE event SET event_picture_path = '${req.session.username}_${qres[0]['id_event']}' WHERE id_event='${qres[0]['id_event']}';`);
+                                                }
+                                            });
+                                        }
+                                    });
+                                }
+                            })
                         }
                     });
                 }

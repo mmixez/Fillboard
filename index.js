@@ -402,7 +402,7 @@ app.get('/main', (req, res) => {
             throw err;
         }
         else {
-            sqlConn.query(`SELECT p.idposts, heading, post_text, event_name, begin_date, end_date, username, post_picture_path
+            sqlConn.query(`SELECT p.idposts, heading, post_text, event_name, begin_date, end_date, username, post_picture_path, user_id_posts
             FROM posts p, event e, fillboard_user u WHERE p.event_id = e.id_event AND p.user_id_posts = u.id_fillboard_user 
             ORDER BY p.idposts DESC;`,
                 function (err, qres_posts, fields) {

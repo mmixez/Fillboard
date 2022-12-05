@@ -12,6 +12,7 @@
 </head>
 
 <body>
+    <%- include('../../functions') %>
     <div class="main-header">
         <nav>
             <div class="nav-left">
@@ -177,14 +178,21 @@
                             </div>
 
                             <img src="<%= '/post_picture/' + post_data[i]['post_picture_path']%>" onerror="this.style.display = 'none';"><br><br>
-                            <textarea readonly class="textarea" rows="6" cols="70" type="post_text" name="post_text"
-                                id="post_text"><%= post_data[i]['post_text'] %></textarea>
+                            <!-- <textarea readonly class="textarea" rows="6" cols="70" type="post_text" name="post_text"
+                                id="post_text"><%= post_data[i]['post_text'] %></textarea> -->
+
+                                <div class="post-text">
+                                    <p>
+                                        <%= post_data[i]['post_text'] %>
+                                    </p>
+                                </div>
 
 
 
                             <div class="post-msg-heading">
                                 <label>Event: <%= post_data[i]['event_name'] %></label><br>
-                                <label>Date: <%= post_data[i]['begin_date'] %> - <%= post_data[i]['end_date'] %></label><br>
+                                <label>Date: <%= changeDateFormat(post_data[i]['begin_date']) %></label><br>
+                                <!-- <label>To: <%= changeDateFormat(post_data[i]['end_date']) %></label><br> -->
                             </div>
 
                             <div class="comments">
@@ -201,22 +209,16 @@
                             </div>
                             <div class="post-comment-heading">
                                 <form action="/comments_text" method="POST">
-                                    <textarea class="textarea" rows="3" cols="70" placeholder="Leave a comment!"
+                                    <textarea class="textarea" rows="2" cols="70" placeholder="Leave a comment!"
                                         type="text" name="comments_text" id="comments_text"></textarea><br>
                                     <div class="comments-btn">
                                         <input type="hidden" name="idposts" value="<%= post_data[i]['idposts']%>" />
                                         <input type="submit" style="background-color: hsl(351, 4%, 66%)"
-                                            value="REPLY" />
-                                            
+                                            value="REPLY" />  
                                     </div>
-
                                 </form>
                             </div>
-                           
-                          
-                        </div>
-
-                        
+                        </div>     
                     </div>
                 </div>
                 
@@ -241,7 +243,7 @@
                         <div class="post-input-container">
                             <div class="post-event-heading">
                                 <span class="bolded"><label for="post_heading"><%= event_data[i]['event_name'] %></label></span><br>
-                                <p>DATE: <%= event_data[i]['begin_date'] %></p>
+                                <p>DATE: <%= changeDateFormat(event_data[i]['begin_date']) %></p>
                                 <label for="post_heading"><%= event_data[i]['description'] %></label><br>
                                 <a href="#">More Info</a>
                             </div>

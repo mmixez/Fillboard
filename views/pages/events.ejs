@@ -153,11 +153,6 @@
                                 value="Create"></button>
                         </div>
                     </form>
-                    <script>
-                        function getData(){
-        
-                        }
-                    </script>
                 </div>
             
             <section class="event-found-amount">
@@ -179,8 +174,8 @@
                     <div class="event-display-box">
                         <b><p><h3>Eventname: <%= event_data[i]['event_name'] %></h3></p></b><br>
                         <p>WHAT:  <%= event_data[i]['description'] %></p>
-                        <p>START:  <%= event_data[i]['begin_date'] %></p>
-                        <p>END:  <%= event_data[i]['end_date'] %></p>
+                        <p>START:  <%= changeDateFormat(event_data[i]['begin_date']) %></p>
+                        <p>END:  <%= changeDateFormat(event_data[i]['end_date']) %></p>
                         <p>MIN-MAX Participants:<%= event_data[i]['min_participants'] %>-<%= event_data[i]['max_participants'] %></p>
                         <!-- <p>MAX participants:  <%= event_data[i]['max_participants'] %></p> -->
                         <p>SUB-CATEGORY:   <%= event_data[i]['category_name'] %>- <%= event_data[i]['sub_category_name'] %></p>
@@ -193,7 +188,7 @@
                         </form>
                         <div class="event-img">
                        
-                        <img src="<%= '/event_pictures/' + event_data[i]['event_picture_path']%>"></div>
+                        <img src="<%= '/event_pictures/' + event_data[i]['event_picture_path']%>" onerror="this.style.display = 'none';"></div>
                     </div><br>
                 <% } %>
                 </div>

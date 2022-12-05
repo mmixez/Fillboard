@@ -50,7 +50,7 @@ if (process.env.DATABASE_URL) {
     sqlConn = mysql.createConnection({
         host: "127.0.0.1",
         user: "root",
-        password: "MySQLAdmin", //might have to change this to your pwd
+        password: "0906clcl", //might have to change this to your pwd
         database: "Fillboard"
     });
 
